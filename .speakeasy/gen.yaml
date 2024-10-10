@@ -17,7 +17,7 @@ generation:
   comments:
     disabled: true
 typescript:
-  version: 0.1.65
+  version: 0.1.66
   additionalDependencies:
     dependencies: {}
     devDependencies: {}
@@ -29,7 +29,7 @@ typescript:
       registry: https://npm.pkg.github.com
     repository:
       type: git
-      url: https://github.com/gsmservice-pl/messaging-sdk-typescript
+      url: https://github.com/gsmservice-pl/messaging-sdk-typescript.git
   author: GSMService.pl
   clientServerStatusCodesAsErrors: true
   enumFormat: union
