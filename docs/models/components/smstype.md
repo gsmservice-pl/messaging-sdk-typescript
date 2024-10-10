@@ -11,7 +11,7 @@ SMS type according to the table
 ## Example Usage
 
 ```typescript
-import { SmsType } from "gsmservice-messaging-sdk/models/components";
+import { SmsType } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: SmsType = 1;
 ```

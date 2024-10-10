@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { Security } from "gsmservice-messaging-sdk/models/components";
+import { Security } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: Security = {
   bearer: "<YOUR API ACCESS TOKEN>",

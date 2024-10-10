@@ -1,9 +1,9 @@
 <!-- Start SDK Example Usage [usage] -->
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {

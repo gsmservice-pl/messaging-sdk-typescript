@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { SendSmsResponse } from "gsmservice-messaging-sdk/models/operations";
+import { SendSmsResponse } from "@gsmservice-pl/messaging-sdk-typescript/models/operations";
 
 let value: SendSmsResponse = {
   headers: {

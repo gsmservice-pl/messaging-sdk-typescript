@@ -5,7 +5,7 @@ An object defining the message recipient telephone number with the message's cus
 ## Example Usage
 
 ```typescript
-import { PhoneNumberWithCid } from "gsmservice-messaging-sdk/models/components";
+import { PhoneNumberWithCid } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: PhoneNumberWithCid = {
   nr: "+48999999999",

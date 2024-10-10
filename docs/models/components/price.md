@@ -5,7 +5,7 @@ An object with the properties and price of a single message
 ## Example Usage
 
 ```typescript
-import { Price } from "gsmservice-messaging-sdk/models/components";
+import { Price } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: Price = {
   error: null,

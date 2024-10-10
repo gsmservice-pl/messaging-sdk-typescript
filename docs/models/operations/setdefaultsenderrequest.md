@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { SetDefaultSenderRequest } from "gsmservice-messaging-sdk/models/operations";
+import { SetDefaultSenderRequest } from "@gsmservice-pl/messaging-sdk-typescript/models/operations";
 
 let value: SetDefaultSenderRequest = {
   sender: "Podpis",

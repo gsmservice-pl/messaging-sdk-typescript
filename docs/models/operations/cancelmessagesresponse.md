@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { CancelMessagesResponse } from "gsmservice-messaging-sdk/models/operations";
+import { CancelMessagesResponse } from "@gsmservice-pl/messaging-sdk-typescript/models/operations";
 
 let value: CancelMessagesResponse = {
   headers: {

@@ -201,7 +201,7 @@ export function resolveGlobalSecurity(
       {
         fieldName: "Authorization",
         type: "http:bearer",
-        value: security?.bearer ?? env().GATEWAY_API_TOKEN_BEARER,
+        value: security?.bearer ?? env().GATEWAY_API_BEARER,
       },
     ],
   );

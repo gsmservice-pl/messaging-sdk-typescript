@@ -12,7 +12,7 @@ Message type according to the table:
 ## Example Usage
 
 ```typescript
-import { MessageType } from "gsmservice-messaging-sdk/models/components";
+import { MessageType } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: MessageType = 1;
 ```

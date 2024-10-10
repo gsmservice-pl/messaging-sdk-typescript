@@ -5,7 +5,7 @@
 ## Example Usage
 
 ```typescript
-import { PingResponse } from "gsmservice-messaging-sdk/models/components";
+import { PingResponse } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: PingResponse = {
   status: "OK",

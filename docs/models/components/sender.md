@@ -5,7 +5,7 @@ An object with the properties of the message sender
 ## Example Usage
 
 ```typescript
-import { Sender } from "gsmservice-messaging-sdk/models/components";
+import { Sender } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: Sender = {
   sender: "Bramka SMS",

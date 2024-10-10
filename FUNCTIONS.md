@@ -19,14 +19,14 @@ specific category of applications.
 ## Example
 
 ```typescript
-import { ClientCore } from "gsmservice-messaging-sdk/core.js";
-import { outgoingSmsSend } from "gsmservice-messaging-sdk/funcs/outgoingSmsSend.js";
-import { SDKValidationError } from "gsmservice-messaging-sdk/models/errors/sdkvalidationerror.js";
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsSend.js";
+import { SDKValidationError } from "@gsmservice-pl/messaging-sdk-typescript/models/errors/sdkvalidationerror.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {

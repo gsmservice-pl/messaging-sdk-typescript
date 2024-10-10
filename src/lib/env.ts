@@ -7,15 +7,15 @@ import { dlv } from "./dlv.js";
 import * as z from "zod";
 
 export interface Env {
-  GATEWAY_API_TOKEN_BEARER?: string | undefined;
+  GATEWAY_API_BEARER?: string | undefined;
 
-  GATEWAY_API_TOKEN_DEBUG?: boolean | undefined;
+  GATEWAY_API_DEBUG?: boolean | undefined;
 }
 
 export const envSchema: z.ZodType<Env, z.ZodTypeDef, unknown> = z.object({
-  GATEWAY_API_TOKEN_BEARER: z.string(),
+  GATEWAY_API_BEARER: z.string(),
 
-  GATEWAY_API_TOKEN_DEBUG: z.coerce.boolean(),
+  GATEWAY_API_DEBUG: z.coerce.boolean(),
 })
   .partial();
 

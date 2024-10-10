@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { DeleteSenderRequest } from "gsmservice-messaging-sdk/models/operations";
+import { DeleteSenderRequest } from "@gsmservice-pl/messaging-sdk-typescript/models/operations";
 
 let value: DeleteSenderRequest = {
   sender: "Podpis",

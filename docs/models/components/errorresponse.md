@@ -5,7 +5,7 @@ An object that complies with RFC 9457 containing information about a request err
 ## Example Usage
 
 ```typescript
-import { ErrorResponse } from "gsmservice-messaging-sdk/models/components";
+import { ErrorResponse } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: ErrorResponse = {
   type: "https://problems-registry.smartbear.com/invalid-body-property-format",

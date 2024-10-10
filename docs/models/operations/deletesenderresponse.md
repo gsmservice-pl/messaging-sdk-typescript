@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { DeleteSenderResponse } from "gsmservice-messaging-sdk/models/operations";
+import { DeleteSenderResponse } from "@gsmservice-pl/messaging-sdk-typescript/models/operations";
 
 let value: DeleteSenderResponse = {
   headers: {

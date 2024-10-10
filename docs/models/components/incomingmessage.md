@@ -5,7 +5,7 @@ An object with the properties of the received message
 ## Example Usage
 
 ```typescript
-import { IncomingMessage } from "gsmservice-messaging-sdk/models/components";
+import { IncomingMessage } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: IncomingMessage = {
   id: 45544,

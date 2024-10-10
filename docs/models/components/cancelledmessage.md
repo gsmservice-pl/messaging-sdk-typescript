@@ -5,7 +5,7 @@ An object containing information about results of cancelling single message
 ## Example Usage
 
 ```typescript
-import { CancelledMessage } from "gsmservice-messaging-sdk/models/components";
+import { CancelledMessage } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: CancelledMessage = {
   id: 43456,

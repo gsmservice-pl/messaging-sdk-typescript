@@ -5,7 +5,7 @@ An object with a new SMS message properties
 ## Example Usage
 
 ```typescript
-import { Sms } from "gsmservice-messaging-sdk/models/components";
+import { Sms } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: Sms = {
   recipients: {

@@ -103,7 +103,7 @@ export class ClientSDK {
     this._baseURL = baseURL;
     this.#httpClient = client;
     this.#logger = options.debugLogger;
-    if (!this.#logger && env().GATEWAY_API_TOKEN_DEBUG) {
+    if (!this.#logger && env().GATEWAY_API_DEBUG) {
       this.#logger = console;
     }
   }

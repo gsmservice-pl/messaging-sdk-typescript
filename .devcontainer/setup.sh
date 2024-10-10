@@ -10,7 +10,7 @@ mkdir samples
 npm install
 npm install -g ts-node
 npm link
-npm link gsmservice-messaging-sdk
+npm link @gsmservice-pl/messaging-sdk-typescript
 TS_CONFIG_CONTENT=$(cat <<EOL
 {
   "compilerOptions": {

@@ -146,10 +146,10 @@ For supported JavaScript runtimes, please consult [RUNTIMES.md](RUNTIMES.md).
 ### Example
 
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -258,10 +258,10 @@ Some of the endpoints in this SDK support retries.  If you use the SDK without a
 
 To change the default retry strategy for a single API call, simply provide a retryConfig object to the call:
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -288,7 +288,7 @@ run();
 
 If you'd like to override the default retry strategy for all operations that support retries, you can provide a retryConfig at SDK initialization:
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
   retryConfig: {
@@ -301,7 +301,7 @@ const client = new Client({
     },
     retryConnectionErrors: false,
   },
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -338,14 +338,14 @@ In addition, when custom error responses are specified for an operation, the SDK
 | errors.ErrorResponse     | 401, 403, 4XX, 5XX       | application/problem+json |
 
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 import {
   ErrorResponse,
   SDKValidationError,
-} from "gsmservice-messaging-sdk/models/errors";
+} from "@gsmservice-pl/messaging-sdk-typescript/models/errors";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -396,11 +396,11 @@ You can override the default server globally by passing a server name to the `se
 | `sandbox` | `https://api.gsmservice.pl/rest-sandbox` | None |
 
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
   server: "sandbox",
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -420,11 +420,11 @@ run();
 The default server can also be overridden globally by passing a URL to the `serverURL` optional parameter when initializing the SDK client instance. For example:
 
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
   serverURL: "https://api.gsmservice.pl/rest",
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -457,8 +457,8 @@ custom header and a timeout to requests and how to use the `"requestError"` hook
 to log errors:
 
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
-import { HTTPClient } from "gsmservice-messaging-sdk/lib/http";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+import { HTTPClient } from "@gsmservice-pl/messaging-sdk-typescript/lib/http";
 
 const httpClient = new HTTPClient({
   // fetcher takes a function that has the same signature as native `fetch`.
@@ -495,16 +495,16 @@ const sdk = new Client({ httpClient });
 
 This SDK supports the following security scheme globally:
 
-| Name                       | Type                       | Scheme                     | Environment Variable       |
-| -------------------------- | -------------------------- | -------------------------- | -------------------------- |
-| `bearer`                   | http                       | HTTP Bearer                | `GATEWAY_API_TOKEN_BEARER` |
+| Name                 | Type                 | Scheme               | Environment Variable |
+| -------------------- | -------------------- | -------------------- | -------------------- |
+| `bearer`             | http                 | HTTP Bearer          | `GATEWAY_API_BEARER` |
 
 To authenticate with the API the `bearer` parameter must be set when initializing the SDK client instance. For example:
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -530,12 +530,12 @@ You can pass a logger that matches `console`'s interface as an SDK option.
 > Beware that debug logging will reveal secrets, like API tokens in headers, in log messages printed to a console or files. It's recommended to use this feature only during local development and not in production.
 
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const sdk = new Client({ debugLogger: console });
 ```
 
-You can also enable a default debug logger by setting an environment variable `GATEWAY_API_TOKEN_DEBUG` to true.
+You can also enable a default debug logger by setting an environment variable `GATEWAY_API_DEBUG` to true.
 <!-- End Debugging [debug] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->

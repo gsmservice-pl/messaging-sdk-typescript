@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { SetDefaultSenderResponse } from "gsmservice-messaging-sdk/models/operations";
+import { SetDefaultSenderResponse } from "@gsmservice-pl/messaging-sdk-typescript/models/operations";
 
 let value: SetDefaultSenderResponse = {
   headers: {

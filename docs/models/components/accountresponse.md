@@ -5,7 +5,7 @@ An object containing information about the User's account and balance
 ## Example Usage
 
 ```typescript
-import { AccountResponse } from "gsmservice-messaging-sdk/models/components";
+import { AccountResponse } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: AccountResponse = {
   login: "some_login",

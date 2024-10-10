@@ -22,10 +22,10 @@ In case of an error, the `ErrorResponse` object will be returned with proper HTT
 ### Example Usage
 
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -47,13 +47,13 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { ClientCore } from "gsmservice-messaging-sdk/core.js";
-import { outgoingGetByIds } from "gsmservice-messaging-sdk/funcs/outgoingGetByIds.js";
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingGetByIds } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingGetByIds.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -110,10 +110,10 @@ In case of an error, the `ErrorResponse` object will be returned with proper HTT
 ### Example Usage
 
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -135,13 +135,13 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { ClientCore } from "gsmservice-messaging-sdk/core.js";
-import { outgoingCancelScheduled } from "gsmservice-messaging-sdk/funcs/outgoingCancelScheduled.js";
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingCancelScheduled } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingCancelScheduled.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -197,10 +197,10 @@ In case of an error, the `ErrorResponse` object will be returned with proper HTT
 ### Example Usage
 
 ```typescript
-import { Client } from "gsmservice-messaging-sdk";
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
@@ -221,13 +221,13 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { ClientCore } from "gsmservice-messaging-sdk/core.js";
-import { outgoingList } from "gsmservice-messaging-sdk/funcs/outgoingList.js";
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingList } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingList.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 
 async function run() {
