@@ -1,0 +1,17 @@
+workflowVersion: 1.0.0
+speakeasyVersion: latest
+sources:
+    messaging-sdk-typescript -OAS:
+        inputs:
+            - location: ..\..\..\app\libs\restApi\openapi.yaml
+        registry:
+            location: registry.speakeasyapi.dev/intermedia/gsmservice-pl/messaging-sdk-typescript--oas
+targets:
+    messaging-sdk-typescript:
+        target: typescript
+        source: messaging-sdk-typescript -OAS
+        codeSamples:
+            output: .speakeasy\code-samples-overlay.yaml
+            langOverride: php
+            labelOverride:
+                fixedValue: Typescript SDK

@@ -1,0 +1,335 @@
+overlay: 1.0.0
+info:
+  title: CodeSamples overlay for typescript target
+  version: 0.0.0
+actions:
+  - target: $["paths"]["/account"]["get"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.accounts.get();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/account/{user_login}"]["get"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.accounts.getSubaccount({
+                userLogin: "some-login",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/incoming"]["get"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.incoming.list({
+                page: 1,
+                limit: 10,
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/incoming/{ids}"]["get"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.incoming.getByIds({
+                ids: [
+                  43456,
+                ],
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/messages"]["get"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.outgoing.list({
+                page: 1,
+                limit: 10,
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/messages/sms"]["post"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.outgoing.sms.send([
+                {
+                  recipients: [
+                    "+48999999999",
+                  ],
+                  message: "To jest treść wiadomości",
+                  sender: "Bramka SMS",
+                  type: 1,
+                  unicode: true,
+                  flash: false,
+                  date: null,
+                },
+              ]);
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/messages/sms/price"]["post"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.outgoing.sms.getPrice([
+                {
+                  recipients: {
+                    nr: "+48999999999",
+                    cid: "my-id-1113",
+                  },
+                  message: "To jest treść wiadomości",
+                  sender: "Bramka SMS",
+                  type: 1,
+                  unicode: true,
+                  flash: false,
+                  date: null,
+                },
+              ]);
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/messages/{ids}"]["delete"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.outgoing.cancelScheduled({
+                ids: [
+                  43456,
+                ],
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/messages/{ids}"]["get"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.outgoing.getByIds({
+                ids: [
+                  43456,
+                ],
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/ping"]["get"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client();
+
+            async function run() {
+              const result = await client.common.ping();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/senders"]["get"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.senders.list();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/senders"]["post"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.senders.add({
+                sender: "Bramka SMS",
+                description: "This is our company name. It contains our registered trademark.",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/senders/{sender}"]["delete"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.senders.delete({
+                sender: "Podpis",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/senders/{sender}"]["patch"]
+    update:
+      x-codeSamples:
+        - lang: php
+          label: Typescript SDK
+          source: |-
+            import { Client } from "gsmservice-messaging-sdk";
+
+            const client = new Client({
+              bearer: process.env["GATEWAY_API_TOKEN_BEARER"] ?? "",
+            });
+
+            async function run() {
+              const result = await client.senders.setDefault({
+                sender: "Podpis",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
