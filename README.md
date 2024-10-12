@@ -1,90 +1,17 @@
-# gsmservice-messaging-gateway
+[![NPM Version (with dist tag)](https://img.shields.io/npm/v/%40gsmservice-pl/messaging-sdk-typescript)](https://www.npmjs.com/package/@gsmservice-pl/messaging-sdk-typescript)
+[![GitHub License](https://img.shields.io/github/license/gsmservice-pl/messaging-sdk-php)](https://github.com/gsmservice-pl/messaging-sdk-php/blob/main/LICENSE)
+[![Static Badge](https://img.shields.io/badge/built_by-Speakeasy-yellow)](https://www.speakeasy.com/?utm_source=gsmservice-pl/messaging-sdk-php&utm_campaign=php)
+# GSMService.pl Messaging REST API SDK for Typescript
 
-Developer-friendly & type-safe Typescript SDK specifically catered to leverage *gsmservice-messaging-gateway* API.
+This package includes Messaging SDK for Typescript to send SMS & MMS messages directly from your app via https://bramka.gsmservice.pl messaging platform.
 
-<div align="left">
-    <a href="https://www.speakeasy.com/?utm_source=gsmservice-messaging-gateway&utm_campaign=typescript"><img src="https://custom-icon-badges.demolab.com/badge/-Built%20By%20Speakeasy-212015?style=for-the-badge&logoColor=FBE331&logo=speakeasy&labelColor=545454" /></a>
-    <a href="https://opensource.org/licenses/MIT">
-        <img src="https://img.shields.io/badge/License-MIT-blue.svg" style="width: 100px; height: 28px;" />
-    </a>
-</div>
+## Additional documentation:
 
-<!-- Start Summary [summary] -->
-## Summary
+A documentation of all methods and types is available below in section [Available Resources and Operations
+](#available-resources-and-operations).
 
-Messaging Gateway GSMService.pl: 
-# Introduction
-
-This document was created to explain the process of integration any application or system with the **GSMService.pl** SMS Gateway via the *REST API*. Currently, there are several ways to send messages with the GSMService.pl platform:
-
-* Directly from the [https://bramka.gsmservice.pl](https://bramka.gsmservice.pl) website [User Panel](https://panel.gsmservice.pl)
-* Via this *REST API* and provided *SDKs*
-* Via the legacy (deprecated) versions API: *Webservices (SOAP)* and *HTTP* 
-* Via the *MAIL2SMS* service
-
-This document describes the possibilities offered by **REST API**.
-
-> **We kindly ask you to read this documentation carefully before starting the integration. This will make the whole process easier and will help you avoid many problems.**
-
-## Documentation and Try Outs
-
-This documentation is available in two formats: [**REDOC**](https://api.gsmservice.pl/rest/) and [**SWAGGER**](https://api.gsmservice.pl/rest/swagger). You can test any endpoint directly from documentation using **Try Out** feature of Swagger. Also you can [download a **YAML** file](https://api.gsmservice.pl/rest/swagger/messaging.yaml) with doc in OpenApi 3.0 format.
-
-## Account signup and setup
-
-Firstly, it is necessary to create your personal account at the GSMService.pl SMS Gateway platform if you haven't one and activate access to the API. To register a new account please [signup the form](https://panel.gsmservice.pl/rejestracja). After signing up and fully activation of an account you have to activate an access to the API.
-
-To do it please use [this site](https://panel.gsmservice.pl/api) - fill the *New API Access* form with your preferred API login, set your API password, select which API standard you want to activate for this account (select **REST API** there). Optionally you can add IP adresses (or IP pool with CIDR notation) from which access to your API account will be possible. You can also set a callback address there to collect any messages status updates automatically. When a status of a messaga changes, the callback address will be called with passing parameters with new message status.
-
-After setup an API access you will get an unique **API Access Token** - please write it down as there won't be possible to display it again (you will have the possibility to regenerate it only). This token will be required to authenticate all the requests made with API on your account.
-
-## Authentication of API requests
-
-All the endpoints of this REST API have to be authenticated using your API Access Token with one exception: */rest/ping* endpoint which doesn't need an authentication. 
-
-To make an authenticated request you should add to all requests an ***Authorization* header** which you have generated in previous step:
-
-```
-Authorization: Bearer <YOUR_API_ACCESS_TOKEN>
-```
-
-## URLs to connect to API
-
-Please use this SSL secured adresses to connect to REST API:
-
-* ```https://api.gsmservice.pl/rest``` - for production system
-
-* ```https://api.gsmservice.pl/rest-sandbox``` - for test system (Sandbox)
-
-> **When calling our API, make sure you are using TLS version 1.2 or higher. Older versions are no longer supported.**
-
-# SDK Client Libraries
-
-For developers integrating SMS functionality into their app, we provide a convenient SDK Libraries.
-
-Our SDKs allow you to quickly start interacting with the Gateway using your favorite programming language. Currently we support the following languages:
-
-## PHP 8
-
-To install PHP SDK issue the following command:
-
-```shell
-composer require gsmservice-pl/messaging-sdk-php
-```
-More information and documentation you can find at our [GitHub](https://github.com/gsmservice-pl/messaging-sdk-php) 
-
-## Typescript
-
-To install Typescript SDK issue the following command:
-
-### NPM
-
-```
-npm install @gsmservice-pl/messaging-sdk-typescript
-```
-
-More information and documentation you can find at our [GitHub](https://github.com/gsmservice-pl/messaging-sdk-typescript)
-<!-- End Summary [summary] -->
+Also you can refer to the [REST API documentation](https://api.gsmservice.pl/rest/) for additional details about the basics of this SDK.
+<!-- No Summary [summary] -->
 
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
@@ -110,25 +37,25 @@ The SDK can be installed with either [npm](https://www.npmjs.com/), [pnpm](https
 ### NPM
 
 ```bash
-npm add <UNSET>
+npm add @gsmservice-pl/messaging-sdk-typescript
 ```
 
 ### PNPM
 
 ```bash
-pnpm add <UNSET>
+pnpm add @gsmservice-pl/messaging-sdk-typescript
 ```
 
 ### Bun
 
 ```bash
-bun add <UNSET>
+bun add @gsmservice-pl/messaging-sdk-typescript
 ```
 
 ### Yarn
 
 ```bash
-yarn add <UNSET> zod
+yarn add @gsmservice-pl/messaging-sdk-typescript zod
 
 # Note that Yarn does not install peer dependencies automatically. You will need
 # to install zod as shown above.
@@ -147,7 +74,9 @@ For supported JavaScript runtimes, please consult [RUNTIMES.md](RUNTIMES.md).
 <!-- Start SDK Example Usage [usage] -->
 ## SDK Example Usage
 
-### Example
+### Sending single SMS Message
+
+This example demonstrates simple sending SMS message to a single recipient:
 
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
@@ -548,13 +477,11 @@ You can also enable a default debug logger by setting an environment variable `G
 
 ## Maturity
 
-This SDK is in beta, and there may be breaking changes between versions without a major version update. Therefore, we recommend pinning usage
+This SDK is in continuous development and there may be breaking changes between a major version update. Therefore, we recommend pinning usage
 to a specific package version. This way, you can install the same version each time without breaking changes unless you are intentionally
 looking for the latest version.
 
 ## Contributions
 
 While we value open-source contributions to this SDK, this library is generated programmatically. Any manual changes added to internal files will be overwritten on the next generation. 
-We look forward to hearing your feedback. Feel free to open a PR or an issue with a proof of concept and we'll do our best to include it in a future release. 
-
-### SDK Created by [Speakeasy](https://www.speakeasy.com/?utm_source=gsmservice-messaging-gateway&utm_campaign=typescript)
+We look forward to hearing your feedback. Feel free to open a PR or an issue with a proof of concept and we'll do our best to include it in a future release.

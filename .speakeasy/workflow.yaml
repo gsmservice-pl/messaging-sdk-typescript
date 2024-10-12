@@ -10,6 +10,9 @@ targets:
     messaging-sdk-typescript:
         target: typescript
         source: messaging-sdk-typescript -OAS
+        publish:
+            npm:
+                token: $npm_token
         codeSamples:
             output: .speakeasy\code-samples-overlay.yaml
             langOverride: php
