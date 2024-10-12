@@ -17,7 +17,7 @@ generation:
   comments:
     disabled: true
 typescript:
-  version: 0.1.70
+  version: 0.1.71
   additionalDependencies:
     dependencies: {}
     devDependencies: {}
@@ -25,8 +25,6 @@ typescript:
   additionalPackageJSON:
     description: Messaging Gateway SDK for TypeScript - GSMService.pl
     license: MIT
-    publishConfig:
-      registry: https://npm.pkg.github.com
     repository:
       type: git
       url: https://github.com/gsmservice-pl/messaging-sdk-typescript.git
