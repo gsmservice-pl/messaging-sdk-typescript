@@ -2,16 +2,16 @@ speakeasyVersion: 1.418.1
 sources:
     messaging-sdk-typescript -OAS:
         sourceNamespace: messaging-sdk-typescript--oas
-        sourceRevisionDigest: sha256:9e5f4426be67aeffe937b9c3557e48d93607bf7587ec3a7e10aedabfe57466d3
-        sourceBlobDigest: sha256:51a52683dfe60f4a97a0294238b85cbdc99289b61ebc2645c29335552a25fe34
+        sourceRevisionDigest: sha256:442de185c9a664ec63e100e14f195eb4725917364d431e95ca89fe19c24454fb
+        sourceBlobDigest: sha256:4a9f814f4b723257f56a75a0f9a46fe8da5d3b9d5ae549ba7bc9b5bbc9356dd2
         tags:
             - latest
 targets:
     messaging-sdk-typescript:
         source: messaging-sdk-typescript -OAS
         sourceNamespace: messaging-sdk-typescript--oas
-        sourceRevisionDigest: sha256:9e5f4426be67aeffe937b9c3557e48d93607bf7587ec3a7e10aedabfe57466d3
-        sourceBlobDigest: sha256:51a52683dfe60f4a97a0294238b85cbdc99289b61ebc2645c29335552a25fe34
+        sourceRevisionDigest: sha256:442de185c9a664ec63e100e14f195eb4725917364d431e95ca89fe19c24454fb
+        sourceBlobDigest: sha256:4a9f814f4b723257f56a75a0f9a46fe8da5d3b9d5ae549ba7bc9b5bbc9356dd2
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest

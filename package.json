@@ -1,16 +1,16 @@
 {
   "name": "@gsmservice-pl/messaging-sdk-typescript",
-  "version": "0.1.69",
+  "version": "0.1.70",
   "author": "GSMService.pl",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/gsmservice-pl/messaging-sdk-typescript.git"
   },
   "description": "Messaging Gateway SDK for TypeScript - GSMService.pl",
   "license": "MIT",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "tshy": {
     "exports": {
       ".": "./src/index.ts",
