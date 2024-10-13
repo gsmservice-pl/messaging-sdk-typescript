@@ -1,9 +1,9 @@
 [![NPM Version (with dist tag)](https://img.shields.io/npm/v/%40gsmservice-pl/messaging-sdk-typescript)](https://www.npmjs.com/package/@gsmservice-pl/messaging-sdk-typescript)
-[![GitHub License](https://img.shields.io/github/license/gsmservice-pl/messaging-sdk-php)](https://github.com/gsmservice-pl/messaging-sdk-php/blob/main/LICENSE)
-[![Static Badge](https://img.shields.io/badge/built_by-Speakeasy-yellow)](https://www.speakeasy.com/?utm_source=gsmservice-pl/messaging-sdk-php&utm_campaign=php)
-# GSMService.pl Messaging REST API SDK for Typescript
+[![GitHub License](https://img.shields.io/github/license/gsmservice-pl/messaging-sdk-typescript)](https://github.com/gsmservice-pl/messaging-sdk-typescript/blob/main/LICENSE)
+[![Static Badge](https://img.shields.io/badge/built_by-Speakeasy-yellow)](https://www.speakeasy.com/?utm_source=gsmservice-pl/messaging-sdk-typescript&utm_campaign=typescript)
+# GSMService.pl Messaging REST API SDK for TypeScript
 
-This package includes Messaging SDK for Typescript to send SMS & MMS messages directly from your app via https://bramka.gsmservice.pl messaging platform.
+This package includes Messaging SDK for TypeScript to send SMS & MMS messages directly from your app via https://bramka.gsmservice.pl messaging platform.
 
 ## Additional documentation:
 
