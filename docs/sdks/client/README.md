@@ -18,8 +18,8 @@ If you want to use a Sandbox test system please initialize it as follows:
 
 ```typescript
 
-const client = new Client({     
+const client = new Client({
+     server: ServerSandbox,     
      bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
-``` $sdk = Gateway\Client::builder()->setServer(Gateway\Client::SERVER_SANDBOX)->setSecurity($security)->build();
 ```
