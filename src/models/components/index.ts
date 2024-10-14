@@ -14,5 +14,5 @@ export * from "./price.js";
 export * from "./security.js";
 export * from "./sender.js";
 export * from "./senderinput.js";
-export * from "./sms.js";
+export * from "./smsmessage.js";
 export * from "./smstype.js";

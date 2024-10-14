@@ -7,9 +7,11 @@ import { remap as remap$ } from "../../lib/primitives.js";
 import * as components from "../components/index.js";
 
 /**
- * To send a single SMS or messages with the same content to multiple recipients, pass in the Request Body a single `Sms` object with the properties of this message. To send multiple messages with different content at the same time, pass in the Request Body an `array` of `Sms` objects with the properties of each message.
+ * To send a single SMS or messages with the same content to multiple recipients, pass in the Request Body a single `SmsMessage` object with the properties of this message. To send multiple messages with different content at the same time, pass in the Request Body an `array` of `SmsMessage` objects with the properties of each message.
  */
-export type SendSmsRequestBody = components.Sms | Array<components.Sms>;
+export type SendSmsRequestBody =
+  | components.SmsMessage
+  | Array<components.SmsMessage>;
 
 export type SendSmsResponse = {
   headers: { [k: string]: Array<string> };
@@ -22,14 +24,14 @@ export const SendSmsRequestBody$inboundSchema: z.ZodType<
   z.ZodTypeDef,
   unknown
 > = z.union([
-  components.Sms$inboundSchema,
-  z.array(components.Sms$inboundSchema),
+  components.SmsMessage$inboundSchema,
+  z.array(components.SmsMessage$inboundSchema),
 ]);
 
 /** @internal */
 export type SendSmsRequestBody$Outbound =
-  | components.Sms$Outbound
-  | Array<components.Sms$Outbound>;
+  | components.SmsMessage$Outbound
+  | Array<components.SmsMessage$Outbound>;
 
 /** @internal */
 export const SendSmsRequestBody$outboundSchema: z.ZodType<
@@ -37,8 +39,8 @@ export const SendSmsRequestBody$outboundSchema: z.ZodType<
   z.ZodTypeDef,
   SendSmsRequestBody
 > = z.union([
-  components.Sms$outboundSchema,
-  z.array(components.Sms$outboundSchema),
+  components.SmsMessage$outboundSchema,
+  z.array(components.SmsMessage$outboundSchema),
 ]);
 
 /**

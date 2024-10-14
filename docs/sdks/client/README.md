@@ -34,7 +34,7 @@ All the endpoints of this REST API have to be authenticated using your API Acces
 
 To make an authenticated request you should add to all requests an ***Authorization* header** which you have generated in previous step:
 
-```
+```html
 Authorization: Bearer &lt;YOUR_API_ACCESS_TOKEN&gt;
 ```
 

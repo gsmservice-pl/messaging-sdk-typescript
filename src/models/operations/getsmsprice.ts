@@ -7,9 +7,11 @@ import { remap as remap$ } from "../../lib/primitives.js";
 import * as components from "../components/index.js";
 
 /**
- * To check the price of a single SMS or messages with the same content to multiple recipients, pass in the Request Body a single `Sms` object with the properties of this message. To check the price of multiple messages with different content at the same time, pass in the Request Body an `array` of `Sms` objects with the properties of each message.
+ * To check the price of a single SMS or messages with the same content to multiple recipients, pass in the Request Body a single `SmsMessage` object with the properties of this message. To check the price of multiple messages with different content at the same time, pass in the Request Body an `array` of `SmsMessage` objects with the properties of each message.
  */
-export type GetSmsPriceRequestBody = components.Sms | Array<components.Sms>;
+export type GetSmsPriceRequestBody =
+  | components.SmsMessage
+  | Array<components.SmsMessage>;
 
 export type GetSmsPriceResponse = {
   headers: { [k: string]: Array<string> };
@@ -22,14 +24,14 @@ export const GetSmsPriceRequestBody$inboundSchema: z.ZodType<
   z.ZodTypeDef,
   unknown
 > = z.union([
-  components.Sms$inboundSchema,
-  z.array(components.Sms$inboundSchema),
+  components.SmsMessage$inboundSchema,
+  z.array(components.SmsMessage$inboundSchema),
 ]);
 
 /** @internal */
 export type GetSmsPriceRequestBody$Outbound =
-  | components.Sms$Outbound
-  | Array<components.Sms$Outbound>;
+  | components.SmsMessage$Outbound
+  | Array<components.SmsMessage$Outbound>;
 
 /** @internal */
 export const GetSmsPriceRequestBody$outboundSchema: z.ZodType<
@@ -37,8 +39,8 @@ export const GetSmsPriceRequestBody$outboundSchema: z.ZodType<
   z.ZodTypeDef,
   GetSmsPriceRequestBody
 > = z.union([
-  components.Sms$outboundSchema,
-  z.array(components.Sms$outboundSchema),
+  components.SmsMessage$outboundSchema,
+  z.array(components.SmsMessage$outboundSchema),
 ]);
 
 /**

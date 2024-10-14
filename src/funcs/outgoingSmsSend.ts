@@ -26,7 +26,7 @@ import { Result } from "../types/fp.js";
  * Send SMS Messages
  *
  * @remarks
- * Send single or multiple SMS messages at the same time. You have to pass as request body the `Sms` object (for single message) or `array` of `Sms` objects (for multiple messages). Each object has several properties, describing message parameters such recipient phone number, content of the message, type or scheduled sending date, etc. Please mind that some of them are required.
+ * Send single or multiple SMS messages at the same time. You have to pass as request body the `SmsMessage` object (for single message) or `array` of `SmsMessage` objects (for multiple messages). Each object has several properties, describing message parameters such recipient phone number, content of the message, type or scheduled sending date, etc. Please mind that some of them are required.
  * The system will accept maximum 100 messages in one call. If you need to send larger volume of messages, please split it to several separate requests.
  *
  * As a successful result an `array` with `Message` objects will be returned, one object per each single message. You should check the `status_code` property of each message in a response body to make sure which were accepted by gateway (queued) and which were rejected. In case of rejection, `status_description` property will include a reason. Response will also include meta-data headers: `X-Success-Count` (a count of messages which were processed successfully), `X-Error-Count` (count of messages which were rejected) and `X-Sandbox` (if a request was made in Sandbox or Production system).

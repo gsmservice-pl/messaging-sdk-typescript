@@ -1,14 +1,14 @@
 # GetSmsPriceRequestBody
 
-To check the price of a single SMS or messages with the same content to multiple recipients, pass in the Request Body a single `Sms` object with the properties of this message. To check the price of multiple messages with different content at the same time, pass in the Request Body an `array` of `Sms` objects with the properties of each message.
+To check the price of a single SMS or messages with the same content to multiple recipients, pass in the Request Body a single `SmsMessage` object with the properties of this message. To check the price of multiple messages with different content at the same time, pass in the Request Body an `array` of `SmsMessage` objects with the properties of each message.
 
 
 ## Supported Types
 
-### `components.Sms`
+### `components.SmsMessage`
 
 ```typescript
-const value: components.Sms = {
+const value: components.SmsMessage = {
   recipients: {
     nr: "+48999999999",
     cid: "my-id-1113",
@@ -22,10 +22,10 @@ const value: components.Sms = {
 };
 ```
 
-### `components.Sms[]`
+### `components.SmsMessage[]`
 
 ```typescript
-const value: components.Sms[] = [
+const value: components.SmsMessage[] = [
   {
     recipients: [
       "+48999999999",

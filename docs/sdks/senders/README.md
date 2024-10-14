@@ -250,7 +250,7 @@ run();
 
 ## setDefault
 
-Set default sender name to one of the senders names already defined on your account. Default sender name can be used while sending messages when you not pass any other defined sender to `Sms` object while sending message. 
+Set default sender name to one of the senders names already defined on your account. Default sender name can be used while sending messages when you not pass any other defined sender to `SmsMessage` object while sending message. 
 
 This endpoint accepts a path `sender` parameter with empty request body. You should pass the full sender name to set it as default on your account.
 
