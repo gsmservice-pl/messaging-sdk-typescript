@@ -26,9 +26,7 @@ import { Result } from "../types/fp.js";
  * @remarks
  * Get current account balance and other details of your account. You can check also account limit and if account is main one. Main accounts have unlimited privileges and using [User Panel](https://panel.gsmservice.pl) you can create as many subaccounts as you need.
  *
- * The request doesn't contain a body or any parameters. As a successful result an `AccountResponse` object will be returned with properties describing details of current account you are logged in to using API Access Token. This request have to be authenticated using **API Access Token**.
- *
- * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+ * This method doesn't get any parameters. As a successful result an `AccountResponse` object will be returned with properties describing details of current account you are logged in using an API Access Token.
  */
 export async function accountsGet(
   client: ClientCore,

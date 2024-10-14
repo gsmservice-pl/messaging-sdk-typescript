@@ -26,13 +26,9 @@ import { Result } from "../types/fp.js";
  * Get the incoming messages by IDs
  *
  * @remarks
- * Get the details of one or more received messages using their `ids`. You have to pass the unique incoming message *IDs* as path parameter, which were given while receiving a messages. If you want to get the details of multiple messages at once, please separate their IDs with a comma. The system will accept maximum 50 identifiers in one call. If you need to get details of larger volume of incoming messages, please split it to several separate requests.
+ * Get the details of one or more received messages using their `ids`. This method accepts a `GetIncomingMessagesRequest` object with `ids` property containing an `array` of the unique incoming message *IDs*, which were given while receiving a messages. The method will accept maximum 50 identifiers in one call.
  *
- * As a successful result an array with `IncomingMessage` objects will be returned, each object per single found message. Response will also include meta-data headers: `X-Success-Count` (a count of incoming messages which were found and returned correctly) and `X-Error-Count` (count of incoming messages which were not found).
- *
- * If you pass duplicated IDs, API will return data of this message only once. This request have to be authenticated using **API Access Token**.
- *
- * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+ * As a successful result a `GetIncomingMessagesResponse` object will be returned with a `result` property containing array of `IncomingMessage` objects, each object per single received message. `GetIncomingMessagesResponse` object will contain also a `headers` array property where you can find `X-Success-Count` (a count of incoming messages which were found and returned correctly) and `X-Error-Count` (count of incoming messages which were not found) elements.
  */
 export async function incomingGetByIds(
   client: ClientCore,

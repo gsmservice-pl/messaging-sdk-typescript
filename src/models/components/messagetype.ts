@@ -10,16 +10,7 @@ import {
 } from "../../types/enums.js";
 
 /**
- * Message type according to the table:
- *
- * @remarks
- *
- * |type|Description|
- * |----|-----------|
- * |  1 | SMS PRO   |
- * |  3 | SMS ECO   |
- * |  4 | SMS 2WAY  |
- * | 10 | MMS       |
+ * Message type (SmsType.SmsPro -> SMS PRO, SmsType.SmsEco -> SMS ECO, SmsType.SmsTwoWay ->SMS 2WAY, SmsType.Mms -> MMS)
  */
 export const MessageType = {
   SmsPro: 1,
@@ -28,16 +19,7 @@ export const MessageType = {
   Mms: 10,
 } as const;
 /**
- * Message type according to the table:
- *
- * @remarks
- *
- * |type|Description|
- * |----|-----------|
- * |  1 | SMS PRO   |
- * |  3 | SMS ECO   |
- * |  4 | SMS 2WAY  |
- * | 10 | MMS       |
+ * Message type (SmsType.SmsPro -> SMS PRO, SmsType.SmsEco -> SMS ECO, SmsType.SmsTwoWay ->SMS 2WAY, SmsType.Mms -> MMS)
  */
 export type MessageType = OpenEnum<typeof MessageType>;
 

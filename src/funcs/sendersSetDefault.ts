@@ -31,14 +31,9 @@ export enum SetDefaultAcceptEnum {
  * Set default sender name
  *
  * @remarks
- * Set default sender name to one of the senders names already defined on your account. Default sender name can be used while sending messages when you not pass any other defined sender to `SmsMessage` object while sending message.
+ * Set default sender name to one of the senders names already defined on your account. This method accepts a `SetDefaultSenderRequest` object with `sender` property containing a **sender name** to be set as default on your account.
  *
- * This endpoint accepts a path `sender` parameter with empty request body. You should pass the full sender name to set it as default on your account.
- *
- * As a successful response only HTTP status code of *204* will be returned in header with empty response body. Response will also include meta-data header: `X-Sandbox` (if a request was made in Sandbox or Production system).
- * This request have to be authenticated using **API Access Token**.
- *
- * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+ * As a successful response no Exception will be thrown.
  */
 export async function sendersSetDefault(
   client: ClientCore,

@@ -25,11 +25,9 @@ import { Result } from "../types/fp.js";
  * List allowed senders names
  *
  * @remarks
- * Get a list of allowed senders defined in your account. The request doesn't contain a body or any parameters.
+ * Get a list of allowed senders defined in your account. The method doesn't take any parameters.
  *
- * As a successful result an array with `Sender` objects will be returned, each object per single sender. Senders are being registered by providers and operators. Registered senders get *Active* status and can be used then to send messages. *Pending* senders are also returned by API (with proper `status`) but until registration they cannot be used. This request have to be authenticated using **API Access Token**.
- *
- * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+ * As a successful result an `array` of `Sender` objects will be returned, each object per single sender.
  */
 export async function sendersList(
   client: ClientCore,

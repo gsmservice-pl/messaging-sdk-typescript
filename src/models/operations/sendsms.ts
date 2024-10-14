@@ -7,7 +7,7 @@ import { remap as remap$ } from "../../lib/primitives.js";
 import * as components from "../components/index.js";
 
 /**
- * To send a single SMS or messages with the same content to multiple recipients, pass in the Request Body a single `SmsMessage` object with the properties of this message. To send multiple messages with different content at the same time, pass in the Request Body an `array` of `SmsMessage` objects with the properties of each message.
+ * To send a single SMS or messages with the same content to multiple recipients, pass as the method param a single `SmsMessage` object with the properties of this message. To send multiple messages with different content at the same time, pass as the method param an `array` of `SmsMessage` objects with the properties of each message.
  */
 export type SendSmsRequestBody =
   | components.SmsMessage

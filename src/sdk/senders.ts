@@ -21,11 +21,9 @@ export class Senders extends ClientSDK {
    * List allowed senders names
    *
    * @remarks
-   * Get a list of allowed senders defined in your account. The request doesn't contain a body or any parameters.
+   * Get a list of allowed senders defined in your account. The method doesn't take any parameters.
    *
-   * As a successful result an array with `Sender` objects will be returned, each object per single sender. Senders are being registered by providers and operators. Registered senders get *Active* status and can be used then to send messages. *Pending* senders are also returned by API (with proper `status`) but until registration they cannot be used. This request have to be authenticated using **API Access Token**.
-   *
-   * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+   * As a successful result an `array` of `Sender` objects will be returned, each object per single sender.
    */
   async list(
     options?: RequestOptions,
@@ -40,11 +38,9 @@ export class Senders extends ClientSDK {
    * Add a new sender name
    *
    * @remarks
-   * Define a new allowed sender on your account. The request body should contain a `Sender` object with two properties: `sender` (defines sender name) and `description`. The secont parameter is very important - sender names are being registered by providers and operators. Only fully registered sender names can be used to send messages. Providers need sometimes detailed description of case in which the sender will be used to eliminate frauds. After verifing it they make a decisions if such sender name can be registered. Please carefully fill this property with the extensive description of a sender name (what will be its use, what the name mean, etc).
+   * Define a new allowed sender on your account. You should pass as parameter a `SenderInput` object with two properties: `sender` (defines sender name) and `description`. Please carefully fill this property with the extensive description of a sender name (what will be its use, what the name mean, etc).
    *
-   * As a successful result a single `Sender` object will be returned. Registered senders get *Active* status and can be used then to send messages. Pending Senders are also returned by API (with proper `status`) but until registration they cannot be used. Response will also include meta-data header: `X-Sandbox` (if a request was made in Sandbox or Production system). This request have to be authenticated using **API Access Token**.
-   *
-   * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+   * As a successful result a `AddSenderResponse` object will be returned with a property `result` containing a `Sender` object with details and status of added sender name.
    */
   async add(
     request: components.SenderInput,
@@ -61,12 +57,9 @@ export class Senders extends ClientSDK {
    * Delete a sender name
    *
    * @remarks
-   * Removes defined sender name from your account. This endpoint accepts a path `sender` parameter with empty request body. You should pass the full sender name to delete it. Sender name will be deleted immediately.
+   * Removes defined sender name from your account. This method accepts `DeleteSenderRequest` object with `sender` property containing a **sender name** you want to remove. Sender name will be deleted immediately.
    *
-   * As a successful response only HTTP status code of *204* will be returned in header with empty response body. Response will also include meta-data header: `X-Sandbox` (if a request was made in Sandbox or Production system).
-   * This request have to be authenticated using **API Access Token**.
-   *
-   * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+   * As a successful response there would be no Exception thrown.
    */
   async delete(
     request: operations.DeleteSenderRequest,
@@ -83,14 +76,9 @@ export class Senders extends ClientSDK {
    * Set default sender name
    *
    * @remarks
-   * Set default sender name to one of the senders names already defined on your account. Default sender name can be used while sending messages when you not pass any other defined sender to `SmsMessage` object while sending message.
+   * Set default sender name to one of the senders names already defined on your account. This method accepts a `SetDefaultSenderRequest` object with `sender` property containing a **sender name** to be set as default on your account.
    *
-   * This endpoint accepts a path `sender` parameter with empty request body. You should pass the full sender name to set it as default on your account.
-   *
-   * As a successful response only HTTP status code of *204* will be returned in header with empty response body. Response will also include meta-data header: `X-Sandbox` (if a request was made in Sandbox or Production system).
-   * This request have to be authenticated using **API Access Token**.
-   *
-   * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+   * As a successful response no Exception will be thrown.
    */
   async setDefault(
     request: operations.SetDefaultSenderRequest,

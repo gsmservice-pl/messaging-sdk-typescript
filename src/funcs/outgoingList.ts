@@ -26,13 +26,9 @@ import { Result } from "../types/fp.js";
  * Lists the history of sent messages
  *
  * @remarks
- * Get the details and current status of all of sent messages from your account message history. This endpoint supports pagination so you have to pass as query parameters a `page` value (number of page with messages which you want to access) and a `limit` value (max of messages per page). Messages are fetched from the latest one. The system will accept maximum **50** as `limit` parameter value. If you need to get details of larger volume of messages, please access them with next pages.
+ * Get the details and current status of all of sent messages from your account message history. This method supports pagination so you have to pass a `ListMessagesRequest` with `page` property (number of page with messages which you want to access) and a `limit` value (max of messages per page). Messages are fetched from the latest one. This method will accept maximum value of **50** as `limit` parameter value.
  *
- * As a successful result an array with `Message` objects will be returned, each object per single message. Response will also include meta-data headers: `X-Total-Results` (a total count of all messages which are available in history on your account), `X-Total-Pages` (a total number of all pages with results), `X-Current-Page` (A current page number) and `X-Limit` (messages count per single page). This request have to be authenticated using **API Access Token**.
- *
- * A response contains also a special `Link` header which includes *URIs* to access next, previous, first and last page with messages (which complies with [RFC 5988](https://www.rfc-editor.org/rfc/rfc5988)).
- *
- * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+ * As a successful result a `ListMessagesResponse` object will be returned containing `result` property with an `array` of `Message` objects, each object per single message. `ListMessagesResponse` will also contain `headers` array property where you can find `X-Total-Results` (a total count of all messages which are available in history on your account), `X-Total-Pages` (a total number of all pages with results), `X-Current-Page` (A current page number) and `X-Limit` (messages count per single page) elements.
  */
 export async function outgoingList(
   client: ClientCore,

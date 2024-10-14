@@ -26,12 +26,9 @@ import { Result } from "../types/fp.js";
  * Delete a sender name
  *
  * @remarks
- * Removes defined sender name from your account. This endpoint accepts a path `sender` parameter with empty request body. You should pass the full sender name to delete it. Sender name will be deleted immediately.
+ * Removes defined sender name from your account. This method accepts `DeleteSenderRequest` object with `sender` property containing a **sender name** you want to remove. Sender name will be deleted immediately.
  *
- * As a successful response only HTTP status code of *204* will be returned in header with empty response body. Response will also include meta-data header: `X-Sandbox` (if a request was made in Sandbox or Production system).
- * This request have to be authenticated using **API Access Token**.
- *
- * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+ * As a successful response there would be no Exception thrown.
  */
 export async function sendersDelete(
   client: ClientCore,

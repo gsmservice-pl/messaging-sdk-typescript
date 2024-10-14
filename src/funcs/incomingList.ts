@@ -26,13 +26,9 @@ import { Result } from "../types/fp.js";
  * List the received SMS messages
  *
  * @remarks
- * Get the details of all of received messages from your account incoming messages box. This endpoint supports pagination so you have to pass as query parameters a `page` value (number of page with received messages which you want to access) and a `limit` value (max of received messages per page). Messages are fetched from the latest one. The system will accept maximum **50** as `limit` parameter value. If you need to get details of larger volume of messages, please access them with next pages.
+ * Get the details of all received messages from your account incoming messages box. This method supports pagination so you have to pass `ListIncomingMessagesRequest` object with property `page` (number of page with received messages which you want to access) and a `limit` (max of received messages per page). Messages are fetched from the latest one. This method will accept maximum **50** as `limit` parameter value.
  *
- * As a successful result an array with `IncomingMessage` objects will be returned, each object per single received message. Response will also include meta-data headers: `X-Total-Results` (a total count of all received messages which are available in incoming box on your account), `X-Total-Pages` (a total number of all pages with results), `X-Current-Page` (A current page number) and `X-Limit` (messages count per single page). This request have to be authenticated using **API Access Token**.
- *
- * A response contains also a special `Link` header which includes *URIs* to access next, previous, first and last page with received messages (which complies with [RFC 5988](https://www.rfc-editor.org/rfc/rfc5988)).
- *
- * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+ * As a successful result a `ListIncomingMessagesResponse` object will be returned with an array of `IncomingMessage` as `result` property, each object per single received message. `ListIncomingMessagesResponse` object will contain also a `headers` array property where you can find `X-Total-Results` (a total count of all received messages which are available in incoming box on your account), `X-Total-Pages` (a total number of all pages with results), `X-Current-Page` (A current page number) and `X-Limit` (messages count per single page) elements.
  */
 export async function incomingList(
   client: ClientCore,

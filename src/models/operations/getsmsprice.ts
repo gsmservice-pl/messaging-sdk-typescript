@@ -7,7 +7,7 @@ import { remap as remap$ } from "../../lib/primitives.js";
 import * as components from "../components/index.js";
 
 /**
- * To check the price of a single SMS or messages with the same content to multiple recipients, pass in the Request Body a single `SmsMessage` object with the properties of this message. To check the price of multiple messages with different content at the same time, pass in the Request Body an `array` of `SmsMessage` objects with the properties of each message.
+ * To check the price of a single message or messages with the same content to multiple recipients, pass a single `SmsMessage` object with the properties of this message. To check the price of multiple messages with different content at the same time, pass as method param an `array` of `SmsMessage` objects with the properties of each message.
  */
 export type GetSmsPriceRequestBody =
   | components.SmsMessage

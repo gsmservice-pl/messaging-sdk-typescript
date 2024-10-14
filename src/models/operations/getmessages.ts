@@ -8,7 +8,7 @@ import * as components from "../components/index.js";
 
 export type GetMessagesRequest = {
   /**
-   * Message IDs assigned by the system (separated by comma). The system will accept a maximum of 50 identifiers in one call.
+   * Array of Message IDs assigned by the system. The system will accept a maximum of 50 identifiers in one call.
    */
   ids: Array<number>;
 };

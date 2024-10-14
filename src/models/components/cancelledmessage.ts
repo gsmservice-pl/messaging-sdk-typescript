@@ -11,7 +11,7 @@ import {
 } from "./errorresponse.js";
 
 /**
- * An object containing information about results of cancelling single message
+ * An  object containing information about results of cancelling single message
  */
 export type CancelledMessage = {
   /**

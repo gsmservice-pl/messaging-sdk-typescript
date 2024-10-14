@@ -26,13 +26,9 @@ import { Result } from "../types/fp.js";
  * Get the messages details and status by IDs
  *
  * @remarks
- * Check the current status and details of one or more messages using their `ids`. You have to pass the unique message *IDs* as path parameter, which were returned after sending a message. If you want to get the details of multiple messages at once, please separate their IDs with a comma. The system will accept maximum 50 identifiers in one call. If you need to get details of larger volume of messages, please split it to several separate requests.
+ * Check the current status and details of one or more messages using their `ids`. You have to pass a `GetMessagesRequest` object with `ids` property, containing an `array` with unique message *IDs* which details you want to fetch. This method will accept maximum 50 identifiers in one call.
  *
- * As a successful result an array with `Message` objects will be returned, each object per single found message. Response will also include meta-data headers: `X-Success-Count` (a count of messages which were found and returned correctly) and `X-Error-Count` (count of messages which were not found).
- *
- * If you pass duplicated IDs, API will return data of this message only once. This request have to be authenticated using **API Access Token**.
- *
- * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+ * As a successful result a `GetMessagesResponse` object will be returned containing `result` property with an `array` of `Message` objects, each object per single found message. `GetMessagesResponse` object will also contain `headers` array property where you can find `X-Success-Count` (a count of messages which were found and returned correctly) and `X-Error-Count` (count of messages which were not found) elements.
  */
 export async function outgoingGetByIds(
   client: ClientCore,
