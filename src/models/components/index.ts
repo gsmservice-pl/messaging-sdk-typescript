@@ -8,6 +8,7 @@ export * from "./errorresponse.js";
 export * from "./incomingmessage.js";
 export * from "./message.js";
 export * from "./messagetype.js";
+export * from "./mmsmessage.js";
 export * from "./phonenumberwithcid.js";
 export * from "./pingresponse.js";
 export * from "./price.js";

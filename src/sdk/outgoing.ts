@@ -8,9 +8,15 @@ import { outgoingList } from "../funcs/outgoingList.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
+import { Mms } from "./mms.js";
 import { Sms } from "./sms.js";
 
 export class Outgoing extends ClientSDK {
+  private _mms?: Mms;
+  get mms(): Mms {
+    return (this._mms ??= new Mms(this._options));
+  }
+
   private _sms?: Sms;
   get sms(): Sms {
     return (this._sms ??= new Sms(this._options));

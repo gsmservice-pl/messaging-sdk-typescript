@@ -20,7 +20,7 @@ specific category of applications.
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { outgoingSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsSend.js";
+import { outgoingMmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingMmsSend.js";
 import { SDKValidationError } from "@gsmservice-pl/messaging-sdk-typescript/models/errors/sdkvalidationerror.js";
 
 // Use `ClientCore` for best tree-shaking performance.
@@ -30,17 +30,17 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await outgoingSmsSend(client, [
+  const res = await outgoingMmsSend(client, [
     {
       recipients: {
         nr: "+48999999999",
         cid: "my-id-1113",
       },
+      subject: "To jest temat wiadomości",
       message: "To jest treść wiadomości",
-      sender: "Bramka SMS",
-      type: 1,
-      unicode: true,
-      flash: false,
+      attachments: [
+        "<file_body in base64 format>",
+      ],
       date: null,
     },
   ]);

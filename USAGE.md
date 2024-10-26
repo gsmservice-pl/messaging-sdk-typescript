@@ -32,4 +32,38 @@ async function run() {
 run();
 
 ```
+
+### Sending single MMS Message
+
+This example demonstrates simple sending MMS message to a single recipient:
+
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+});
+
+async function run() {
+  const result = await client.outgoing.mms.send([
+    {
+      recipients: [
+        "+48999999999",
+      ],
+      subject: "To jest temat wiadomości",
+      message: "To jest treść wiadomości",
+      attachments: [
+        "<file_body in base64 format>",
+      ],
+      date: null,
+    },
+  ]);
+
+  // Handle the result
+  console.log(result);
+}
+
+run();
+
+```
 <!-- End SDK Example Usage [usage] -->

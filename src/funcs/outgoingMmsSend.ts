@@ -23,22 +23,22 @@ import * as operations from "../models/operations/index.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Send SMS Messages
+ * Send MMS Messages
  *
  * @remarks
- * Send single or multiple SMS messages at the same time. You can pass as a parameter `SmsMessage` object (for single message) or `array` of `SmsMessage` objects (for multiple messages). Each `SmsMessage` object has several properties, describing message parameters such recipient phone number, content of the message, type or scheduled sending date, etc. This method will accept maximum **100** messages in one call.
+ * Send single or multiple MMS messages at the same time. You can pass as a parameter `MmsMessage` object (for single message) or `array` of `MmsMessage` objects (for multiple messages). Each `MmsMessage` object has several properties, describing message parameters such recipient phone number, content of the message, attachments or scheduled sending date, etc. This method will accept maximum **50** messages in one call.
  *
- * As a successful result a `SendSmsResponse` object will be returned with `result` property containing array of `Message` objects, one object per each single message. You should check the `statusCode` property of each `Message` object to make sure which were accepted by gateway (queued) and which were rejected. In case of rejection, `statusDescription` property will include a reason.
+ * As a successful result a `SendMmsResponse` object will be returned with `result` property containing array of `Message` objects, one object per each single message. You should check the `statusCode` property of each `Message` object to make sure which were accepted by gateway (queued) and which were rejected. In case of rejection, `statusDescription` property will include a reason.
  *
  * `SendSmsResponse` will also include `headers` array with `X-Success-Count` (a count of messages which were processed successfully), `X-Error-Count` (count of messages which were rejected) and `X-Sandbox` (if a request was made in Sandbox or Production system) elements.
  */
-export async function outgoingSmsSend(
+export async function outgoingMmsSend(
   client: ClientCore,
-  request: operations.SendSmsRequestBody,
+  request: operations.SendMmsRequestBody,
   options?: RequestOptions,
 ): Promise<
   Result<
-    operations.SendSmsResponse,
+    operations.SendMmsResponse,
     | errors.ErrorResponse
     | SDKError
     | SDKValidationError
@@ -51,7 +51,7 @@ export async function outgoingSmsSend(
 > {
   const parsed = safeParse(
     request,
-    (value) => operations.SendSmsRequestBody$outboundSchema.parse(value),
+    (value) => operations.SendMmsRequestBody$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -60,7 +60,7 @@ export async function outgoingSmsSend(
   const payload = parsed.value;
   const body = encodeJSON("body", payload, { explode: true });
 
-  const path = pathToFunc("/messages/sms")();
+  const path = pathToFunc("/messages/mms")();
 
   const headers = new Headers({
     "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export async function outgoingSmsSend(
   const secConfig = await extractSecurity(client._options.bearer);
   const securityInput = secConfig == null ? {} : { bearer: secConfig };
   const context = {
-    operationID: "sendSms",
+    operationID: "sendMms",
     oAuth2Scopes: [],
     securitySource: client._options.bearer,
   };
@@ -116,7 +116,7 @@ export async function outgoingSmsSend(
   };
 
   const [result] = await M.match<
-    operations.SendSmsResponse,
+    operations.SendMmsResponse,
     | errors.ErrorResponse
     | SDKError
     | SDKValidationError
@@ -126,7 +126,7 @@ export async function outgoingSmsSend(
     | RequestTimeoutError
     | ConnectionError
   >(
-    M.json(200, operations.SendSmsResponse$inboundSchema, {
+    M.json(200, operations.SendMmsResponse$inboundSchema, {
       hdrs: true,
       key: "Result",
     }),

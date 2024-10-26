@@ -9,10 +9,7 @@ To send a single SMS or messages with the same content to multiple recipients, p
 
 ```typescript
 const value: components.SmsMessage = {
-  recipients: {
-    nr: "+48999999999",
-    cid: "my-id-1113",
-  },
+  recipients: "+48999999999",
   message: "To jest treść wiadomości",
   sender: "Bramka SMS",
   type: 1,
@@ -28,7 +25,10 @@ const value: components.SmsMessage = {
 const value: components.SmsMessage[] = [
   {
     recipients: [
-      "+48999999999",
+      {
+        nr: "+48999999999",
+        cid: "my-id-1113",
+      },
     ],
     message: "To jest treść wiadomości",
     sender: "Bramka SMS",

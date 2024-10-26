@@ -25,7 +25,10 @@ export type Price = {
    * Message type (SmsType.SmsPro -> SMS PRO, SmsType.SmsEco -> SMS ECO, SmsType.SmsTwoWay ->SMS 2WAY, SmsType.Mms -> MMS)
    */
   type?: MessageType | undefined;
-  recipient?: string | null | undefined;
+  /**
+   * A telephone number in international format (with a plus sign and the country code at the beginning, e.g. +48 for Poland)
+   */
+  recipient?: string | undefined;
   /**
    * Message sender name
    */
@@ -54,7 +57,7 @@ export const Price$inboundSchema: z.ZodType<Price, z.ZodTypeDef, unknown> = z
     error: z.nullable(z.string()).optional(),
     cid: z.nullable(z.string()).optional(),
     type: MessageType$inboundSchema.optional(),
-    recipient: z.nullable(z.string()).optional(),
+    recipient: z.string().optional(),
     sender: z.nullable(z.string()).optional(),
     parts: z.nullable(z.number().int()).optional(),
     unicode: z.boolean().optional(),
@@ -67,7 +70,7 @@ export type Price$Outbound = {
   error?: string | null | undefined;
   cid?: string | null | undefined;
   type?: number | undefined;
-  recipient?: string | null | undefined;
+  recipient?: string | undefined;
   sender?: string | null | undefined;
   parts?: number | null | undefined;
   unicode?: boolean | undefined;
@@ -84,7 +87,7 @@ export const Price$outboundSchema: z.ZodType<
   error: z.nullable(z.string()).optional(),
   cid: z.nullable(z.string()).optional(),
   type: MessageType$outboundSchema.optional(),
-  recipient: z.nullable(z.string()).optional(),
+  recipient: z.string().optional(),
   sender: z.nullable(z.string()).optional(),
   parts: z.nullable(z.number().int()).optional(),
   unicode: z.boolean().optional(),

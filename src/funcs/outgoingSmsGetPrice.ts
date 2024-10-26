@@ -29,7 +29,7 @@ import { Result } from "../types/fp.js";
  * Check the price of single or multiple SMS messages at the same time before sending them. You can pass a single `SmsMessage` object (for single message) or `array` of `SmsMessage` objects (for multiple messages). Each `SmsMessage` object has several properties, describing message parameters such as recipient phone number, content of the message, type, etc.
  * The method will accept maximum **100** messages in one call.
  *
- * As a successful result a `GetSmsPriceResponse` object will be returned with `result` property containing array of `Price` objects, one object per each single message. You should check the `error` property of each message in a response body to make sure which were priced successfully and which finished with an error. Successfully priced messages will have `null` value of `error` property.
+ * As a successful result a `GetSmsPriceResponse` object will be returned with `result` property containing `array` of `Price` objects, one object per each single message. You should check the `error` property of each `Price` object to make sure which were priced successfully and which finished with an error. Successfully priced messages will have `null` value of `error` property.
  *
  * `GetSmsPriceResponse` object will include also `headers` array with `X-Success-Count` (a count of messages which were processed successfully) and `X-Error-Count` (count of messages which were rejected) elements.
  */

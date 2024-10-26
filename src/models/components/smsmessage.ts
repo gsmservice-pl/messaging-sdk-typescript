@@ -18,7 +18,7 @@ import {
 /**
  * The recipient number or multiple recipients numbers of single message. To set one recipient, simply pass here a `string` with his phone number. To set multiple recipients, pass here a simple `array` of `string`. Optionally you can also set custom id (user identifier) for each message - pass `PhoneNumberWithCid` object (in case of single recipient) or `Array` of `PhoneNumberWithCid` (in case of multiple recipients).
  */
-export type Recipients =
+export type SmsMessageRecipients =
   | PhoneNumberWithCid
   | string
   | Array<string>
@@ -63,8 +63,8 @@ export type SmsMessage = {
 };
 
 /** @internal */
-export const Recipients$inboundSchema: z.ZodType<
-  Recipients,
+export const SmsMessageRecipients$inboundSchema: z.ZodType<
+  SmsMessageRecipients,
   z.ZodTypeDef,
   unknown
 > = z.union([
@@ -75,17 +75,17 @@ export const Recipients$inboundSchema: z.ZodType<
 ]);
 
 /** @internal */
-export type Recipients$Outbound =
+export type SmsMessageRecipients$Outbound =
   | PhoneNumberWithCid$Outbound
   | string
   | Array<string>
   | Array<PhoneNumberWithCid$Outbound>;
 
 /** @internal */
-export const Recipients$outboundSchema: z.ZodType<
-  Recipients$Outbound,
+export const SmsMessageRecipients$outboundSchema: z.ZodType<
+  SmsMessageRecipients$Outbound,
   z.ZodTypeDef,
-  Recipients
+  SmsMessageRecipients
 > = z.union([
   PhoneNumberWithCid$outboundSchema,
   z.string(),
@@ -97,13 +97,13 @@ export const Recipients$outboundSchema: z.ZodType<
  * @internal
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
-export namespace Recipients$ {
-  /** @deprecated use `Recipients$inboundSchema` instead. */
-  export const inboundSchema = Recipients$inboundSchema;
-  /** @deprecated use `Recipients$outboundSchema` instead. */
-  export const outboundSchema = Recipients$outboundSchema;
-  /** @deprecated use `Recipients$Outbound` instead. */
-  export type Outbound = Recipients$Outbound;
+export namespace SmsMessageRecipients$ {
+  /** @deprecated use `SmsMessageRecipients$inboundSchema` instead. */
+  export const inboundSchema = SmsMessageRecipients$inboundSchema;
+  /** @deprecated use `SmsMessageRecipients$outboundSchema` instead. */
+  export const outboundSchema = SmsMessageRecipients$outboundSchema;
+  /** @deprecated use `SmsMessageRecipients$Outbound` instead. */
+  export type Outbound = SmsMessageRecipients$Outbound;
 }
 
 /** @internal */

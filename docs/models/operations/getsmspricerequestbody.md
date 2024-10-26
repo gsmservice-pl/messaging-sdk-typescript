@@ -9,10 +9,7 @@ To check the price of a single message or messages with the same content to mult
 
 ```typescript
 const value: components.SmsMessage = {
-  recipients: {
-    nr: "+48999999999",
-    cid: "my-id-1113",
-  },
+  recipients: "+48999999999",
   message: "To jest treść wiadomości",
   sender: "Bramka SMS",
   type: 1,
@@ -27,9 +24,7 @@ const value: components.SmsMessage = {
 ```typescript
 const value: components.SmsMessage[] = [
   {
-    recipients: [
-      "+48999999999",
-    ],
+    recipients: "+48999999999",
     message: "To jest treść wiadomości",
     sender: "Bramka SMS",
     type: 1,

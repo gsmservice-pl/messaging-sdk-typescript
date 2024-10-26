@@ -23,22 +23,23 @@ import * as operations from "../models/operations/index.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Send SMS Messages
+ * Check the price of MMS Messages
  *
  * @remarks
- * Send single or multiple SMS messages at the same time. You can pass as a parameter `SmsMessage` object (for single message) or `array` of `SmsMessage` objects (for multiple messages). Each `SmsMessage` object has several properties, describing message parameters such recipient phone number, content of the message, type or scheduled sending date, etc. This method will accept maximum **100** messages in one call.
+ * Check the price of single or multiple MMS messages at the same time before sending them. You can pass a single `MmsMessage` object (for single message) or `array` of `MmsMessage` objects (for multiple messages). Each `MmsMessage` object has several properties, describing message parameters such as recipient phone number, content of the message, attachments, etc.
+ * The method will accept maximum **50** messages in one call.
  *
- * As a successful result a `SendSmsResponse` object will be returned with `result` property containing array of `Message` objects, one object per each single message. You should check the `statusCode` property of each `Message` object to make sure which were accepted by gateway (queued) and which were rejected. In case of rejection, `statusDescription` property will include a reason.
+ * As a successful result a `GetMmsPriceResponse` object will be returned with `result` property containing `array` of `Price` objects, one object per each single message. You should check the `error` property of each `Price` object to make sure which were priced successfully and which finished with an error. Successfully priced messages will have `null` value of `error` property.
  *
- * `SendSmsResponse` will also include `headers` array with `X-Success-Count` (a count of messages which were processed successfully), `X-Error-Count` (count of messages which were rejected) and `X-Sandbox` (if a request was made in Sandbox or Production system) elements.
+ * `GetSmsPriceResponse` object will include also `headers` array with `X-Success-Count` (a count of messages which were processed successfully) and `X-Error-Count` (count of messages which were rejected) elements.
  */
-export async function outgoingSmsSend(
+export async function outgoingMmsGetPrice(
   client: ClientCore,
-  request: operations.SendSmsRequestBody,
+  request: operations.GetMmsPriceRequestBody,
   options?: RequestOptions,
 ): Promise<
   Result<
-    operations.SendSmsResponse,
+    operations.GetMmsPriceResponse,
     | errors.ErrorResponse
     | SDKError
     | SDKValidationError
@@ -51,7 +52,7 @@ export async function outgoingSmsSend(
 > {
   const parsed = safeParse(
     request,
-    (value) => operations.SendSmsRequestBody$outboundSchema.parse(value),
+    (value) => operations.GetMmsPriceRequestBody$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -60,7 +61,7 @@ export async function outgoingSmsSend(
   const payload = parsed.value;
   const body = encodeJSON("body", payload, { explode: true });
 
-  const path = pathToFunc("/messages/sms")();
+  const path = pathToFunc("/messages/mms/price")();
 
   const headers = new Headers({
     "Content-Type": "application/json",
@@ -70,7 +71,7 @@ export async function outgoingSmsSend(
   const secConfig = await extractSecurity(client._options.bearer);
   const securityInput = secConfig == null ? {} : { bearer: secConfig };
   const context = {
-    operationID: "sendSms",
+    operationID: "getMmsPrice",
     oAuth2Scopes: [],
     securitySource: client._options.bearer,
   };
@@ -91,7 +92,7 @@ export async function outgoingSmsSend(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "403", "4XX", "5XX"],
+    errorCodes: ["400", "401", "4XX", "5XX"],
     retryConfig: options?.retries
       || client._options.retryConfig
       || {
@@ -116,7 +117,7 @@ export async function outgoingSmsSend(
   };
 
   const [result] = await M.match<
-    operations.SendSmsResponse,
+    operations.GetMmsPriceResponse,
     | errors.ErrorResponse
     | SDKError
     | SDKValidationError
@@ -126,15 +127,13 @@ export async function outgoingSmsSend(
     | RequestTimeoutError
     | ConnectionError
   >(
-    M.json(200, operations.SendSmsResponse$inboundSchema, {
+    M.json(200, operations.GetMmsPriceResponse$inboundSchema, {
       hdrs: true,
       key: "Result",
     }),
-    M.jsonErr(
-      [400, 401, 403, "4XX", "5XX"],
-      errors.ErrorResponse$inboundSchema,
-      { ctype: "application/problem+json" },
-    ),
+    M.jsonErr([400, 401, "4XX", "5XX"], errors.ErrorResponse$inboundSchema, {
+      ctype: "application/problem+json",
+    }),
   )(response, { extraFields: responseFields });
   if (!result.ok) {
     return result;
