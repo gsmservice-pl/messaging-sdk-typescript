@@ -7,7 +7,7 @@ This example demonstrates simple sending SMS message to a single recipient:
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -19,7 +19,7 @@ async function run() {
       message: "To jest treść wiadomości",
       sender: "Bramka SMS",
       type: 1,
-      unicode: true,
+      unicode: false,
       flash: false,
       date: null,
     },
@@ -41,7 +41,7 @@ This example demonstrates simple sending MMS message to a single recipient:
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {

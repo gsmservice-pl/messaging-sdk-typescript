@@ -11,11 +11,6 @@ To check the price of a single message or messages with the same content to mult
 const value: components.SmsMessage = {
   recipients: "+48999999999",
   message: "To jest treść wiadomości",
-  sender: "Bramka SMS",
-  type: 1,
-  unicode: true,
-  flash: false,
-  date: null,
 };
 ```
 
@@ -26,11 +21,6 @@ const value: components.SmsMessage[] = [
   {
     recipients: "+48999999999",
     message: "To jest treść wiadomości",
-    sender: "Bramka SMS",
-    type: 1,
-    unicode: true,
-    flash: false,
-    date: null,
   },
 ];
 ```

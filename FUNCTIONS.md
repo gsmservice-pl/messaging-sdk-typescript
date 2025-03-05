@@ -26,7 +26,7 @@ import { SDKValidationError } from "@gsmservice-pl/messaging-sdk-typescript/mode
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {

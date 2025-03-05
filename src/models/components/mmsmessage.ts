@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 import {
   PhoneNumberWithCid,
   PhoneNumberWithCid$inboundSchema,
@@ -43,7 +46,7 @@ export type MmsMessage = {
   /**
    * MMS message content
    */
-  message: string | null;
+  message?: string | null | undefined;
   /**
    * Attachments for the message. You can pass here images, audio and video files bodies. To set one attachment please pass a `string` with attachment body encoded with `base64`. To set multiple attachments - pass an `array` of `strings` with attachment bodies encoded with `base64`. Max 3 attachments per message.
    */
@@ -98,6 +101,20 @@ export namespace Recipients$ {
   export type Outbound = Recipients$Outbound;
 }
 
+export function recipientsToJSON(recipients: Recipients): string {
+  return JSON.stringify(Recipients$outboundSchema.parse(recipients));
+}
+
+export function recipientsFromJSON(
+  jsonString: string,
+): SafeParseResult<Recipients, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Recipients$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Recipients' from JSON`,
+  );
+}
+
 /** @internal */
 export const Attachments$inboundSchema: z.ZodType<
   Attachments,
@@ -128,6 +145,20 @@ export namespace Attachments$ {
   export type Outbound = Attachments$Outbound;
 }
 
+export function attachmentsToJSON(attachments: Attachments): string {
+  return JSON.stringify(Attachments$outboundSchema.parse(attachments));
+}
+
+export function attachmentsFromJSON(
+  jsonString: string,
+): SafeParseResult<Attachments, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Attachments$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Attachments' from JSON`,
+  );
+}
+
 /** @internal */
 export const MmsMessage$inboundSchema: z.ZodType<
   MmsMessage,
@@ -141,7 +172,7 @@ export const MmsMessage$inboundSchema: z.ZodType<
     z.array(PhoneNumberWithCid$inboundSchema),
   ]),
   subject: z.nullable(z.string()).optional(),
-  message: z.nullable(z.string()),
+  message: z.nullable(z.string()).optional(),
   attachments: z.union([z.string(), z.array(z.string())]).optional(),
   date: z.nullable(
     z.string().datetime({ offset: true }).transform(v => new Date(v)),
@@ -156,7 +187,7 @@ export type MmsMessage$Outbound = {
     | Array<string>
     | Array<PhoneNumberWithCid$Outbound>;
   subject?: string | null | undefined;
-  message: string | null;
+  message?: string | null | undefined;
   attachments?: string | Array<string> | undefined;
   date: string | null;
 };
@@ -174,7 +205,7 @@ export const MmsMessage$outboundSchema: z.ZodType<
     z.array(PhoneNumberWithCid$outboundSchema),
   ]),
   subject: z.nullable(z.string()).optional(),
-  message: z.nullable(z.string()),
+  message: z.nullable(z.string()).optional(),
   attachments: z.union([z.string(), z.array(z.string())]).optional(),
   date: z.nullable(z.date().transform(v => v.toISOString())).default(null),
 });
@@ -190,4 +221,18 @@ export namespace MmsMessage$ {
   export const outboundSchema = MmsMessage$outboundSchema;
   /** @deprecated use `MmsMessage$Outbound` instead. */
   export type Outbound = MmsMessage$Outbound;
+}
+
+export function mmsMessageToJSON(mmsMessage: MmsMessage): string {
+  return JSON.stringify(MmsMessage$outboundSchema.parse(mmsMessage));
+}
+
+export function mmsMessageFromJSON(
+  jsonString: string,
+): SafeParseResult<MmsMessage, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => MmsMessage$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'MmsMessage' from JSON`,
+  );
 }

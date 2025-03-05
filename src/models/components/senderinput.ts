@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * An object with the properties of the message sender
@@ -55,4 +58,18 @@ export namespace SenderInput$ {
   export const outboundSchema = SenderInput$outboundSchema;
   /** @deprecated use `SenderInput$Outbound` instead. */
   export type Outbound = SenderInput$Outbound;
+}
+
+export function senderInputToJSON(senderInput: SenderInput): string {
+  return JSON.stringify(SenderInput$outboundSchema.parse(senderInput));
+}
+
+export function senderInputFromJSON(
+  jsonString: string,
+): SafeParseResult<SenderInput, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SenderInput$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SenderInput' from JSON`,
+  );
 }

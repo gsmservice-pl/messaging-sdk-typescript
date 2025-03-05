@@ -20,7 +20,6 @@ const value: components.MmsMessage = {
   attachments: [
     "<file_body in base64 format>",
   ],
-  date: null,
 };
 ```
 
@@ -38,7 +37,6 @@ const value: components.MmsMessage[] = [
     attachments: [
       "<file_body in base64 format>",
     ],
-    date: null,
   },
 ];
 ```

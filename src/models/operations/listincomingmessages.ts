@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type ListIncomingMessagesRequest = {
   /**
@@ -61,6 +64,26 @@ export namespace ListIncomingMessagesRequest$ {
   export type Outbound = ListIncomingMessagesRequest$Outbound;
 }
 
+export function listIncomingMessagesRequestToJSON(
+  listIncomingMessagesRequest: ListIncomingMessagesRequest,
+): string {
+  return JSON.stringify(
+    ListIncomingMessagesRequest$outboundSchema.parse(
+      listIncomingMessagesRequest,
+    ),
+  );
+}
+
+export function listIncomingMessagesRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<ListIncomingMessagesRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ListIncomingMessagesRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ListIncomingMessagesRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const ListIncomingMessagesResponse$inboundSchema: z.ZodType<
   ListIncomingMessagesResponse,
@@ -108,4 +131,24 @@ export namespace ListIncomingMessagesResponse$ {
   export const outboundSchema = ListIncomingMessagesResponse$outboundSchema;
   /** @deprecated use `ListIncomingMessagesResponse$Outbound` instead. */
   export type Outbound = ListIncomingMessagesResponse$Outbound;
+}
+
+export function listIncomingMessagesResponseToJSON(
+  listIncomingMessagesResponse: ListIncomingMessagesResponse,
+): string {
+  return JSON.stringify(
+    ListIncomingMessagesResponse$outboundSchema.parse(
+      listIncomingMessagesResponse,
+    ),
+  );
+}
+
+export function listIncomingMessagesResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<ListIncomingMessagesResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ListIncomingMessagesResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ListIncomingMessagesResponse' from JSON`,
+  );
 }

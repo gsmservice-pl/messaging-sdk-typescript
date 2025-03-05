@@ -5,6 +5,7 @@
 import { ClientCore } from "../core.js";
 import { encodeSimple } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
@@ -20,6 +21,7 @@ import * as errors from "../models/errors/index.js";
 import { SDKError } from "../models/errors/sdkerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
 import * as operations from "../models/operations/index.js";
+import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 export enum SetDefaultAcceptEnum {
@@ -35,13 +37,14 @@ export enum SetDefaultAcceptEnum {
  *
  * As a successful response no Exception will be thrown.
  */
-export async function sendersSetDefault(
+export function sendersSetDefault(
   client: ClientCore,
   request: operations.SetDefaultSenderRequest,
   options?: RequestOptions & { acceptHeaderOverride?: SetDefaultAcceptEnum },
-): Promise<
+): APIPromise<
   Result<
     operations.SetDefaultSenderResponse | undefined,
+    | errors.ErrorResponse
     | errors.ErrorResponse
     | errors.ErrorResponse
     | SDKError
@@ -53,13 +56,42 @@ export async function sendersSetDefault(
     | ConnectionError
   >
 > {
+  return new APIPromise($do(
+    client,
+    request,
+    options,
+  ));
+}
+
+async function $do(
+  client: ClientCore,
+  request: operations.SetDefaultSenderRequest,
+  options?: RequestOptions & { acceptHeaderOverride?: SetDefaultAcceptEnum },
+): Promise<
+  [
+    Result<
+      operations.SetDefaultSenderResponse | undefined,
+      | errors.ErrorResponse
+      | errors.ErrorResponse
+      | errors.ErrorResponse
+      | SDKError
+      | SDKValidationError
+      | UnexpectedClientError
+      | InvalidRequestError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | ConnectionError
+    >,
+    APICall,
+  ]
+> {
   const parsed = safeParse(
     request,
     (value) => operations.SetDefaultSenderRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
-    return parsed;
+    return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
   const body = null;
@@ -73,36 +105,23 @@ export async function sendersSetDefault(
 
   const path = pathToFunc("/senders/{sender}")(pathParams);
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     Accept: options?.acceptHeaderOverride
       || "application/json;q=1, application/problem+json;q=0",
-  });
+  }));
 
   const secConfig = await extractSecurity(client._options.bearer);
   const securityInput = secConfig == null ? {} : { bearer: secConfig };
-  const context = {
-    operationID: "setDefaultSender",
-    oAuth2Scopes: [],
-    securitySource: client._options.bearer,
-  };
   const requestSecurity = resolveGlobalSecurity(securityInput);
 
-  const requestRes = client._createRequest(context, {
-    security: requestSecurity,
-    method: "PATCH",
-    path: path,
-    headers: headers,
-    body: body,
-    timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
-  }, options);
-  if (!requestRes.ok) {
-    return requestRes;
-  }
-  const req = requestRes.value;
+  const context = {
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
+    operationID: "setDefaultSender",
+    oAuth2Scopes: [],
 
-  const doResult = await client._do(req, {
-    context,
-    errorCodes: ["400", "401", "403", "404", "4XX", "5XX"],
+    resolvedSecurity: requestSecurity,
+
+    securitySource: client._options.bearer,
     retryConfig: options?.retries
       || client._options.retryConfig
       || {
@@ -114,11 +133,33 @@ export async function sendersSetDefault(
           maxElapsedTime: 3600000,
         },
         retryConnectionErrors: true,
-      },
+      }
+      || { strategy: "none" },
     retryCodes: options?.retryCodes || ["5XX"],
+  };
+
+  const requestRes = client._createRequest(context, {
+    security: requestSecurity,
+    method: "PATCH",
+    baseURL: options?.serverURL,
+    path: path,
+    headers: headers,
+    body: body,
+    timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
+  }, options);
+  if (!requestRes.ok) {
+    return [requestRes, { status: "invalid" }];
+  }
+  const req = requestRes.value;
+
+  const doResult = await client._do(req, {
+    context,
+    errorCodes: ["400", "401", "403", "404", "4XX", "5XX"],
+    retryConfig: context.retryConfig,
+    retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
@@ -128,6 +169,7 @@ export async function sendersSetDefault(
 
   const [result] = await M.match<
     operations.SetDefaultSenderResponse | undefined,
+    | errors.ErrorResponse
     | errors.ErrorResponse
     | errors.ErrorResponse
     | SDKError
@@ -141,16 +183,17 @@ export async function sendersSetDefault(
     M.nil(204, operations.SetDefaultSenderResponse$inboundSchema.optional(), {
       hdrs: true,
     }),
-    M.jsonErr(
-      [400, 401, 403, "4XX", "5XX"],
-      errors.ErrorResponse$inboundSchema,
-      { ctype: "application/problem+json" },
-    ),
     M.jsonErr(404, errors.ErrorResponse$inboundSchema),
+    M.jsonErr([400, 401, 403, "4XX"], errors.ErrorResponse$inboundSchema, {
+      ctype: "application/problem+json",
+    }),
+    M.jsonErr("5XX", errors.ErrorResponse$inboundSchema, {
+      ctype: "application/problem+json",
+    }),
   )(response, { extraFields: responseFields });
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }

@@ -23,7 +23,7 @@ As a successful result a `GetSmsPriceResponse` object will be returned with `res
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -36,7 +36,7 @@ async function run() {
       message: "To jest treść wiadomości",
       sender: "Bramka SMS",
       type: 1,
-      unicode: true,
+      unicode: false,
       flash: false,
       date: null,
     },
@@ -60,7 +60,7 @@ import { outgoingSmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/fun
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -69,7 +69,7 @@ async function run() {
     message: "To jest treść wiadomości",
     sender: "Bramka SMS",
     type: 1,
-    unicode: true,
+    unicode: false,
     flash: false,
     date: null,
   });
@@ -104,7 +104,8 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 401, 4XX, 5XX       | application/problem+json |
+| errors.ErrorResponse     | 400, 401, 4XX            | application/problem+json |
+| errors.ErrorResponse     | 5XX                      | application/problem+json |
 
 ## send
 
@@ -120,7 +121,7 @@ As a successful result a `SendSmsResponse` object will be returned with `result`
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -132,7 +133,7 @@ async function run() {
       message: "To jest treść wiadomości",
       sender: "Bramka SMS",
       type: 1,
-      unicode: true,
+      unicode: false,
       flash: false,
       date: null,
     },
@@ -156,7 +157,7 @@ import { outgoingSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/o
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -168,7 +169,7 @@ async function run() {
       message: "To jest treść wiadomości",
       sender: "Bramka SMS",
       type: 1,
-      unicode: true,
+      unicode: false,
       flash: false,
       date: null,
     },
@@ -204,4 +205,5 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 401, 403, 4XX, 5XX  | application/problem+json |
+| errors.ErrorResponse     | 400, 401, 403, 4XX       | application/problem+json |
+| errors.ErrorResponse     | 5XX                      | application/problem+json |

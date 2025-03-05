@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * To check the price of a single message or messages with the same content to multiple recipients, pass a single `SmsMessage` object with the properties of this message. To check the price of multiple messages with different content at the same time, pass as method param an `array` of `SmsMessage` objects with the properties of each message.
@@ -56,6 +59,24 @@ export namespace GetSmsPriceRequestBody$ {
   export type Outbound = GetSmsPriceRequestBody$Outbound;
 }
 
+export function getSmsPriceRequestBodyToJSON(
+  getSmsPriceRequestBody: GetSmsPriceRequestBody,
+): string {
+  return JSON.stringify(
+    GetSmsPriceRequestBody$outboundSchema.parse(getSmsPriceRequestBody),
+  );
+}
+
+export function getSmsPriceRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<GetSmsPriceRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetSmsPriceRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetSmsPriceRequestBody' from JSON`,
+  );
+}
+
 /** @internal */
 export const GetSmsPriceResponse$inboundSchema: z.ZodType<
   GetSmsPriceResponse,
@@ -103,4 +124,22 @@ export namespace GetSmsPriceResponse$ {
   export const outboundSchema = GetSmsPriceResponse$outboundSchema;
   /** @deprecated use `GetSmsPriceResponse$Outbound` instead. */
   export type Outbound = GetSmsPriceResponse$Outbound;
+}
+
+export function getSmsPriceResponseToJSON(
+  getSmsPriceResponse: GetSmsPriceResponse,
+): string {
+  return JSON.stringify(
+    GetSmsPriceResponse$outboundSchema.parse(getSmsPriceResponse),
+  );
+}
+
+export function getSmsPriceResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<GetSmsPriceResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetSmsPriceResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetSmsPriceResponse' from JSON`,
+  );
 }

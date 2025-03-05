@@ -4,6 +4,7 @@
 
 import { ClientCore } from "../core.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { pathToFunc } from "../lib/url.js";
 import * as components from "../models/components/index.js";
@@ -17,6 +18,7 @@ import {
 import * as errors from "../models/errors/index.js";
 import { SDKError } from "../models/errors/sdkerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
+import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
@@ -27,12 +29,13 @@ import { Result } from "../types/fp.js";
  *
  * As a successful result a `PingResponse` object will be returned.
  */
-export async function commonPing(
+export function commonPing(
   client: ClientCore,
   options?: RequestOptions,
-): Promise<
+): APIPromise<
   Result<
     components.PingResponse,
+    | errors.ErrorResponse
     | errors.ErrorResponse
     | SDKError
     | SDKValidationError
@@ -43,32 +46,46 @@ export async function commonPing(
     | ConnectionError
   >
 > {
+  return new APIPromise($do(
+    client,
+    options,
+  ));
+}
+
+async function $do(
+  client: ClientCore,
+  options?: RequestOptions,
+): Promise<
+  [
+    Result<
+      components.PingResponse,
+      | errors.ErrorResponse
+      | errors.ErrorResponse
+      | SDKError
+      | SDKValidationError
+      | UnexpectedClientError
+      | InvalidRequestError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | ConnectionError
+    >,
+    APICall,
+  ]
+> {
   const path = pathToFunc("/ping")();
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     Accept: "application/json",
-  });
+  }));
 
   const context = {
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "ping",
     oAuth2Scopes: [],
+
+    resolvedSecurity: null,
+
     securitySource: null,
-  };
-
-  const requestRes = client._createRequest(context, {
-    method: "GET",
-    path: path,
-    headers: headers,
-    timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
-  }, options);
-  if (!requestRes.ok) {
-    return requestRes;
-  }
-  const req = requestRes.value;
-
-  const doResult = await client._do(req, {
-    context,
-    errorCodes: ["400", "4XX", "503", "5XX"],
     retryConfig: options?.retries
       || client._options.retryConfig
       || {
@@ -80,11 +97,31 @@ export async function commonPing(
           maxElapsedTime: 3600000,
         },
         retryConnectionErrors: true,
-      },
+      }
+      || { strategy: "none" },
     retryCodes: options?.retryCodes || ["5XX"],
+  };
+
+  const requestRes = client._createRequest(context, {
+    method: "GET",
+    baseURL: options?.serverURL,
+    path: path,
+    headers: headers,
+    timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
+  }, options);
+  if (!requestRes.ok) {
+    return [requestRes, { status: "invalid" }];
+  }
+  const req = requestRes.value;
+
+  const doResult = await client._do(req, {
+    context,
+    errorCodes: ["400", "4XX", "503", "5XX"],
+    retryConfig: context.retryConfig,
+    retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
@@ -95,6 +132,7 @@ export async function commonPing(
   const [result] = await M.match<
     components.PingResponse,
     | errors.ErrorResponse
+    | errors.ErrorResponse
     | SDKError
     | SDKValidationError
     | UnexpectedClientError
@@ -104,13 +142,16 @@ export async function commonPing(
     | ConnectionError
   >(
     M.json(200, components.PingResponse$inboundSchema),
-    M.jsonErr([400, "4XX", 503, "5XX"], errors.ErrorResponse$inboundSchema, {
+    M.jsonErr([400, "4XX"], errors.ErrorResponse$inboundSchema, {
+      ctype: "application/problem+json",
+    }),
+    M.jsonErr([503, "5XX"], errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
   )(response, { extraFields: responseFields });
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }

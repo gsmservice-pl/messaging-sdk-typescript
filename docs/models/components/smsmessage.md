@@ -13,11 +13,6 @@ let value: SmsMessage = {
     cid: "my-id-1113",
   },
   message: "To jest treść wiadomości",
-  sender: "Bramka SMS",
-  type: 1,
-  unicode: true,
-  flash: false,
-  date: null,
 };
 ```
 

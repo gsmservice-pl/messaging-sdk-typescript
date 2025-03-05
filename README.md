@@ -1,32 +1,38 @@
 [![NPM Version (with dist tag)](https://img.shields.io/npm/v/%40gsmservice-pl/messaging-sdk-typescript)](https://www.npmjs.com/package/@gsmservice-pl/messaging-sdk-typescript)
 [![GitHub License](https://img.shields.io/github/license/gsmservice-pl/messaging-sdk-typescript)](https://github.com/gsmservice-pl/messaging-sdk-typescript/blob/main/LICENSE)
 [![Static Badge](https://img.shields.io/badge/built_by-Speakeasy-yellow)](https://www.speakeasy.com/?utm_source=gsmservice-pl/messaging-sdk-typescript&utm_campaign=typescript)
-# GSMService.pl Messaging REST API SDK for TypeScript
+# SzybkiSMS.pl Messaging REST API SDK for TypeScript (powered by GSMService.pl)
 
-This package includes Messaging SDK for TypeScript to send SMS & MMS messages directly from your app via https://bramka.gsmservice.pl messaging platform.
+This package includes Messaging SDK for TypeScript to send SMS & MMS messages directly from your app via https://szybkisms.pl messaging platform.
 
 ## Additional documentation:
 
 A documentation of all methods and types is available below in section [Available Resources and Operations
 ](#available-resources-and-operations).
 
-Also you can refer to the [REST API documentation](https://api.gsmservice.pl/rest/) for additional details about the basics of this SDK.
+Also you can refer to the [REST API documentation](https://api.szybkisms.pl/rest/) for additional details about the basics of this SDK.
 <!-- No Summary [summary] -->
 
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
+<!-- $toc-max-depth=2 -->
+* [SzybkiSMS.pl Messaging REST API SDK for TypeScript (powered by GSMService.pl)](#szybkismspl-messaging-rest-api-sdk-for-typescript-powered-by-gsmservicepl)
+  * [Additional documentation:](#additional-documentation)
+  * [SDK Installation](#sdk-installation)
+  * [Requirements](#requirements)
+  * [SDK Example Usage](#sdk-example-usage)
+  * [Available Resources and Operations](#available-resources-and-operations)
+  * [Standalone functions](#standalone-functions)
+  * [Retries](#retries)
+  * [Error Handling](#error-handling)
+  * [Server Selection](#server-selection)
+  * [Custom HTTP Client](#custom-http-client)
+  * [Authentication](#authentication)
+  * [Debugging](#debugging)
+* [Development](#development)
+  * [Maturity](#maturity)
+  * [Contributions](#contributions)
 
-* [SDK Installation](#sdk-installation)
-* [Requirements](#requirements)
-* [SDK Example Usage](#sdk-example-usage)
-* [Available Resources and Operations](#available-resources-and-operations)
-* [Standalone functions](#standalone-functions)
-* [Retries](#retries)
-* [Error Handling](#error-handling)
-* [Server Selection](#server-selection)
-* [Custom HTTP Client](#custom-http-client)
-* [Authentication](#authentication)
-* [Debugging](#debugging)
 <!-- End Table of Contents [toc] -->
 
 <!-- Start SDK Installation [installation] -->
@@ -63,6 +69,57 @@ yarn add @gsmservice-pl/messaging-sdk-typescript zod
 
 > [!NOTE]
 > This package is published with CommonJS and ES Modules (ESM) support.
+
+
+### Model Context Protocol (MCP) Server
+
+This SDK is also an installable MCP server where the various SDK methods are
+exposed as tools that can be invoked by AI applications.
+
+> Node.js v20 or greater is required to run the MCP server.
+
+<details>
+<summary>Claude installation steps</summary>
+
+Add the following server definition to your `claude_desktop_config.json` file:
+
+```json
+{
+  "mcpServers": {
+    "Client": {
+      "command": "npx",
+      "args": [
+        "-y", "--package", "@gsmservice-pl/messaging-sdk-typescript",
+        "--",
+        "mcp", "start",
+        "--bearer", "..."
+      ]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary>Cursor installation steps</summary>
+
+Go to `Cursor Settings > Features > MCP Servers > Add new MCP server` and use the following settings:
+
+- Name: Client
+- Type: `command`
+- Command:
+```sh
+npx -y --package @gsmservice-pl/messaging-sdk-typescript -- mcp start --bearer ... 
+```
+
+</details>
+
+For a full list of server arguments, run:
+
+```sh
+npx -y --package @gsmservice-pl/messaging-sdk-typescript -- mcp start --help
+```
 <!-- End SDK Installation [installation] -->
 
 <!-- Start Requirements [requirements] -->
@@ -82,7 +139,7 @@ This example demonstrates simple sending SMS message to a single recipient:
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -94,7 +151,7 @@ async function run() {
       message: "To jest treść wiadomości",
       sender: "Bramka SMS",
       type: 1,
-      unicode: true,
+      unicode: false,
       flash: false,
       date: null,
     },
@@ -116,7 +173,7 @@ This example demonstrates simple sending MMS message to a single recipient:
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -235,7 +292,7 @@ To change the default retry strategy for a single API call, simply provide a ret
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -275,7 +332,7 @@ const client = new Client({
     },
     retryConnectionErrors: false,
   },
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -293,23 +350,14 @@ run();
 <!-- Start Error Handling [errors] -->
 ## Error Handling
 
-All SDK methods return a response object or throw an error. By default, an API error will throw a `errors.SDKError`.
+Some methods specify known errors which can be thrown. All the known errors are enumerated in the `models/errors/errors.ts` module. The known errors for a method are documented under the *Errors* tables in SDK docs. For example, the `get` method may throw the following errors:
 
-If a HTTP request fails, an operation my also throw an error from the `models/errors/httpclienterrors.ts` module:
+| Error Type           | Status Code   | Content Type             |
+| -------------------- | ------------- | ------------------------ |
+| errors.ErrorResponse | 401, 403, 4XX | application/problem+json |
+| errors.ErrorResponse | 5XX           | application/problem+json |
 
-| HTTP Client Error                                    | Description                                          |
-| ---------------------------------------------------- | ---------------------------------------------------- |
-| RequestAbortedError                                  | HTTP request was aborted by the client               |
-| RequestTimeoutError                                  | HTTP request timed out due to an AbortSignal signal  |
-| ConnectionError                                      | HTTP client was unable to make a request to a server |
-| InvalidRequestError                                  | Any input used to create a request is invalid        |
-| UnexpectedClientError                                | Unrecognised or unexpected error                     |
-
-In addition, when custom error responses are specified for an operation, the SDK may throw their associated Error type. You can refer to respective *Errors* tables in SDK docs for more details on possible error types for each operation. For example, the `get` method may throw the following errors:
-
-| Error Type               | Status Code              | Content Type             |
-| ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 401, 403, 4XX, 5XX       | application/problem+json |
+If the method throws an error and it is not captured by the known errors, it will default to throwing a `SDKError`.
 
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
@@ -319,7 +367,7 @@ import {
 } from "@gsmservice-pl/messaging-sdk-typescript/models/errors";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -331,8 +379,9 @@ async function run() {
     console.log(result);
   } catch (err) {
     switch (true) {
+      // The server response does not match the expected SDK schema
       case (err instanceof SDKValidationError): {
-        // Validation errors can be pretty-printed
+        // Pretty-print will provide a human-readable multi-line error message
         console.error(err.pretty());
         // Raw value may also be inspected
         console.error(err.rawValue);
@@ -343,7 +392,13 @@ async function run() {
         console.error(err);
         return;
       }
+      case (err instanceof ErrorResponse): {
+        // Handle err.data$: ErrorResponseData
+        console.error(err);
+        return;
+      }
       default: {
+        // Other errors such as network errors, see HTTPClientErrors for more details
         throw err;
       }
     }
@@ -354,7 +409,17 @@ run();
 
 ```
 
-Validation errors can also occur when either method arguments or data returned from the server do not match the expected format. The `SDKValidationError` that is thrown as a result will capture the raw value that failed validation in an attribute called `rawValue`. Additionally, a `pretty()` method is available on this error that can be used to log a nicely formatted string since validation errors can list many issues and the plain error string may be difficult read when debugging.
+Validation errors can also occur when either method arguments or data returned from the server do not match the expected format. The `SDKValidationError` that is thrown as a result will capture the raw value that failed validation in an attribute called `rawValue`. Additionally, a `pretty()` method is available on this error that can be used to log a nicely formatted multi-line string since validation errors can list many issues and the plain error string may be difficult read when debugging.
+
+In some rare cases, the SDK can fail to get a response from the server or even make the request due to unexpected circumstances such as network conditions. These types of errors are captured in the `models/errors/httpclienterrors.ts` module:
+
+| HTTP Client Error                                    | Description                                          |
+| ---------------------------------------------------- | ---------------------------------------------------- |
+| RequestAbortedError                                  | HTTP request was aborted by the client               |
+| RequestTimeoutError                                  | HTTP request timed out due to an AbortSignal signal  |
+| ConnectionError                                      | HTTP client was unable to make a request to a server |
+| InvalidRequestError                                  | Any input used to create a request is invalid        |
+| UnexpectedClientError                                | Unrecognised or unexpected error                     |
 <!-- End Error Handling [errors] -->
 
 <!-- Start Server Selection [server] -->
@@ -362,19 +427,21 @@ Validation errors can also occur when either method arguments or data returned f
 
 ### Select Server by Name
 
-You can override the default server globally by passing a server name to the `server` optional parameter when initializing the SDK client instance. The selected server will then be used as the default on the operations that use it. This table lists the names associated with the available servers:
+You can override the default server globally by passing a server name to the `server: keyof typeof ServerList` optional parameter when initializing the SDK client instance. The selected server will then be used as the default on the operations that use it. This table lists the names associated with the available servers:
 
-| Name | Server | Variables |
-| ----- | ------ | --------- |
-| `prod` | `https://api.gsmservice.pl/rest` | None |
-| `sandbox` | `https://api.gsmservice.pl/rest-sandbox` | None |
+| Name      | Server                                  | Description           |
+| --------- | --------------------------------------- | --------------------- |
+| `prod`    | `https://api.szybkisms.pl/rest`         | Production system     |
+| `sandbox` | `https://api.szybkisms.pl/rest-sandbox` | Test system (SANDBOX) |
+
+#### Example
 
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
   server: "sandbox",
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -388,17 +455,15 @@ run();
 
 ```
 
-
 ### Override Server URL Per-Client
 
-The default server can also be overridden globally by passing a URL to the `serverURL` optional parameter when initializing the SDK client instance. For example:
-
+The default server can also be overridden globally by passing a URL to the `serverURL: string` optional parameter when initializing the SDK client instance. For example:
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  serverURL: "https://api.gsmservice.pl/rest",
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  serverURL: "https://api.szybkisms.pl/rest",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -469,16 +534,16 @@ const sdk = new Client({ httpClient });
 
 This SDK supports the following security scheme globally:
 
-| Name                 | Type                 | Scheme               | Environment Variable |
-| -------------------- | -------------------- | -------------------- | -------------------- |
-| `bearer`             | http                 | HTTP Bearer          | `GATEWAY_API_BEARER` |
+| Name     | Type | Scheme      | Environment Variable |
+| -------- | ---- | ----------- | -------------------- |
+| `bearer` | http | HTTP Bearer | `GATEWAY_API_BEARER` |
 
 To authenticate with the API the `bearer` parameter must be set when initializing the SDK client instance. For example:
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {

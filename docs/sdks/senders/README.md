@@ -22,7 +22,7 @@ As a successful result an `array` of `Sender` objects will be returned, each obj
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -46,7 +46,7 @@ import { sendersList } from "@gsmservice-pl/messaging-sdk-typescript/funcs/sende
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -81,7 +81,8 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 401, 403, 4XX, 5XX  | application/problem+json |
+| errors.ErrorResponse     | 400, 401, 403, 4XX       | application/problem+json |
+| errors.ErrorResponse     | 5XX                      | application/problem+json |
 
 ## add
 
@@ -95,7 +96,7 @@ As a successful result a `AddSenderResponse` object will be returned with a prop
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -122,7 +123,7 @@ import { sendersAdd } from "@gsmservice-pl/messaging-sdk-typescript/funcs/sender
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -161,7 +162,8 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 401, 403, 4XX, 5XX  | application/problem+json |
+| errors.ErrorResponse     | 400, 401, 403, 4XX       | application/problem+json |
+| errors.ErrorResponse     | 5XX                      | application/problem+json |
 
 ## delete
 
@@ -175,7 +177,7 @@ As a successful response there would be no Exception thrown.
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -201,7 +203,7 @@ import { sendersDelete } from "@gsmservice-pl/messaging-sdk-typescript/funcs/sen
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -237,9 +239,10 @@ run();
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| errors.ErrorResponse         | 400, 401, 403, 404, 4XX, 5XX | application/problem+json     |
+| Error Type               | Status Code              | Content Type             |
+| ------------------------ | ------------------------ | ------------------------ |
+| errors.ErrorResponse     | 400, 401, 403, 404, 4XX  | application/problem+json |
+| errors.ErrorResponse     | 5XX                      | application/problem+json |
 
 ## setDefault
 
@@ -253,7 +256,7 @@ As a successful response no Exception will be thrown.
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -279,7 +282,7 @@ import { sendersSetDefault } from "@gsmservice-pl/messaging-sdk-typescript/funcs
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -317,5 +320,6 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 401, 403, 4XX, 5XX  | application/problem+json |
 | errors.ErrorResponse     | 404                      | application/json         |
+| errors.ErrorResponse     | 400, 401, 403, 4XX       | application/problem+json |
+| errors.ErrorResponse     | 5XX                      | application/problem+json |

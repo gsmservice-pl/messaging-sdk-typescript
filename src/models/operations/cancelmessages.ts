@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type CancelMessagesRequest = {
   /**
@@ -54,6 +57,24 @@ export namespace CancelMessagesRequest$ {
   export type Outbound = CancelMessagesRequest$Outbound;
 }
 
+export function cancelMessagesRequestToJSON(
+  cancelMessagesRequest: CancelMessagesRequest,
+): string {
+  return JSON.stringify(
+    CancelMessagesRequest$outboundSchema.parse(cancelMessagesRequest),
+  );
+}
+
+export function cancelMessagesRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<CancelMessagesRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CancelMessagesRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CancelMessagesRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const CancelMessagesResponse$inboundSchema: z.ZodType<
   CancelMessagesResponse,
@@ -101,4 +122,22 @@ export namespace CancelMessagesResponse$ {
   export const outboundSchema = CancelMessagesResponse$outboundSchema;
   /** @deprecated use `CancelMessagesResponse$Outbound` instead. */
   export type Outbound = CancelMessagesResponse$Outbound;
+}
+
+export function cancelMessagesResponseToJSON(
+  cancelMessagesResponse: CancelMessagesResponse,
+): string {
+  return JSON.stringify(
+    CancelMessagesResponse$outboundSchema.parse(cancelMessagesResponse),
+  );
+}
+
+export function cancelMessagesResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<CancelMessagesResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CancelMessagesResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CancelMessagesResponse' from JSON`,
+  );
 }

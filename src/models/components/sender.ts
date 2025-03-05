@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * An object with the properties of the message sender
@@ -68,4 +71,18 @@ export namespace Sender$ {
   export const outboundSchema = Sender$outboundSchema;
   /** @deprecated use `Sender$Outbound` instead. */
   export type Outbound = Sender$Outbound;
+}
+
+export function senderToJSON(sender: Sender): string {
+  return JSON.stringify(Sender$outboundSchema.parse(sender));
+}
+
+export function senderFromJSON(
+  jsonString: string,
+): SafeParseResult<Sender, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Sender$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Sender' from JSON`,
+  );
 }

@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * An object with the properties of the received message
@@ -118,4 +121,20 @@ export namespace IncomingMessage$ {
   export const outboundSchema = IncomingMessage$outboundSchema;
   /** @deprecated use `IncomingMessage$Outbound` instead. */
   export type Outbound = IncomingMessage$Outbound;
+}
+
+export function incomingMessageToJSON(
+  incomingMessage: IncomingMessage,
+): string {
+  return JSON.stringify(IncomingMessage$outboundSchema.parse(incomingMessage));
+}
+
+export function incomingMessageFromJSON(
+  jsonString: string,
+): SafeParseResult<IncomingMessage, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => IncomingMessage$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'IncomingMessage' from JSON`,
+  );
 }

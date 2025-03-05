@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type GetIncomingMessagesRequest = {
   /**
@@ -54,6 +57,24 @@ export namespace GetIncomingMessagesRequest$ {
   export type Outbound = GetIncomingMessagesRequest$Outbound;
 }
 
+export function getIncomingMessagesRequestToJSON(
+  getIncomingMessagesRequest: GetIncomingMessagesRequest,
+): string {
+  return JSON.stringify(
+    GetIncomingMessagesRequest$outboundSchema.parse(getIncomingMessagesRequest),
+  );
+}
+
+export function getIncomingMessagesRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<GetIncomingMessagesRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetIncomingMessagesRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetIncomingMessagesRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const GetIncomingMessagesResponse$inboundSchema: z.ZodType<
   GetIncomingMessagesResponse,
@@ -101,4 +122,24 @@ export namespace GetIncomingMessagesResponse$ {
   export const outboundSchema = GetIncomingMessagesResponse$outboundSchema;
   /** @deprecated use `GetIncomingMessagesResponse$Outbound` instead. */
   export type Outbound = GetIncomingMessagesResponse$Outbound;
+}
+
+export function getIncomingMessagesResponseToJSON(
+  getIncomingMessagesResponse: GetIncomingMessagesResponse,
+): string {
+  return JSON.stringify(
+    GetIncomingMessagesResponse$outboundSchema.parse(
+      getIncomingMessagesResponse,
+    ),
+  );
+}
+
+export function getIncomingMessagesResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<GetIncomingMessagesResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetIncomingMessagesResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetIncomingMessagesResponse' from JSON`,
+  );
 }

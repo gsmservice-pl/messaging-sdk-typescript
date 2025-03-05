@@ -5,10 +5,7 @@
 ```typescript
 import { ListIncomingMessagesRequest } from "@gsmservice-pl/messaging-sdk-typescript/models/operations";
 
-let value: ListIncomingMessagesRequest = {
-  page: 1,
-  limit: 10,
-};
+let value: ListIncomingMessagesRequest = {};
 ```
 
 ## Fields

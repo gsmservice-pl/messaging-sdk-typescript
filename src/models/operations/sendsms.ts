@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * To send a single SMS or messages with the same content to multiple recipients, pass as the method param a single `SmsMessage` object with the properties of this message. To send multiple messages with different content at the same time, pass as the method param an `array` of `SmsMessage` objects with the properties of each message.
@@ -56,6 +59,24 @@ export namespace SendSmsRequestBody$ {
   export type Outbound = SendSmsRequestBody$Outbound;
 }
 
+export function sendSmsRequestBodyToJSON(
+  sendSmsRequestBody: SendSmsRequestBody,
+): string {
+  return JSON.stringify(
+    SendSmsRequestBody$outboundSchema.parse(sendSmsRequestBody),
+  );
+}
+
+export function sendSmsRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<SendSmsRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SendSmsRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SendSmsRequestBody' from JSON`,
+  );
+}
+
 /** @internal */
 export const SendSmsResponse$inboundSchema: z.ZodType<
   SendSmsResponse,
@@ -103,4 +124,20 @@ export namespace SendSmsResponse$ {
   export const outboundSchema = SendSmsResponse$outboundSchema;
   /** @deprecated use `SendSmsResponse$Outbound` instead. */
   export type Outbound = SendSmsResponse$Outbound;
+}
+
+export function sendSmsResponseToJSON(
+  sendSmsResponse: SendSmsResponse,
+): string {
+  return JSON.stringify(SendSmsResponse$outboundSchema.parse(sendSmsResponse));
+}
+
+export function sendSmsResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<SendSmsResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SendSmsResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SendSmsResponse' from JSON`,
+  );
 }

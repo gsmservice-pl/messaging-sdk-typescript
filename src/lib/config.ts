@@ -19,22 +19,22 @@ export const ServerSandbox = "sandbox";
  * Contains the list of servers available to the SDK
  */
 export const ServerList = {
-  [ServerProd]: "https://api.gsmservice.pl/rest",
-  [ServerSandbox]: "https://api.gsmservice.pl/rest-sandbox",
+  [ServerProd]: "https://api.szybkisms.pl/rest",
+  [ServerSandbox]: "https://api.szybkisms.pl/rest-sandbox",
 } as const;
 
 export type SDKOptions = {
-  bearer?: string | (() => Promise<string>);
+  bearer?: string | (() => Promise<string>) | undefined;
 
   httpClient?: HTTPClient;
   /**
    * Allows overriding the default server used by the SDK
    */
-  server?: keyof typeof ServerList;
+  server?: keyof typeof ServerList | undefined;
   /**
    * Allows overriding the default server URL used by the SDK
    */
-  serverURL?: string;
+  serverURL?: string | undefined;
   /**
    * Allows overriding the default retry config used by the SDK
    */
@@ -59,9 +59,9 @@ export function serverURLFromOptions(options: SDKOptions): URL | null {
 
 export const SDK_METADATA = {
   language: "typescript",
-  openapiDocVersion: "1.1.2",
-  sdkVersion: "2.1.5",
-  genVersion: "2.438.15",
+  openapiDocVersion: "1.2.1",
+  sdkVersion: "3.0.1",
+  genVersion: "2.539.1",
   userAgent:
-    "speakeasy-sdk/typescript 2.1.5 2.438.15 1.1.2 @gsmservice-pl/messaging-sdk-typescript",
+    "speakeasy-sdk/typescript 3.0.1 2.539.1 1.2.1 @gsmservice-pl/messaging-sdk-typescript",
 } as const;

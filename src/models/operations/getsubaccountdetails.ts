@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type GetSubaccountDetailsRequest = {
   /**
@@ -54,4 +57,24 @@ export namespace GetSubaccountDetailsRequest$ {
   export const outboundSchema = GetSubaccountDetailsRequest$outboundSchema;
   /** @deprecated use `GetSubaccountDetailsRequest$Outbound` instead. */
   export type Outbound = GetSubaccountDetailsRequest$Outbound;
+}
+
+export function getSubaccountDetailsRequestToJSON(
+  getSubaccountDetailsRequest: GetSubaccountDetailsRequest,
+): string {
+  return JSON.stringify(
+    GetSubaccountDetailsRequest$outboundSchema.parse(
+      getSubaccountDetailsRequest,
+    ),
+  );
+}
+
+export function getSubaccountDetailsRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<GetSubaccountDetailsRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetSubaccountDetailsRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetSubaccountDetailsRequest' from JSON`,
+  );
 }

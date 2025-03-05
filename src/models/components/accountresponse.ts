@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Account type
@@ -140,4 +143,20 @@ export namespace AccountResponse$ {
   export const outboundSchema = AccountResponse$outboundSchema;
   /** @deprecated use `AccountResponse$Outbound` instead. */
   export type Outbound = AccountResponse$Outbound;
+}
+
+export function accountResponseToJSON(
+  accountResponse: AccountResponse,
+): string {
+  return JSON.stringify(AccountResponse$outboundSchema.parse(accountResponse));
+}
+
+export function accountResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<AccountResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => AccountResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'AccountResponse' from JSON`,
+  );
 }

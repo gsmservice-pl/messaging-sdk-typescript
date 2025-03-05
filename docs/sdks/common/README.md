@@ -74,4 +74,5 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 4XX, 503, 5XX       | application/problem+json |
+| errors.ErrorResponse     | 400, 4XX                 | application/problem+json |
+| errors.ErrorResponse     | 503, 5XX                 | application/problem+json |

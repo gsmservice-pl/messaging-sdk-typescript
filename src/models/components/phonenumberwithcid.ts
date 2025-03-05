@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * An object defining the message recipient telephone number with the message's custom identifier assigned by the User
@@ -55,4 +58,22 @@ export namespace PhoneNumberWithCid$ {
   export const outboundSchema = PhoneNumberWithCid$outboundSchema;
   /** @deprecated use `PhoneNumberWithCid$Outbound` instead. */
   export type Outbound = PhoneNumberWithCid$Outbound;
+}
+
+export function phoneNumberWithCidToJSON(
+  phoneNumberWithCid: PhoneNumberWithCid,
+): string {
+  return JSON.stringify(
+    PhoneNumberWithCid$outboundSchema.parse(phoneNumberWithCid),
+  );
+}
+
+export function phoneNumberWithCidFromJSON(
+  jsonString: string,
+): SafeParseResult<PhoneNumberWithCid, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PhoneNumberWithCid$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PhoneNumberWithCid' from JSON`,
+  );
 }

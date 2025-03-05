@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type GetMessagesRequest = {
   /**
@@ -54,6 +57,24 @@ export namespace GetMessagesRequest$ {
   export type Outbound = GetMessagesRequest$Outbound;
 }
 
+export function getMessagesRequestToJSON(
+  getMessagesRequest: GetMessagesRequest,
+): string {
+  return JSON.stringify(
+    GetMessagesRequest$outboundSchema.parse(getMessagesRequest),
+  );
+}
+
+export function getMessagesRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<GetMessagesRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetMessagesRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetMessagesRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const GetMessagesResponse$inboundSchema: z.ZodType<
   GetMessagesResponse,
@@ -101,4 +122,22 @@ export namespace GetMessagesResponse$ {
   export const outboundSchema = GetMessagesResponse$outboundSchema;
   /** @deprecated use `GetMessagesResponse$Outbound` instead. */
   export type Outbound = GetMessagesResponse$Outbound;
+}
+
+export function getMessagesResponseToJSON(
+  getMessagesResponse: GetMessagesResponse,
+): string {
+  return JSON.stringify(
+    GetMessagesResponse$outboundSchema.parse(getMessagesResponse),
+  );
+}
+
+export function getMessagesResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<GetMessagesResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetMessagesResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetMessagesResponse' from JSON`,
+  );
 }

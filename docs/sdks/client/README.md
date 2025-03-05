@@ -23,3 +23,5 @@ const client = new Client({
      bearer: process.env["GATEWAY_API_BEARER"] ?? "",
 });
 ```
+
+### Available Operations

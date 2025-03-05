@@ -21,7 +21,7 @@ As a successful result a `GetMessagesResponse` object will be returned containin
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -49,7 +49,7 @@ import { outgoingGetByIds } from "@gsmservice-pl/messaging-sdk-typescript/funcs/
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -87,9 +87,10 @@ run();
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| errors.ErrorResponse         | 400, 401, 403, 404, 4XX, 5XX | application/problem+json     |
+| Error Type               | Status Code              | Content Type             |
+| ------------------------ | ------------------------ | ------------------------ |
+| errors.ErrorResponse     | 400, 401, 403, 404, 4XX  | application/problem+json |
+| errors.ErrorResponse     | 5XX                      | application/problem+json |
 
 ## cancelScheduled
 
@@ -105,7 +106,7 @@ As a successful result a `CancelMessagesResponse` object will be returned, with 
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -133,7 +134,7 @@ import { outgoingCancelScheduled } from "@gsmservice-pl/messaging-sdk-typescript
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
@@ -171,9 +172,10 @@ run();
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| errors.ErrorResponse         | 400, 401, 403, 404, 4XX, 5XX | application/problem+json     |
+| Error Type               | Status Code              | Content Type             |
+| ------------------------ | ------------------------ | ------------------------ |
+| errors.ErrorResponse     | 400, 401, 403, 404, 4XX  | application/problem+json |
+| errors.ErrorResponse     | 5XX                      | application/problem+json |
 
 ## list
 
@@ -187,14 +189,11 @@ As a successful result a `ListMessagesResponse` object will be returned containi
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
 const client = new Client({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
-  const result = await client.outgoing.list({
-    page: 1,
-    limit: 10,
-  });
+  const result = await client.outgoing.list({});
 
   // Handle the result
   console.log(result);
@@ -214,14 +213,11 @@ import { outgoingList } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outg
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const client = new ClientCore({
-  bearer: process.env["GATEWAY_API_BEARER"] ?? "",
+  bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
-  const res = await outgoingList(client, {
-    page: 1,
-    limit: 10,
-  });
+  const res = await outgoingList(client, {});
 
   if (!res.ok) {
     throw res.error;
@@ -251,6 +247,7 @@ run();
 
 ### Errors
 
-| Error Type                   | Status Code                  | Content Type                 |
-| ---------------------------- | ---------------------------- | ---------------------------- |
-| errors.ErrorResponse         | 400, 401, 403, 404, 4XX, 5XX | application/problem+json     |
+| Error Type               | Status Code              | Content Type             |
+| ------------------------ | ------------------------ | ------------------------ |
+| errors.ErrorResponse     | 400, 401, 403, 404, 4XX  | application/problem+json |
+| errors.ErrorResponse     | 5XX                      | application/problem+json |

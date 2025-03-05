@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 import {
   PhoneNumberWithCid,
   PhoneNumberWithCid$inboundSchema,
@@ -106,6 +109,24 @@ export namespace SmsMessageRecipients$ {
   export type Outbound = SmsMessageRecipients$Outbound;
 }
 
+export function smsMessageRecipientsToJSON(
+  smsMessageRecipients: SmsMessageRecipients,
+): string {
+  return JSON.stringify(
+    SmsMessageRecipients$outboundSchema.parse(smsMessageRecipients),
+  );
+}
+
+export function smsMessageRecipientsFromJSON(
+  jsonString: string,
+): SafeParseResult<SmsMessageRecipients, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SmsMessageRecipients$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SmsMessageRecipients' from JSON`,
+  );
+}
+
 /** @internal */
 export const SmsMessage$inboundSchema: z.ZodType<
   SmsMessage,
@@ -174,4 +195,18 @@ export namespace SmsMessage$ {
   export const outboundSchema = SmsMessage$outboundSchema;
   /** @deprecated use `SmsMessage$Outbound` instead. */
   export type Outbound = SmsMessage$Outbound;
+}
+
+export function smsMessageToJSON(smsMessage: SmsMessage): string {
+  return JSON.stringify(SmsMessage$outboundSchema.parse(smsMessage));
+}
+
+export function smsMessageFromJSON(
+  jsonString: string,
+): SafeParseResult<SmsMessage, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SmsMessage$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SmsMessage' from JSON`,
+  );
 }

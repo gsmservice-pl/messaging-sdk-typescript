@@ -4,6 +4,7 @@
 
 import { ClientCore } from "../core.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
@@ -18,22 +19,24 @@ import {
 import * as errors from "../models/errors/index.js";
 import { SDKError } from "../models/errors/sdkerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
+import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
  * Get account details
  *
  * @remarks
- * Get current account balance and other details of your account. You can check also account limit and if account is main one. Main accounts have unlimited privileges and using [User Panel](https://panel.gsmservice.pl) you can create as many subaccounts as you need.
+ * Get current account balance and other details of your account. You can check also account limit and if account is main one. Main accounts have unlimited privileges and using [User Panel](https://panel.szybkisms.pl) you can create as many subaccounts as you need.
  *
  * This method doesn't get any parameters. As a successful result an `AccountResponse` object will be returned with properties describing details of current account you are logged in using an API Access Token.
  */
-export async function accountsGet(
+export function accountsGet(
   client: ClientCore,
   options?: RequestOptions,
-): Promise<
+): APIPromise<
   Result<
     components.AccountResponse,
+    | errors.ErrorResponse
     | errors.ErrorResponse
     | SDKError
     | SDKValidationError
@@ -44,36 +47,50 @@ export async function accountsGet(
     | ConnectionError
   >
 > {
+  return new APIPromise($do(
+    client,
+    options,
+  ));
+}
+
+async function $do(
+  client: ClientCore,
+  options?: RequestOptions,
+): Promise<
+  [
+    Result<
+      components.AccountResponse,
+      | errors.ErrorResponse
+      | errors.ErrorResponse
+      | SDKError
+      | SDKValidationError
+      | UnexpectedClientError
+      | InvalidRequestError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | ConnectionError
+    >,
+    APICall,
+  ]
+> {
   const path = pathToFunc("/account")();
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     Accept: "application/json",
-  });
+  }));
 
   const secConfig = await extractSecurity(client._options.bearer);
   const securityInput = secConfig == null ? {} : { bearer: secConfig };
-  const context = {
-    operationID: "getAccountDetails",
-    oAuth2Scopes: [],
-    securitySource: client._options.bearer,
-  };
   const requestSecurity = resolveGlobalSecurity(securityInput);
 
-  const requestRes = client._createRequest(context, {
-    security: requestSecurity,
-    method: "GET",
-    path: path,
-    headers: headers,
-    timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
-  }, options);
-  if (!requestRes.ok) {
-    return requestRes;
-  }
-  const req = requestRes.value;
+  const context = {
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
+    operationID: "getAccountDetails",
+    oAuth2Scopes: [],
 
-  const doResult = await client._do(req, {
-    context,
-    errorCodes: ["401", "403", "4XX", "5XX"],
+    resolvedSecurity: requestSecurity,
+
+    securitySource: client._options.bearer,
     retryConfig: options?.retries
       || client._options.retryConfig
       || {
@@ -85,11 +102,32 @@ export async function accountsGet(
           maxElapsedTime: 3600000,
         },
         retryConnectionErrors: true,
-      },
+      }
+      || { strategy: "none" },
     retryCodes: options?.retryCodes || ["5XX"],
+  };
+
+  const requestRes = client._createRequest(context, {
+    security: requestSecurity,
+    method: "GET",
+    baseURL: options?.serverURL,
+    path: path,
+    headers: headers,
+    timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
+  }, options);
+  if (!requestRes.ok) {
+    return [requestRes, { status: "invalid" }];
+  }
+  const req = requestRes.value;
+
+  const doResult = await client._do(req, {
+    context,
+    errorCodes: ["401", "403", "4XX", "5XX"],
+    retryConfig: context.retryConfig,
+    retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
@@ -100,6 +138,7 @@ export async function accountsGet(
   const [result] = await M.match<
     components.AccountResponse,
     | errors.ErrorResponse
+    | errors.ErrorResponse
     | SDKError
     | SDKValidationError
     | UnexpectedClientError
@@ -109,13 +148,16 @@ export async function accountsGet(
     | ConnectionError
   >(
     M.json(200, components.AccountResponse$inboundSchema),
-    M.jsonErr([401, 403, "4XX", "5XX"], errors.ErrorResponse$inboundSchema, {
+    M.jsonErr([401, 403, "4XX"], errors.ErrorResponse$inboundSchema, {
+      ctype: "application/problem+json",
+    }),
+    M.jsonErr("5XX", errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
   )(response, { extraFields: responseFields });
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }

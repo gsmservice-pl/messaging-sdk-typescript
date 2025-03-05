@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type SetDefaultSenderRequest = {
   /**
@@ -52,6 +55,24 @@ export namespace SetDefaultSenderRequest$ {
   export type Outbound = SetDefaultSenderRequest$Outbound;
 }
 
+export function setDefaultSenderRequestToJSON(
+  setDefaultSenderRequest: SetDefaultSenderRequest,
+): string {
+  return JSON.stringify(
+    SetDefaultSenderRequest$outboundSchema.parse(setDefaultSenderRequest),
+  );
+}
+
+export function setDefaultSenderRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<SetDefaultSenderRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SetDefaultSenderRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SetDefaultSenderRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const SetDefaultSenderResponse$inboundSchema: z.ZodType<
   SetDefaultSenderResponse,
@@ -94,4 +115,22 @@ export namespace SetDefaultSenderResponse$ {
   export const outboundSchema = SetDefaultSenderResponse$outboundSchema;
   /** @deprecated use `SetDefaultSenderResponse$Outbound` instead. */
   export type Outbound = SetDefaultSenderResponse$Outbound;
+}
+
+export function setDefaultSenderResponseToJSON(
+  setDefaultSenderResponse: SetDefaultSenderResponse,
+): string {
+  return JSON.stringify(
+    SetDefaultSenderResponse$outboundSchema.parse(setDefaultSenderResponse),
+  );
+}
+
+export function setDefaultSenderResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<SetDefaultSenderResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SetDefaultSenderResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SetDefaultSenderResponse' from JSON`,
+  );
 }
