@@ -173,7 +173,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.messages.sms.send({
+  const result = await client.outgoing.sms.send({
     recipients: "+48999999999",
     message: "This is SMS message content.",
     sender: "Bramka SMS",
@@ -202,7 +202,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.messages.mms.send({
+  const result = await client.outgoing.mms.send({
     recipients: "+48999999999",
     subject: "This is a subject of the message",
     message: "This is MMS message content.",
@@ -226,8 +226,8 @@ run();
 
 ### [accounts](docs/sdks/accounts/README.md)
 
-* [getDetails](docs/sdks/accounts/README.md#getdetails) - Get account details
-* [getSubaccountDetails](docs/sdks/accounts/README.md#getsubaccountdetails) - Get subaccount details
+* [get](docs/sdks/accounts/README.md#get) - Get account details
+* [getSubaccount](docs/sdks/accounts/README.md#getsubaccount) - Get subaccount details
 
 
 ### [common](docs/sdks/common/README.md)
@@ -239,18 +239,18 @@ run();
 * [list](docs/sdks/incoming/README.md#list) - List the received SMS messages
 * [getByIds](docs/sdks/incoming/README.md#getbyids) - Get the incoming messages by IDs
 
-### [messages](docs/sdks/messages/README.md)
+### [outgoing](docs/sdks/outgoing/README.md)
 
-* [getByIds](docs/sdks/messages/README.md#getbyids) - Get the messages details and status by IDs
-* [cancelScheduled](docs/sdks/messages/README.md#cancelscheduled) - Cancel a scheduled messages
-* [list](docs/sdks/messages/README.md#list) - Lists the history of sent messages
+* [getByIds](docs/sdks/outgoing/README.md#getbyids) - Get the messages details and status by IDs
+* [cancelScheduled](docs/sdks/outgoing/README.md#cancelscheduled) - Cancel a scheduled messages
+* [list](docs/sdks/outgoing/README.md#list) - Lists the history of sent messages
 
-#### [messages.mms](docs/sdks/mms/README.md)
+#### [outgoing.mms](docs/sdks/mms/README.md)
 
 * [getPrice](docs/sdks/mms/README.md#getprice) - Check the price of MMS Messages
 * [send](docs/sdks/mms/README.md#send) - Send MMS Messages
 
-#### [messages.sms](docs/sdks/sms/README.md)
+#### [outgoing.sms](docs/sdks/sms/README.md)
 
 * [getPrice](docs/sdks/sms/README.md#getprice) - Check the price of SMS Messages
 * [send](docs/sdks/sms/README.md#send) - Send SMS Messages
@@ -280,18 +280,18 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 <summary>Available standalone functions</summary>
 
-- [`accountsGetDetails`](docs/sdks/accounts/README.md#getdetails) - Get account details
-- [`accountsGetSubaccountDetails`](docs/sdks/accounts/README.md#getsubaccountdetails) - Get subaccount details
+- [`accountsGet`](docs/sdks/accounts/README.md#get) - Get account details
+- [`accountsGetSubaccount`](docs/sdks/accounts/README.md#getsubaccount) - Get subaccount details
 - [`commonPing`](docs/sdks/common/README.md#ping) - Checks API availability and version
 - [`incomingGetByIds`](docs/sdks/incoming/README.md#getbyids) - Get the incoming messages by IDs
 - [`incomingList`](docs/sdks/incoming/README.md#list) - List the received SMS messages
-- [`messagesCancelScheduled`](docs/sdks/messages/README.md#cancelscheduled) - Cancel a scheduled messages
-- [`messagesGetByIds`](docs/sdks/messages/README.md#getbyids) - Get the messages details and status by IDs
-- [`messagesList`](docs/sdks/messages/README.md#list) - Lists the history of sent messages
-- [`messagesMmsGetPrice`](docs/sdks/mms/README.md#getprice) - Check the price of MMS Messages
-- [`messagesMmsSend`](docs/sdks/mms/README.md#send) - Send MMS Messages
-- [`messagesSmsGetPrice`](docs/sdks/sms/README.md#getprice) - Check the price of SMS Messages
-- [`messagesSmsSend`](docs/sdks/sms/README.md#send) - Send SMS Messages
+- [`outgoingCancelScheduled`](docs/sdks/outgoing/README.md#cancelscheduled) - Cancel a scheduled messages
+- [`outgoingGetByIds`](docs/sdks/outgoing/README.md#getbyids) - Get the messages details and status by IDs
+- [`outgoingList`](docs/sdks/outgoing/README.md#list) - Lists the history of sent messages
+- [`outgoingMmsGetPrice`](docs/sdks/mms/README.md#getprice) - Check the price of MMS Messages
+- [`outgoingMmsSend`](docs/sdks/mms/README.md#send) - Send MMS Messages
+- [`outgoingSmsGetPrice`](docs/sdks/sms/README.md#getprice) - Check the price of SMS Messages
+- [`outgoingSmsSend`](docs/sdks/sms/README.md#send) - Send SMS Messages
 - [`sendersAdd`](docs/sdks/senders/README.md#add) - Add a new sender name
 - [`sendersDelete`](docs/sdks/senders/README.md#delete) - Delete a sender name
 - [`sendersList`](docs/sdks/senders/README.md#list) - List allowed senders names
@@ -314,7 +314,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.accounts.getDetails({
+  const result = await client.accounts.get({
     retries: {
       strategy: "backoff",
       backoff: {
@@ -353,7 +353,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.accounts.getDetails();
+  const result = await client.accounts.get();
 
   console.log(result);
 }
@@ -388,7 +388,7 @@ const client = new Client({
 
 async function run() {
   try {
-    const result = await client.accounts.getDetails();
+    const result = await client.accounts.get();
 
     console.log(result);
   } catch (error) {
@@ -461,7 +461,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.accounts.getDetails();
+  const result = await client.accounts.get();
 
   console.log(result);
 }
@@ -482,7 +482,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.accounts.getDetails();
+  const result = await client.accounts.get();
 
   console.log(result);
 }
@@ -561,7 +561,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.accounts.getDetails();
+  const result = await client.accounts.get();
 
   console.log(result);
 }

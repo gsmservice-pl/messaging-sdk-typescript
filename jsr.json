@@ -2,7 +2,7 @@
 
 {
   "name": "@gsmservice-pl/messaging-sdk-typescript",
-  "version": "3.9.44",
+  "version": "3.9.48",
   "exports": {
     ".": "./src/index.ts",    
     "./models/errors": "./src/models/errors/index.ts",    

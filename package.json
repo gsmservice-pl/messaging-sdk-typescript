@@ -1,6 +1,6 @@
 {
   "name": "@gsmservice-pl/messaging-sdk-typescript",
-  "version": "3.9.44",
+  "version": "3.9.48",
   "author": "SzybkiSMS.pl",
   "description": "Messaging Gateway SDK for TypeScript - SzybkiSMS.pl",
   "license": "MIT",

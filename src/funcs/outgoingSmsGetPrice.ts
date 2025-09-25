@@ -36,7 +36,7 @@ import { Result } from "../types/fp.js";
  *
  * `GetSmsPriceResponse` object will include also `headers` array with `X-Success-Count` (a count of messages which were processed successfully) and `X-Error-Count` (count of messages which were rejected) elements.
  */
-export function messagesSmsGetPrice(
+export function outgoingSmsGetPrice(
   client: ClientCore,
   request: operations.GetSmsPriceRequestBody,
   options?: RequestOptions,

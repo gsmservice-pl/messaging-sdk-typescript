@@ -26,22 +26,20 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Cancel a scheduled messages
+ * Get the messages details and status by IDs
  *
  * @remarks
- * Cancel messages using their `ids` which were scheduled to be sent at a specific time. You have to pass a `CancelMessagesRequest` object containing as `ids` property an `array` of the unique message IDs, which were returned after sending a message. This method will accept maximum 50 identifiers in one call. You can cancel only messages with *SCHEDULED* status.
+ * Check the current status and details of one or more messages using their `ids`. You have to pass a `GetMessagesRequest` object with `ids` property, containing an `array` with unique message *IDs* which details you want to fetch. This method will accept maximum 50 identifiers in one call.
  *
- * As a successful result a `CancelMessagesResponse` object will be returned, with `result` property containing array of `CancelledMessage` object. The `status` property of each `CancelledMessage` object will contain a status code of operation - `204` if a particular message was cancelled successfully and other code if an error occured.
- *
- * `CancelMessagesResponse` object will also contain `headers` array property where you can find `X-Success-Count` (a count of messages which were cancelled successfully), `X-Error-Count` (count of messages which were not cancelled) and `X-Sandbox` (if a request was made in Sandbox or Production system) elements.
+ * As a successful result a `GetMessagesResponse` object will be returned containing `result` property with an `array` of `Message` objects, each object per single found message. `GetMessagesResponse` object will also contain `headers` array property where you can find `X-Success-Count` (a count of messages which were found and returned correctly) and `X-Error-Count` (count of messages which were not found) elements.
  */
-export function messagesCancelScheduled(
+export function outgoingGetByIds(
   client: ClientCore,
-  request: operations.CancelMessagesRequest,
+  request: operations.GetMessagesRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.CancelMessagesResponse,
+    operations.GetMessagesResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -62,12 +60,12 @@ export function messagesCancelScheduled(
 
 async function $do(
   client: ClientCore,
-  request: operations.CancelMessagesRequest,
+  request: operations.GetMessagesRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.CancelMessagesResponse,
+      operations.GetMessagesResponse,
       | errors.ErrorResponse
       | ClientError
       | ResponseValidationError
@@ -83,7 +81,7 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) => operations.CancelMessagesRequest$outboundSchema.parse(value),
+    (value) => operations.GetMessagesRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -112,7 +110,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "cancelMessages",
+    operationID: "getMessages",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,
@@ -136,7 +134,7 @@ async function $do(
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "DELETE",
+    method: "GET",
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
@@ -165,7 +163,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.CancelMessagesResponse,
+    operations.GetMessagesResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -176,7 +174,7 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, operations.CancelMessagesResponse$inboundSchema, {
+    M.json(200, operations.GetMessagesResponse$inboundSchema, {
       hdrs: true,
       key: "Result",
     }),

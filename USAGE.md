@@ -11,7 +11,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.messages.sms.send({
+  const result = await client.outgoing.sms.send({
     recipients: "+48999999999",
     message: "This is SMS message content.",
     sender: "Bramka SMS",
@@ -40,7 +40,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.messages.mms.send({
+  const result = await client.outgoing.mms.send({
     recipients: "+48999999999",
     subject: "This is a subject of the message",
     message: "This is MMS message content.",

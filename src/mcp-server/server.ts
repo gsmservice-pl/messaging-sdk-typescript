@@ -13,18 +13,18 @@ import {
 } from "./resources.js";
 import { MCPScope } from "./scopes.js";
 import { createRegisterTool } from "./tools.js";
-import { tool$accountsGetDetails } from "./tools/accountsGetDetails.js";
-import { tool$accountsGetSubaccountDetails } from "./tools/accountsGetSubaccountDetails.js";
+import { tool$accountsGet } from "./tools/accountsGet.js";
+import { tool$accountsGetSubaccount } from "./tools/accountsGetSubaccount.js";
 import { tool$commonPing } from "./tools/commonPing.js";
 import { tool$incomingGetByIds } from "./tools/incomingGetByIds.js";
 import { tool$incomingList } from "./tools/incomingList.js";
-import { tool$messagesCancelScheduled } from "./tools/messagesCancelScheduled.js";
-import { tool$messagesGetByIds } from "./tools/messagesGetByIds.js";
-import { tool$messagesList } from "./tools/messagesList.js";
-import { tool$messagesMmsGetPrice } from "./tools/messagesMmsGetPrice.js";
-import { tool$messagesMmsSend } from "./tools/messagesMmsSend.js";
-import { tool$messagesSmsGetPrice } from "./tools/messagesSmsGetPrice.js";
-import { tool$messagesSmsSend } from "./tools/messagesSmsSend.js";
+import { tool$outgoingCancelScheduled } from "./tools/outgoingCancelScheduled.js";
+import { tool$outgoingGetByIds } from "./tools/outgoingGetByIds.js";
+import { tool$outgoingList } from "./tools/outgoingList.js";
+import { tool$outgoingMmsGetPrice } from "./tools/outgoingMmsGetPrice.js";
+import { tool$outgoingMmsSend } from "./tools/outgoingMmsSend.js";
+import { tool$outgoingSmsGetPrice } from "./tools/outgoingSmsGetPrice.js";
+import { tool$outgoingSmsSend } from "./tools/outgoingSmsSend.js";
 import { tool$sendersAdd } from "./tools/sendersAdd.js";
 import { tool$sendersDelete } from "./tools/sendersDelete.js";
 import { tool$sendersList } from "./tools/sendersList.js";
@@ -40,7 +40,7 @@ export function createMCPServer(deps: {
 }) {
   const server = new McpServer({
     name: "Client",
-    version: "3.9.44",
+    version: "3.9.48",
   });
 
   const client = new ClientCore({
@@ -70,11 +70,11 @@ export function createMCPServer(deps: {
   const register = { tool, resource, resourceTemplate, prompt };
   void register; // suppress unused warnings
 
-  tool(tool$accountsGetDetails);
-  tool(tool$accountsGetSubaccountDetails);
-  tool(tool$messagesGetByIds);
-  tool(tool$messagesCancelScheduled);
-  tool(tool$messagesList);
+  tool(tool$accountsGet);
+  tool(tool$accountsGetSubaccount);
+  tool(tool$outgoingGetByIds);
+  tool(tool$outgoingCancelScheduled);
+  tool(tool$outgoingList);
   tool(tool$incomingList);
   tool(tool$incomingGetByIds);
   tool(tool$commonPing);
@@ -82,10 +82,10 @@ export function createMCPServer(deps: {
   tool(tool$sendersAdd);
   tool(tool$sendersDelete);
   tool(tool$sendersSetDefault);
-  tool(tool$messagesMmsGetPrice);
-  tool(tool$messagesMmsSend);
-  tool(tool$messagesSmsGetPrice);
-  tool(tool$messagesSmsSend);
+  tool(tool$outgoingMmsGetPrice);
+  tool(tool$outgoingMmsSend);
+  tool(tool$outgoingSmsGetPrice);
+  tool(tool$outgoingSmsSend);
 
   return server;
 }

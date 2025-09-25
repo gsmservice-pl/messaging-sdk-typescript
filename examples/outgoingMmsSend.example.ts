@@ -8,7 +8,7 @@ dotenv.config();
  * Example usage of the @gsmservice-pl/messaging-sdk-typescript SDK
  *
  * To run this example from the examples directory:
- * npm run build && npx tsx messagesMmsSend.example.ts
+ * npm run build && npx tsx outgoingMmsSend.example.ts
  */
 
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
@@ -18,7 +18,7 @@ const client = new Client({
 });
 
 async function main() {
-  const result = await client.messages.mms.send({
+  const result = await client.outgoing.mms.send({
     recipients: "+48999999999",
     subject: "This is a subject of the message",
     message: "This is MMS message content.",

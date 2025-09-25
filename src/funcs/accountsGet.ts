@@ -3,13 +3,12 @@
  */
 
 import { ClientCore } from "../core.js";
-import { encodeJSON } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
-import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
+import * as components from "../models/components/index.js";
 import { ClientError } from "../models/errors/clienterror.js";
 import {
   ConnectionError,
@@ -21,28 +20,23 @@ import {
 import * as errors from "../models/errors/index.js";
 import { ResponseValidationError } from "../models/errors/responsevalidationerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
-import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Check the price of MMS Messages
+ * Get account details
  *
  * @remarks
- * Check the price of single or multiple MMS messages at the same time before sending them. You can pass a single `MmsMessage` object (for single message) or `array` of `MmsMessage` objects (for multiple messages). Each `MmsMessage` object has several properties, describing message parameters such as recipient phone number, content of the message, attachments, etc.
- * The method will accept maximum **50** messages in one call.
+ * Get current account balance and other details of your account. You can check also account limit and if account is main one. Main accounts have unlimited privileges and using [User Panel](https://panel.szybkisms.pl) you can create as many subaccounts as you need.
  *
- * As a successful result a `GetMmsPriceResponse` object will be returned with `result` property containing `array` of `Price` objects, one object per each single message. You should check the `error` property of each `Price` object to make sure which were priced successfully and which finished with an error. Successfully priced messages will have `null` value of `error` property.
- *
- * `GetSmsPriceResponse` object will include also `headers` array with `X-Success-Count` (a count of messages which were processed successfully) and `X-Error-Count` (count of messages which were rejected) elements.
+ * This method doesn't get any parameters. As a successful result an `AccountResponse` object will be returned with properties describing details of current account you are logged in using an API Access Token.
  */
-export function messagesMmsGetPrice(
+export function accountsGet(
   client: ClientCore,
-  request: operations.GetMmsPriceRequestBody,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.GetMmsPriceResponse,
+    components.AccountResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -56,19 +50,17 @@ export function messagesMmsGetPrice(
 > {
   return new APIPromise($do(
     client,
-    request,
     options,
   ));
 }
 
 async function $do(
   client: ClientCore,
-  request: operations.GetMmsPriceRequestBody,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.GetMmsPriceResponse,
+      components.AccountResponse,
       | errors.ErrorResponse
       | ClientError
       | ResponseValidationError
@@ -82,21 +74,9 @@ async function $do(
     APICall,
   ]
 > {
-  const parsed = safeParse(
-    request,
-    (value) => operations.GetMmsPriceRequestBody$outboundSchema.parse(value),
-    "Input validation failed",
-  );
-  if (!parsed.ok) {
-    return [parsed, { status: "invalid" }];
-  }
-  const payload = parsed.value;
-  const body = encodeJSON("body", payload, { explode: true });
-
-  const path = pathToFunc("/messages/mms/price")();
+  const path = pathToFunc("/account")();
 
   const headers = new Headers(compactMap({
-    "Content-Type": "application/json",
     Accept: "application/json",
   }));
 
@@ -107,7 +87,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "getMmsPrice",
+    operationID: "getAccountDetails",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,
@@ -131,11 +111,10 @@ async function $do(
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "POST",
+    method: "GET",
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
-    body: body,
     userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
@@ -146,7 +125,7 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "4XX", "5XX"],
+    errorCodes: ["401", "403", "4XX", "5XX"],
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -160,7 +139,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.GetMmsPriceResponse,
+    components.AccountResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -171,11 +150,8 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, operations.GetMmsPriceResponse$inboundSchema, {
-      hdrs: true,
-      key: "Result",
-    }),
-    M.jsonErr([400, 401, "4XX"], errors.ErrorResponse$inboundSchema, {
+    M.json(200, components.AccountResponse$inboundSchema),
+    M.jsonErr([401, 403, "4XX"], errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
     M.jsonErr("5XX", errors.ErrorResponse$inboundSchema, {

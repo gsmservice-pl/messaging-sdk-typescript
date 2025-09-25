@@ -3,7 +3,7 @@
  */
 
 import { ClientCore } from "../core.js";
-import { encodeSimple } from "../lib/encodings.js";
+import { encodeJSON } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -26,20 +26,23 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Get the messages details and status by IDs
+ * Check the price of MMS Messages
  *
  * @remarks
- * Check the current status and details of one or more messages using their `ids`. You have to pass a `GetMessagesRequest` object with `ids` property, containing an `array` with unique message *IDs* which details you want to fetch. This method will accept maximum 50 identifiers in one call.
+ * Check the price of single or multiple MMS messages at the same time before sending them. You can pass a single `MmsMessage` object (for single message) or `array` of `MmsMessage` objects (for multiple messages). Each `MmsMessage` object has several properties, describing message parameters such as recipient phone number, content of the message, attachments, etc.
+ * The method will accept maximum **50** messages in one call.
  *
- * As a successful result a `GetMessagesResponse` object will be returned containing `result` property with an `array` of `Message` objects, each object per single found message. `GetMessagesResponse` object will also contain `headers` array property where you can find `X-Success-Count` (a count of messages which were found and returned correctly) and `X-Error-Count` (count of messages which were not found) elements.
+ * As a successful result a `GetMmsPriceResponse` object will be returned with `result` property containing `array` of `Price` objects, one object per each single message. You should check the `error` property of each `Price` object to make sure which were priced successfully and which finished with an error. Successfully priced messages will have `null` value of `error` property.
+ *
+ * `GetSmsPriceResponse` object will include also `headers` array with `X-Success-Count` (a count of messages which were processed successfully) and `X-Error-Count` (count of messages which were rejected) elements.
  */
-export function messagesGetByIds(
+export function outgoingMmsGetPrice(
   client: ClientCore,
-  request: operations.GetMessagesRequest,
+  request: operations.GetMmsPriceRequestBody,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.GetMessagesResponse,
+    operations.GetMmsPriceResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -60,12 +63,12 @@ export function messagesGetByIds(
 
 async function $do(
   client: ClientCore,
-  request: operations.GetMessagesRequest,
+  request: operations.GetMmsPriceRequestBody,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.GetMessagesResponse,
+      operations.GetMmsPriceResponse,
       | errors.ErrorResponse
       | ClientError
       | ResponseValidationError
@@ -81,25 +84,19 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) => operations.GetMessagesRequest$outboundSchema.parse(value),
+    (value) => operations.GetMmsPriceRequestBody$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
     return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
-  const body = null;
+  const body = encodeJSON("body", payload, { explode: true });
 
-  const pathParams = {
-    ids: encodeSimple("ids", payload.ids, {
-      explode: true,
-      charEncoding: "percent",
-    }),
-  };
-
-  const path = pathToFunc("/messages/{ids}")(pathParams);
+  const path = pathToFunc("/messages/mms/price")();
 
   const headers = new Headers(compactMap({
+    "Content-Type": "application/json",
     Accept: "application/json",
   }));
 
@@ -110,7 +107,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "getMessages",
+    operationID: "getMmsPrice",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,
@@ -134,7 +131,7 @@ async function $do(
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "GET",
+    method: "POST",
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
@@ -149,7 +146,7 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "403", "404", "4XX", "5XX"],
+    errorCodes: ["400", "401", "4XX", "5XX"],
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -163,7 +160,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.GetMessagesResponse,
+    operations.GetMmsPriceResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -174,11 +171,11 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, operations.GetMessagesResponse$inboundSchema, {
+    M.json(200, operations.GetMmsPriceResponse$inboundSchema, {
       hdrs: true,
       key: "Result",
     }),
-    M.jsonErr([400, 401, 403, 404, "4XX"], errors.ErrorResponse$inboundSchema, {
+    M.jsonErr([400, 401, "4XX"], errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
     M.jsonErr("5XX", errors.ErrorResponse$inboundSchema, {

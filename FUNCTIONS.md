@@ -20,7 +20,7 @@ specific category of applications.
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { messagesMmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesMmsSend.js";
+import { outgoingMmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingMmsSend.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -29,7 +29,7 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await messagesMmsSend(client, {
+  const res = await outgoingMmsSend(client, {
     recipients: "+48999999999",
     subject: "This is a subject of the message",
     message: "This is MMS message content.",
@@ -40,7 +40,7 @@ async function run() {
     const { value: result } = res;
     console.log(result);
   } else {
-    console.log("messagesMmsSend failed:", res.error);
+    console.log("outgoingMmsSend failed:", res.error);
   }
 }
 

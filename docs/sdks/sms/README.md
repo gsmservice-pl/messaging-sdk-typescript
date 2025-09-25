@@ -1,5 +1,5 @@
 # Sms
-(*messages.sms*)
+(*outgoing.sms*)
 
 ## Overview
 
@@ -28,7 +28,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.messages.sms.getPrice({
+  const result = await client.outgoing.sms.getPrice({
     recipients: "+48999999999",
     message: "This is SMS message content.",
     sender: "Bramka SMS",
@@ -50,7 +50,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { messagesSmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesSmsGetPrice.js";
+import { outgoingSmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsGetPrice.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -59,7 +59,7 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await messagesSmsGetPrice(client, {
+  const res = await outgoingSmsGetPrice(client, {
     recipients: "+48999999999",
     message: "This is SMS message content.",
     sender: "Bramka SMS",
@@ -72,7 +72,7 @@ async function run() {
     const { value: result } = res;
     console.log(result);
   } else {
-    console.log("messagesSmsGetPrice failed:", res.error);
+    console.log("outgoingSmsGetPrice failed:", res.error);
   }
 }
 
@@ -118,7 +118,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.messages.sms.send({
+  const result = await client.outgoing.sms.send({
     recipients: "+48999999999",
     message: "This is SMS message content.",
     sender: "Bramka SMS",
@@ -140,7 +140,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { messagesSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesSmsSend.js";
+import { outgoingSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsSend.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -149,7 +149,7 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await messagesSmsSend(client, {
+  const res = await outgoingSmsSend(client, {
     recipients: "+48999999999",
     message: "This is SMS message content.",
     sender: "Bramka SMS",
@@ -162,7 +162,7 @@ async function run() {
     const { value: result } = res;
     console.log(result);
   } else {
-    console.log("messagesSmsSend failed:", res.error);
+    console.log("outgoingSmsSend failed:", res.error);
   }
 }
 

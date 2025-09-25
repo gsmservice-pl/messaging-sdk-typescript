@@ -3,13 +3,14 @@
  */
 
 import { ClientCore } from "../core.js";
-import { encodeJSON } from "../lib/encodings.js";
+import { encodeSimple } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
+import * as components from "../models/components/index.js";
 import { ClientError } from "../models/errors/clienterror.js";
 import {
   ConnectionError,
@@ -26,22 +27,22 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Send MMS Messages
+ * Get subaccount details
  *
  * @remarks
- * Send single or multiple MMS messages at the same time. You can pass as a parameter `MmsMessage` object (for single message) or `array` of `MmsMessage` objects (for multiple messages). Each `MmsMessage` object has several properties, describing message parameters such recipient phone number, content of the message, attachments or scheduled sending date, etc. This method will accept maximum **50** messages in one call.
+ * Check account balance and other details such subcredit balance of a subaccount. Subaccounts are additional users who can access your account services and the details. You can restrict access level and setup privileges to subaccounts using [user panel](https://panel.szybkisms.pl).
  *
- * As a successful result a `SendMmsResponse` object will be returned with `result` property containing array of `Message` objects, one object per each single message. You should check the `statusCode` property of each `Message` object to make sure which were accepted by gateway (queued) and which were rejected. In case of rejection, `statusDescription` property will include a reason.
+ * This method accepts an object `GetSubaccountDetailsRequest` with `userLogin` property. You should pass there the full subaccount login to access its data.
  *
- * `SendSmsResponse` will also include `headers` array with `X-Success-Count` (a count of messages which were processed successfully), `X-Error-Count` (count of messages which were rejected) and `X-Sandbox` (if a request was made in Sandbox or Production system) elements.
+ * As a successful result a `AccountResponse` object will be returned with properties describing details of subaccount with provided login.
  */
-export function messagesMmsSend(
+export function accountsGetSubaccount(
   client: ClientCore,
-  request: operations.SendMmsRequestBody,
+  request: operations.GetSubaccountDetailsRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.SendMmsResponse,
+    components.AccountResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -62,12 +63,12 @@ export function messagesMmsSend(
 
 async function $do(
   client: ClientCore,
-  request: operations.SendMmsRequestBody,
+  request: operations.GetSubaccountDetailsRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.SendMmsResponse,
+      components.AccountResponse,
       | errors.ErrorResponse
       | ClientError
       | ResponseValidationError
@@ -83,19 +84,26 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) => operations.SendMmsRequestBody$outboundSchema.parse(value),
+    (value) =>
+      operations.GetSubaccountDetailsRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
     return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
-  const body = encodeJSON("body", payload, { explode: true });
+  const body = null;
 
-  const path = pathToFunc("/messages/mms")();
+  const pathParams = {
+    user_login: encodeSimple("user_login", payload.user_login, {
+      explode: true,
+      charEncoding: "percent",
+    }),
+  };
+
+  const path = pathToFunc("/account/{user_login}")(pathParams);
 
   const headers = new Headers(compactMap({
-    "Content-Type": "application/json",
     Accept: "application/json",
   }));
 
@@ -106,7 +114,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "sendMms",
+    operationID: "getSubaccountDetails",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,
@@ -130,7 +138,7 @@ async function $do(
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "POST",
+    method: "GET",
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
@@ -145,7 +153,7 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "403", "4XX", "5XX"],
+    errorCodes: ["401", "403", "404", "4XX", "5XX"],
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -159,7 +167,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.SendMmsResponse,
+    components.AccountResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -170,11 +178,8 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, operations.SendMmsResponse$inboundSchema, {
-      hdrs: true,
-      key: "Result",
-    }),
-    M.jsonErr([400, 401, 403, "4XX"], errors.ErrorResponse$inboundSchema, {
+    M.json(200, components.AccountResponse$inboundSchema),
+    M.jsonErr([401, 403, 404, "4XX"], errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
     M.jsonErr("5XX", errors.ErrorResponse$inboundSchema, {

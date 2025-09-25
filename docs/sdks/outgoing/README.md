@@ -1,5 +1,5 @@
-# Messages
-(*messages*)
+# Outgoing
+(*outgoing*)
 
 ## Overview
 
@@ -26,7 +26,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.messages.getByIds({
+  const result = await client.outgoing.getByIds({
     ids: [
       43456,
     ],
@@ -44,7 +44,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { messagesGetByIds } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesGetByIds.js";
+import { outgoingGetByIds } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingGetByIds.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -53,7 +53,7 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await messagesGetByIds(client, {
+  const res = await outgoingGetByIds(client, {
     ids: [
       43456,
     ],
@@ -62,7 +62,7 @@ async function run() {
     const { value: result } = res;
     console.log(result);
   } else {
-    console.log("messagesGetByIds failed:", res.error);
+    console.log("outgoingGetByIds failed:", res.error);
   }
 }
 
@@ -108,7 +108,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.messages.cancelScheduled({
+  const result = await client.outgoing.cancelScheduled({
     ids: [
       43456,
     ],
@@ -126,7 +126,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { messagesCancelScheduled } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesCancelScheduled.js";
+import { outgoingCancelScheduled } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingCancelScheduled.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -135,7 +135,7 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await messagesCancelScheduled(client, {
+  const res = await outgoingCancelScheduled(client, {
     ids: [
       43456,
     ],
@@ -144,7 +144,7 @@ async function run() {
     const { value: result } = res;
     console.log(result);
   } else {
-    console.log("messagesCancelScheduled failed:", res.error);
+    console.log("outgoingCancelScheduled failed:", res.error);
   }
 }
 
@@ -188,7 +188,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.messages.list({});
+  const result = await client.outgoing.list({});
 
   console.log(result);
 }
@@ -202,7 +202,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { messagesList } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesList.js";
+import { outgoingList } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingList.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -211,12 +211,12 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await messagesList(client, {});
+  const res = await outgoingList(client, {});
   if (res.ok) {
     const { value: result } = res;
     console.log(result);
   } else {
-    console.log("messagesList failed:", res.error);
+    console.log("outgoingList failed:", res.error);
   }
 }
 
