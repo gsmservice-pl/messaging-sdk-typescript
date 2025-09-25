@@ -28,3 +28,4 @@
 /.tshy
 /.tshy-*
 /__tests__
+/.devcontainer/
