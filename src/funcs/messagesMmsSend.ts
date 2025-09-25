@@ -3,13 +3,14 @@
  */
 
 import { ClientCore } from "../core.js";
-import { encodeFormQuery } from "../lib/encodings.js";
+import { encodeJSON } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
+import { ClientError } from "../models/errors/clienterror.js";
 import {
   ConnectionError,
   InvalidRequestError,
@@ -18,36 +19,38 @@ import {
   UnexpectedClientError,
 } from "../models/errors/httpclienterrors.js";
 import * as errors from "../models/errors/index.js";
-import { SDKError } from "../models/errors/sdkerror.js";
+import { ResponseValidationError } from "../models/errors/responsevalidationerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
 import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Lists the history of sent messages
+ * Send MMS Messages
  *
  * @remarks
- * Get the details and current status of all of sent messages from your account message history. This method supports pagination so you have to pass a `ListMessagesRequest` with `page` property (number of page with messages which you want to access) and a `limit` value (max of messages per page). Messages are fetched from the latest one. This method will accept maximum value of **50** as `limit` parameter value.
+ * Send single or multiple MMS messages at the same time. You can pass as a parameter `MmsMessage` object (for single message) or `array` of `MmsMessage` objects (for multiple messages). Each `MmsMessage` object has several properties, describing message parameters such recipient phone number, content of the message, attachments or scheduled sending date, etc. This method will accept maximum **50** messages in one call.
  *
- * As a successful result a `ListMessagesResponse` object will be returned containing `result` property with an `array` of `Message` objects, each object per single message. `ListMessagesResponse` will also contain `headers` array property where you can find `X-Total-Results` (a total count of all messages which are available in history on your account), `X-Total-Pages` (a total number of all pages with results), `X-Current-Page` (A current page number) and `X-Limit` (messages count per single page) elements.
+ * As a successful result a `SendMmsResponse` object will be returned with `result` property containing array of `Message` objects, one object per each single message. You should check the `statusCode` property of each `Message` object to make sure which were accepted by gateway (queued) and which were rejected. In case of rejection, `statusDescription` property will include a reason.
+ *
+ * `SendSmsResponse` will also include `headers` array with `X-Success-Count` (a count of messages which were processed successfully), `X-Error-Count` (count of messages which were rejected) and `X-Sandbox` (if a request was made in Sandbox or Production system) elements.
  */
-export function outgoingList(
+export function messagesMmsSend(
   client: ClientCore,
-  request: operations.ListMessagesRequest,
+  request: operations.SendMmsRequestBody,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.ListMessagesResponse,
+    operations.SendMmsResponse,
     | errors.ErrorResponse
-    | errors.ErrorResponse
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | ClientError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >
 > {
   return new APIPromise($do(
@@ -59,44 +62,40 @@ export function outgoingList(
 
 async function $do(
   client: ClientCore,
-  request: operations.ListMessagesRequest,
+  request: operations.SendMmsRequestBody,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.ListMessagesResponse,
+      operations.SendMmsResponse,
       | errors.ErrorResponse
-      | errors.ErrorResponse
-      | SDKError
-      | SDKValidationError
-      | UnexpectedClientError
-      | InvalidRequestError
+      | ClientError
+      | ResponseValidationError
+      | ConnectionError
       | RequestAbortedError
       | RequestTimeoutError
-      | ConnectionError
+      | InvalidRequestError
+      | UnexpectedClientError
+      | SDKValidationError
     >,
     APICall,
   ]
 > {
   const parsed = safeParse(
     request,
-    (value) => operations.ListMessagesRequest$outboundSchema.parse(value),
+    (value) => operations.SendMmsRequestBody$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
     return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
-  const body = null;
+  const body = encodeJSON("body", payload, { explode: true });
 
-  const path = pathToFunc("/messages")();
-
-  const query = encodeFormQuery({
-    "limit": payload.limit,
-    "page": payload.page,
-  });
+  const path = pathToFunc("/messages/mms")();
 
   const headers = new Headers(compactMap({
+    "Content-Type": "application/json",
     Accept: "application/json",
   }));
 
@@ -105,8 +104,9 @@ async function $do(
   const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const context = {
+    options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "listMessages",
+    operationID: "sendMms",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,
@@ -130,12 +130,12 @@ async function $do(
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "GET",
+    method: "POST",
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
-    query: query,
     body: body,
+    userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
@@ -145,7 +145,7 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "403", "404", "4XX", "5XX"],
+    errorCodes: ["400", "401", "403", "4XX", "5XX"],
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -159,28 +159,28 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.ListMessagesResponse,
+    operations.SendMmsResponse,
     | errors.ErrorResponse
-    | errors.ErrorResponse
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | ClientError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >(
-    M.json(200, operations.ListMessagesResponse$inboundSchema, {
+    M.json(200, operations.SendMmsResponse$inboundSchema, {
       hdrs: true,
       key: "Result",
     }),
-    M.jsonErr([400, 401, 403, 404, "4XX"], errors.ErrorResponse$inboundSchema, {
+    M.jsonErr([400, 401, 403, "4XX"], errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
     M.jsonErr("5XX", errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
-  )(response, { extraFields: responseFields });
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }

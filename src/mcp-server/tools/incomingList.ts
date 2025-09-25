@@ -11,7 +11,7 @@ const args = {
 };
 
 export const tool$incomingList: ToolDefinition<typeof args> = {
-  name: "incoming_list",
+  name: "incoming-list",
   description: `List the received SMS messages
 
 Get the details of all received messages from your account incoming messages box. This method supports pagination so you have to pass \`ListIncomingMessagesRequest\` object with property \`page\` (number of page with received messages which you want to access) and a \`limit\` (max of received messages per page). Messages are fetched from the latest one. This method will accept maximum **50** as \`limit\` parameter value.

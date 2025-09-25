@@ -8,22 +8,14 @@ import { ListIncomingMessagesResponse } from "@gsmservice-pl/messaging-sdk-types
 let value: ListIncomingMessagesResponse = {
   headers: {
     "key": [
-      "<value>",
+      "<value 1>",
+    ],
+    "key1": [
+      "<value 1>",
+      "<value 2>",
     ],
   },
-  result: [
-    {
-      id: 45544,
-      login: "some-user",
-      recipient: "+48999000555",
-      sender: "+48999888777",
-      phonebookSenderName: "Jan Nowak",
-      date: new Date("2024-05-31T05:17:35Z"),
-      message: "To jest treść odebranego SMSa",
-      dedicatedNumber: "+48111222444",
-      dedicatedPrefix: "LATO",
-    },
-  ],
+  result: [],
 };
 ```
 

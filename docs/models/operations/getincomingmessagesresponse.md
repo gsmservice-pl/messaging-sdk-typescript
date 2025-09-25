@@ -8,7 +8,7 @@ import { GetIncomingMessagesResponse } from "@gsmservice-pl/messaging-sdk-typesc
 let value: GetIncomingMessagesResponse = {
   headers: {
     "key": [
-      "<value>",
+      "<value 1>",
     ],
   },
   result: [

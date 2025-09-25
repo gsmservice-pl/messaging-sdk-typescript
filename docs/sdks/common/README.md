@@ -15,6 +15,7 @@ As a successful result a `PingResponse` object will be returned.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="ping" method="get" path="/ping" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -23,7 +24,6 @@ const client = new Client();
 async function run() {
   const result = await client.common.ping();
 
-  // Handle the result
   console.log(result);
 }
 
@@ -44,15 +44,12 @@ const client = new ClientCore();
 
 async function run() {
   const res = await commonPing(client);
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("commonPing failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();

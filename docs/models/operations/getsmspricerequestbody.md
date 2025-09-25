@@ -11,6 +11,7 @@ To check the price of a single message or messages with the same content to mult
 const value: components.SmsMessage = {
   recipients: "+48999999999",
   message: "To jest treść wiadomości",
+  unicode: true,
 };
 ```
 
@@ -21,6 +22,7 @@ const value: components.SmsMessage[] = [
   {
     recipients: "+48999999999",
     message: "To jest treść wiadomości",
+    unicode: true,
   },
 ];
 ```

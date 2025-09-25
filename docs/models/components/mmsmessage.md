@@ -8,10 +8,7 @@ An object with a new MMS message properties
 import { MmsMessage } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: MmsMessage = {
-  recipients: {
-    nr: "+48999999999",
-    cid: "my-id-1113",
-  },
+  recipients: "+48999999999",
   subject: "To jest temat wiadomości",
   message: "To jest treść wiadomości",
   attachments: "<file_body in base64 format>",

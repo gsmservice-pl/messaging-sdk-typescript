@@ -3,6 +3,7 @@
  */
 
 import * as z from "zod";
+import { ClientError } from "./clienterror.js";
 
 /**
  * An object that complies with RFC 9457 containing information about a request error
@@ -37,7 +38,7 @@ export type ErrorResponseData = {
 /**
  * An object that complies with RFC 9457 containing information about a request error
  */
-export class ErrorResponse extends Error {
+export class ErrorResponse extends ClientError {
   /**
    * A URI reference that identifies the problem type
    */
@@ -66,11 +67,13 @@ export class ErrorResponse extends Error {
   /** The original data that was passed to this error instance. */
   data$: ErrorResponseData;
 
-  constructor(err: ErrorResponseData) {
-    const message = err.detail || "API error occurred";
-    super(message);
+  constructor(
+    err: ErrorResponseData,
+    httpMeta: { response: Response; request: Request; body: string },
+  ) {
+    const message = err.detail || `API error occurred: ${JSON.stringify(err)}`;
+    super(message, httpMeta);
     this.data$ = err;
-
     if (err.type != null) this.type = err.type;
     if (err.status != null) this.status = err.status;
     if (err.title != null) this.title = err.title;
@@ -94,9 +97,16 @@ export const ErrorResponse$inboundSchema: z.ZodType<
   detail: z.string().optional(),
   code: z.string().optional(),
   instance: z.string().optional(),
+  request$: z.instanceof(Request),
+  response$: z.instanceof(Response),
+  body$: z.string(),
 })
   .transform((v) => {
-    return new ErrorResponse(v);
+    return new ErrorResponse(v, {
+      request: v.request$,
+      response: v.response$,
+      body: v.body$,
+    });
   });
 
 /** @internal */

@@ -8,11 +8,9 @@ An object with a new SMS message properties
 import { SmsMessage } from "@gsmservice-pl/messaging-sdk-typescript/models/components";
 
 let value: SmsMessage = {
-  recipients: {
-    nr: "+48999999999",
-    cid: "my-id-1113",
-  },
+  recipients: "+48999999999",
   message: "To jest treść wiadomości",
+  unicode: true,
 };
 ```
 

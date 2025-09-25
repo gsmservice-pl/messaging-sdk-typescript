@@ -11,21 +11,16 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.outgoing.sms.send([
-    {
-      recipients: [
-        "+48999999999",
-      ],
-      message: "To jest treść wiadomości",
-      sender: "Bramka SMS",
-      type: 1,
-      unicode: false,
-      flash: false,
-      date: null,
-    },
-  ]);
+  const result = await client.messages.sms.send({
+    recipients: "+48999999999",
+    message: "This is SMS message content.",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -45,21 +40,14 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.outgoing.mms.send([
-    {
-      recipients: [
-        "+48999999999",
-      ],
-      subject: "To jest temat wiadomości",
-      message: "To jest treść wiadomości",
-      attachments: [
-        "<file_body in base64 format>",
-      ],
-      date: null,
-    },
-  ]);
+  const result = await client.messages.mms.send({
+    recipients: "+48999999999",
+    subject: "This is a subject of the message",
+    message: "This is MMS message content.",
+    attachments: "<file body in base64 format>",
+    date: null,
+  });
 
-  // Handle the result
   console.log(result);
 }
 

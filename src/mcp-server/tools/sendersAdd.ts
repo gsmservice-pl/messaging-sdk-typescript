@@ -11,7 +11,7 @@ const args = {
 };
 
 export const tool$sendersAdd: ToolDefinition<typeof args> = {
-  name: "senders_add",
+  name: "senders-add",
   description: `Add a new sender name
 
 Define a new allowed sender on your account. You should pass as parameter a \`SenderInput\` object with two properties: \`sender\` (defines sender name) and \`description\`. Please carefully fill this property with the extensive description of a sender name (what will be its use, what the name mean, etc).

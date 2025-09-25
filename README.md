@@ -61,10 +61,7 @@ bun add @gsmservice-pl/messaging-sdk-typescript
 ### Yarn
 
 ```bash
-yarn add @gsmservice-pl/messaging-sdk-typescript zod
-
-# Note that Yarn does not install peer dependencies automatically. You will need
-# to install zod as shown above.
+yarn add @gsmservice-pl/messaging-sdk-typescript
 ```
 
 > [!NOTE]
@@ -76,7 +73,7 @@ yarn add @gsmservice-pl/messaging-sdk-typescript zod
 This SDK is also an installable MCP server where the various SDK methods are
 exposed as tools that can be invoked by AI applications.
 
-> Node.js v20 or greater is required to run the MCP server.
+> Node.js v20 or greater is required to run the MCP server from npm.
 
 <details>
 <summary>Claude installation steps</summary>
@@ -104,16 +101,49 @@ Add the following server definition to your `claude_desktop_config.json` file:
 <details>
 <summary>Cursor installation steps</summary>
 
-Go to `Cursor Settings > Features > MCP Servers > Add new MCP server` and use the following settings:
+Create a `.cursor/mcp.json` file in your project root with the following content:
 
-- Name: Client
-- Type: `command`
-- Command:
-```sh
-npx -y --package @gsmservice-pl/messaging-sdk-typescript -- mcp start --bearer ... 
+```json
+{
+  "mcpServers": {
+    "Client": {
+      "command": "npx",
+      "args": [
+        "-y", "--package", "@gsmservice-pl/messaging-sdk-typescript",
+        "--",
+        "mcp", "start",
+        "--bearer", "..."
+      ]
+    }
+  }
+}
 ```
 
 </details>
+
+You can also run MCP servers as a standalone binary with no additional dependencies. You must pull these binaries from available Github releases:
+
+```bash
+curl -L -o mcp-server \
+    https://github.com/{org}/{repo}/releases/download/{tag}/mcp-server-bun-darwin-arm64 && \
+chmod +x mcp-server
+```
+
+If the repo is a private repo you must add your Github PAT to download a release `-H "Authorization: Bearer {GITHUB_PAT}"`.
+
+
+```json
+{
+  "mcpServers": {
+    "Todos": {
+      "command": "./DOWNLOAD/PATH/mcp-server",
+      "args": [
+        "start"
+      ]
+    }
+  }
+}
+```
 
 For a full list of server arguments, run:
 
@@ -143,21 +173,16 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.outgoing.sms.send([
-    {
-      recipients: [
-        "+48999999999",
-      ],
-      message: "To jest treść wiadomości",
-      sender: "Bramka SMS",
-      type: 1,
-      unicode: false,
-      flash: false,
-      date: null,
-    },
-  ]);
+  const result = await client.messages.sms.send({
+    recipients: "+48999999999",
+    message: "This is SMS message content.",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -177,21 +202,14 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.outgoing.mms.send([
-    {
-      recipients: [
-        "+48999999999",
-      ],
-      subject: "To jest temat wiadomości",
-      message: "To jest treść wiadomości",
-      attachments: [
-        "<file_body in base64 format>",
-      ],
-      date: null,
-    },
-  ]);
+  const result = await client.messages.mms.send({
+    recipients: "+48999999999",
+    subject: "This is a subject of the message",
+    message: "This is MMS message content.",
+    attachments: "<file body in base64 format>",
+    date: null,
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -208,8 +226,8 @@ run();
 
 ### [accounts](docs/sdks/accounts/README.md)
 
-* [get](docs/sdks/accounts/README.md#get) - Get account details
-* [getSubaccount](docs/sdks/accounts/README.md#getsubaccount) - Get subaccount details
+* [getDetails](docs/sdks/accounts/README.md#getdetails) - Get account details
+* [getSubaccountDetails](docs/sdks/accounts/README.md#getsubaccountdetails) - Get subaccount details
 
 
 ### [common](docs/sdks/common/README.md)
@@ -221,18 +239,18 @@ run();
 * [list](docs/sdks/incoming/README.md#list) - List the received SMS messages
 * [getByIds](docs/sdks/incoming/README.md#getbyids) - Get the incoming messages by IDs
 
-### [outgoing](docs/sdks/outgoing/README.md)
+### [messages](docs/sdks/messages/README.md)
 
-* [getByIds](docs/sdks/outgoing/README.md#getbyids) - Get the messages details and status by IDs
-* [cancelScheduled](docs/sdks/outgoing/README.md#cancelscheduled) - Cancel a scheduled messages
-* [list](docs/sdks/outgoing/README.md#list) - Lists the history of sent messages
+* [getByIds](docs/sdks/messages/README.md#getbyids) - Get the messages details and status by IDs
+* [cancelScheduled](docs/sdks/messages/README.md#cancelscheduled) - Cancel a scheduled messages
+* [list](docs/sdks/messages/README.md#list) - Lists the history of sent messages
 
-#### [outgoing.mms](docs/sdks/mms/README.md)
+#### [messages.mms](docs/sdks/mms/README.md)
 
 * [getPrice](docs/sdks/mms/README.md#getprice) - Check the price of MMS Messages
 * [send](docs/sdks/mms/README.md#send) - Send MMS Messages
 
-#### [outgoing.sms](docs/sdks/sms/README.md)
+#### [messages.sms](docs/sdks/sms/README.md)
 
 * [getPrice](docs/sdks/sms/README.md#getprice) - Check the price of SMS Messages
 * [send](docs/sdks/sms/README.md#send) - Send SMS Messages
@@ -262,18 +280,18 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 <summary>Available standalone functions</summary>
 
-- [`accountsGet`](docs/sdks/accounts/README.md#get) - Get account details
-- [`accountsGetSubaccount`](docs/sdks/accounts/README.md#getsubaccount) - Get subaccount details
+- [`accountsGetDetails`](docs/sdks/accounts/README.md#getdetails) - Get account details
+- [`accountsGetSubaccountDetails`](docs/sdks/accounts/README.md#getsubaccountdetails) - Get subaccount details
 - [`commonPing`](docs/sdks/common/README.md#ping) - Checks API availability and version
 - [`incomingGetByIds`](docs/sdks/incoming/README.md#getbyids) - Get the incoming messages by IDs
 - [`incomingList`](docs/sdks/incoming/README.md#list) - List the received SMS messages
-- [`outgoingCancelScheduled`](docs/sdks/outgoing/README.md#cancelscheduled) - Cancel a scheduled messages
-- [`outgoingGetByIds`](docs/sdks/outgoing/README.md#getbyids) - Get the messages details and status by IDs
-- [`outgoingList`](docs/sdks/outgoing/README.md#list) - Lists the history of sent messages
-- [`outgoingMmsGetPrice`](docs/sdks/mms/README.md#getprice) - Check the price of MMS Messages
-- [`outgoingMmsSend`](docs/sdks/mms/README.md#send) - Send MMS Messages
-- [`outgoingSmsGetPrice`](docs/sdks/sms/README.md#getprice) - Check the price of SMS Messages
-- [`outgoingSmsSend`](docs/sdks/sms/README.md#send) - Send SMS Messages
+- [`messagesCancelScheduled`](docs/sdks/messages/README.md#cancelscheduled) - Cancel a scheduled messages
+- [`messagesGetByIds`](docs/sdks/messages/README.md#getbyids) - Get the messages details and status by IDs
+- [`messagesList`](docs/sdks/messages/README.md#list) - Lists the history of sent messages
+- [`messagesMmsGetPrice`](docs/sdks/mms/README.md#getprice) - Check the price of MMS Messages
+- [`messagesMmsSend`](docs/sdks/mms/README.md#send) - Send MMS Messages
+- [`messagesSmsGetPrice`](docs/sdks/sms/README.md#getprice) - Check the price of SMS Messages
+- [`messagesSmsSend`](docs/sdks/sms/README.md#send) - Send SMS Messages
 - [`sendersAdd`](docs/sdks/senders/README.md#add) - Add a new sender name
 - [`sendersDelete`](docs/sdks/senders/README.md#delete) - Delete a sender name
 - [`sendersList`](docs/sdks/senders/README.md#list) - List allowed senders names
@@ -296,7 +314,7 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.accounts.get({
+  const result = await client.accounts.getDetails({
     retries: {
       strategy: "backoff",
       backoff: {
@@ -309,7 +327,6 @@ async function run() {
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -336,9 +353,8 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.accounts.get();
+  const result = await client.accounts.getDetails();
 
-  // Handle the result
   console.log(result);
 }
 
@@ -350,56 +366,46 @@ run();
 <!-- Start Error Handling [errors] -->
 ## Error Handling
 
-Some methods specify known errors which can be thrown. All the known errors are enumerated in the `models/errors/errors.ts` module. The known errors for a method are documented under the *Errors* tables in SDK docs. For example, the `get` method may throw the following errors:
+[`ClientError`](./src/models/errors/clienterror.ts) is the base class for all HTTP error responses. It has the following properties:
 
-| Error Type           | Status Code   | Content Type             |
-| -------------------- | ------------- | ------------------------ |
-| errors.ErrorResponse | 401, 403, 4XX | application/problem+json |
-| errors.ErrorResponse | 5XX           | application/problem+json |
+| Property            | Type       | Description                                                                             |
+| ------------------- | ---------- | --------------------------------------------------------------------------------------- |
+| `error.message`     | `string`   | Error message                                                                           |
+| `error.statusCode`  | `number`   | HTTP response status code eg `404`                                                      |
+| `error.headers`     | `Headers`  | HTTP response headers                                                                   |
+| `error.body`        | `string`   | HTTP body. Can be empty string if no body is returned.                                  |
+| `error.rawResponse` | `Response` | Raw HTTP response                                                                       |
+| `error.data$`       |            | Optional. Some errors may contain structured data. [See Error Classes](#error-classes). |
 
-If the method throws an error and it is not captured by the known errors, it will default to throwing a `SDKError`.
-
+### Example
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
-import {
-  ErrorResponse,
-  SDKValidationError,
-} from "@gsmservice-pl/messaging-sdk-typescript/models/errors";
+import * as errors from "@gsmservice-pl/messaging-sdk-typescript/models/errors";
 
 const client = new Client({
   bearer: "<YOUR API ACCESS TOKEN>",
 });
 
 async function run() {
-  let result;
   try {
-    result = await client.accounts.get();
+    const result = await client.accounts.getDetails();
 
-    // Handle the result
     console.log(result);
-  } catch (err) {
-    switch (true) {
-      // The server response does not match the expected SDK schema
-      case (err instanceof SDKValidationError): {
-        // Pretty-print will provide a human-readable multi-line error message
-        console.error(err.pretty());
-        // Raw value may also be inspected
-        console.error(err.rawValue);
-        return;
-      }
-      case (err instanceof ErrorResponse): {
-        // Handle err.data$: ErrorResponseData
-        console.error(err);
-        return;
-      }
-      case (err instanceof ErrorResponse): {
-        // Handle err.data$: ErrorResponseData
-        console.error(err);
-        return;
-      }
-      default: {
-        // Other errors such as network errors, see HTTPClientErrors for more details
-        throw err;
+  } catch (error) {
+    // The base class for HTTP error responses
+    if (error instanceof errors.ClientError) {
+      console.log(error.message);
+      console.log(error.statusCode);
+      console.log(error.body);
+      console.log(error.headers);
+
+      // Depending on the method different errors may be thrown
+      if (error instanceof errors.ErrorResponse) {
+        console.log(error.data$.type); // string
+        console.log(error.data$.status); // number
+        console.log(error.data$.title); // string
+        console.log(error.data$.detail); // string
+        console.log(error.data$.code); // string
       }
     }
   }
@@ -409,17 +415,27 @@ run();
 
 ```
 
-Validation errors can also occur when either method arguments or data returned from the server do not match the expected format. The `SDKValidationError` that is thrown as a result will capture the raw value that failed validation in an attribute called `rawValue`. Additionally, a `pretty()` method is available on this error that can be used to log a nicely formatted multi-line string since validation errors can list many issues and the plain error string may be difficult read when debugging.
+### Error Classes
+**Primary errors:**
+* [`ClientError`](./src/models/errors/clienterror.ts): The base class for HTTP error responses.
+  * [`ErrorResponse`](./src/models/errors/errorresponse.ts): An object that complies with RFC 9457 containing information about a request error.
 
-In some rare cases, the SDK can fail to get a response from the server or even make the request due to unexpected circumstances such as network conditions. These types of errors are captured in the `models/errors/httpclienterrors.ts` module:
+<details><summary>Less common errors (6)</summary>
 
-| HTTP Client Error                                    | Description                                          |
-| ---------------------------------------------------- | ---------------------------------------------------- |
-| RequestAbortedError                                  | HTTP request was aborted by the client               |
-| RequestTimeoutError                                  | HTTP request timed out due to an AbortSignal signal  |
-| ConnectionError                                      | HTTP client was unable to make a request to a server |
-| InvalidRequestError                                  | Any input used to create a request is invalid        |
-| UnexpectedClientError                                | Unrecognised or unexpected error                     |
+<br />
+
+**Network errors:**
+* [`ConnectionError`](./src/models/errors/httpclienterrors.ts): HTTP client was unable to make a request to a server.
+* [`RequestTimeoutError`](./src/models/errors/httpclienterrors.ts): HTTP request timed out due to an AbortSignal signal.
+* [`RequestAbortedError`](./src/models/errors/httpclienterrors.ts): HTTP request was aborted by the client.
+* [`InvalidRequestError`](./src/models/errors/httpclienterrors.ts): Any input used to create a request is invalid.
+* [`UnexpectedClientError`](./src/models/errors/httpclienterrors.ts): Unrecognised or unexpected error.
+
+
+**Inherit from [`ClientError`](./src/models/errors/clienterror.ts)**:
+* [`ResponseValidationError`](./src/models/errors/responsevalidationerror.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
+
+</details>
 <!-- End Error Handling [errors] -->
 
 <!-- Start Server Selection [server] -->
@@ -445,9 +461,8 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.accounts.get();
+  const result = await client.accounts.getDetails();
 
-  // Handle the result
   console.log(result);
 }
 
@@ -467,9 +482,8 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.accounts.get();
+  const result = await client.accounts.getDetails();
 
-  // Handle the result
   console.log(result);
 }
 
@@ -523,7 +537,7 @@ httpClient.addHook("requestError", (error, request) => {
   console.groupEnd();
 });
 
-const sdk = new Client({ httpClient });
+const sdk = new Client({ httpClient: httpClient });
 ```
 <!-- End Custom HTTP Client [http-client] -->
 
@@ -547,9 +561,8 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.accounts.get();
+  const result = await client.accounts.getDetails();
 
-  // Handle the result
   console.log(result);
 }
 

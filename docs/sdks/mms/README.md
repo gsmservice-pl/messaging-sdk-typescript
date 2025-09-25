@@ -1,5 +1,5 @@
 # Mms
-(*outgoing.mms*)
+(*messages.mms*)
 
 ## Overview
 
@@ -19,6 +19,7 @@ As a successful result a `GetMmsPriceResponse` object will be returned with `res
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getMmsPrice" method="post" path="/messages/mms/price" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -27,22 +28,14 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.outgoing.mms.getPrice([
-    {
-      recipients: {
-        nr: "+48999999999",
-        cid: "my-id-1113",
-      },
-      subject: "To jest temat wiadomości",
-      message: "To jest treść wiadomości",
-      attachments: [
-        "<file_body in base64 format>",
-      ],
-      date: null,
-    },
-  ]);
+  const result = await client.messages.mms.getPrice({
+    recipients: "+48999999999",
+    subject: "This is a subject of the message",
+    message: "This is MMS message content.",
+    attachments: "<file body in base64 format>",
+    date: null,
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -55,7 +48,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { outgoingMmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingMmsGetPrice.js";
+import { messagesMmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesMmsGetPrice.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -64,27 +57,19 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await outgoingMmsGetPrice(client, [
-    {
-      recipients: {
-        nr: "+48999999999",
-        cid: "my-id-1113",
-      },
-      subject: "To jest temat wiadomości",
-      message: "To jest treść wiadomości",
-      attachments: "<file_body in base64 format>",
-      date: null,
-    },
-  ]);
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await messagesMmsGetPrice(client, {
+    recipients: "+48999999999",
+    subject: "This is a subject of the message",
+    message: "This is MMS message content.",
+    attachments: "<file body in base64 format>",
+    date: null,
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("messagesMmsGetPrice failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -120,6 +105,7 @@ As a successful result a `SendMmsResponse` object will be returned with `result`
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="sendMms" method="post" path="/messages/mms" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -128,21 +114,14 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.outgoing.mms.send([
-    {
-      recipients: [
-        "+48999999999",
-      ],
-      subject: "To jest temat wiadomości",
-      message: "To jest treść wiadomości",
-      attachments: [
-        "<file_body in base64 format>",
-      ],
-      date: null,
-    },
-  ]);
+  const result = await client.messages.mms.send({
+    recipients: "+48999999999",
+    subject: "This is a subject of the message",
+    message: "This is MMS message content.",
+    attachments: "<file body in base64 format>",
+    date: null,
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -155,7 +134,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { outgoingMmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingMmsSend.js";
+import { messagesMmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesMmsSend.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -164,26 +143,19 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await outgoingMmsSend(client, [
-    {
-      recipients: [
-        "+48999999999",
-      ],
-      subject: "To jest temat wiadomości",
-      message: "To jest treść wiadomości",
-      attachments: "<file_body in base64 format>",
-      date: null,
-    },
-  ]);
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await messagesMmsSend(client, {
+    recipients: "+48999999999",
+    subject: "This is a subject of the message",
+    message: "This is MMS message content.",
+    attachments: "<file body in base64 format>",
+    date: null,
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("messagesMmsSend failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();

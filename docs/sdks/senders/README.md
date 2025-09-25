@@ -18,6 +18,7 @@ As a successful result an `array` of `Sender` objects will be returned, each obj
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="listSenders" method="get" path="/senders" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -28,7 +29,6 @@ const client = new Client({
 async function run() {
   const result = await client.senders.list();
 
-  // Handle the result
   console.log(result);
 }
 
@@ -51,15 +51,12 @@ const client = new ClientCore({
 
 async function run() {
   const res = await sendersList(client);
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("sendersList failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -92,6 +89,7 @@ As a successful result a `AddSenderResponse` object will be returned with a prop
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="addSender" method="post" path="/senders" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -105,7 +103,6 @@ async function run() {
     description: "This is our company name. It contains our registered trademark.",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -131,15 +128,12 @@ async function run() {
     sender: "Bramka SMS",
     description: "This is our company name. It contains our registered trademark.",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("sendersAdd failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -173,6 +167,7 @@ As a successful response there would be no Exception thrown.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="deleteSender" method="delete" path="/senders/{sender}" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -185,7 +180,6 @@ async function run() {
     sender: "Podpis",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -210,15 +204,12 @@ async function run() {
   const res = await sendersDelete(client, {
     sender: "Podpis",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("sendersDelete failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -252,6 +243,7 @@ As a successful response no Exception will be thrown.
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="setDefaultSender" method="patch" path="/senders/{sender}" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -264,7 +256,6 @@ async function run() {
     sender: "Podpis",
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -289,15 +280,12 @@ async function run() {
   const res = await sendersSetDefault(client, {
     sender: "Podpis",
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("sendersSetDefault failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();

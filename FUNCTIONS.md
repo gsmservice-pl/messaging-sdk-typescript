@@ -20,8 +20,7 @@ specific category of applications.
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { outgoingMmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingMmsSend.js";
-import { SDKValidationError } from "@gsmservice-pl/messaging-sdk-typescript/models/errors/sdkvalidationerror.js";
+import { messagesMmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesMmsSend.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -30,42 +29,19 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await outgoingMmsSend(client, [
-    {
-      recipients: {
-        nr: "+48999999999",
-        cid: "my-id-1113",
-      },
-      subject: "To jest temat wiadomości",
-      message: "To jest treść wiadomości",
-      attachments: [
-        "<file_body in base64 format>",
-      ],
-      date: null,
-    },
-  ]);
-
-  switch (true) {
-    case res.ok:
-      // The success case will be handled outside of the switch block
-      break;
-    case res.error instanceof SDKValidationError:
-      // Pretty-print validation errors.
-      return console.log(res.error.pretty());
-    case res.error instanceof Error:
-      return console.log(res.error);
-    default:
-      // TypeScript's type checking will fail on the following line if the above
-      // cases were not exhaustive.
-      res.error satisfies never;
-      throw new Error("Assertion failed: expected error checks to be exhaustive: " + res.error);
+  const res = await messagesMmsSend(client, {
+    recipients: "+48999999999",
+    subject: "This is a subject of the message",
+    message: "This is MMS message content.",
+    attachments: "<file body in base64 format>",
+    date: null,
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("messagesMmsSend failed:", res.error);
   }
-
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();

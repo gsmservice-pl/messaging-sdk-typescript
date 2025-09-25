@@ -11,7 +11,7 @@ const args = {
 };
 
 export const tool$sendersDelete: ToolDefinition<typeof args> = {
-  name: "senders_delete",
+  name: "senders-delete",
   description: `Delete a sender name
 
 Removes defined sender name from your account. This method accepts \`DeleteSenderRequest\` object with \`sender\` property containing a **sender name** you want to remove. Sender name will be deleted immediately.

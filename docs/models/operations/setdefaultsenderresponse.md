@@ -7,8 +7,10 @@ import { SetDefaultSenderResponse } from "@gsmservice-pl/messaging-sdk-typescrip
 
 let value: SetDefaultSenderResponse = {
   headers: {
-    "key": [
-      "<value>",
+    "key": [],
+    "key1": [
+      "<value 1>",
+      "<value 2>",
     ],
   },
 };

@@ -1,5 +1,5 @@
 # Sms
-(*outgoing.sms*)
+(*messages.sms*)
 
 ## Overview
 
@@ -19,6 +19,7 @@ As a successful result a `GetSmsPriceResponse` object will be returned with `res
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getSmsPrice" method="post" path="/messages/sms/price" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -27,22 +28,16 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.outgoing.sms.getPrice([
-    {
-      recipients: {
-        nr: "+48999999999",
-        cid: "my-id-1113",
-      },
-      message: "To jest treść wiadomości",
-      sender: "Bramka SMS",
-      type: 1,
-      unicode: false,
-      flash: false,
-      date: null,
-    },
-  ]);
+  const result = await client.messages.sms.getPrice({
+    recipients: "+48999999999",
+    message: "This is SMS message content.",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -55,7 +50,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { outgoingSmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsGetPrice.js";
+import { messagesSmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesSmsGetPrice.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -64,24 +59,21 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await outgoingSmsGetPrice(client, {
+  const res = await messagesSmsGetPrice(client, {
     recipients: "+48999999999",
-    message: "To jest treść wiadomości",
+    message: "This is SMS message content.",
     sender: "Bramka SMS",
     type: 1,
-    unicode: false,
+    unicode: true,
     flash: false,
     date: null,
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("messagesSmsGetPrice failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -117,6 +109,7 @@ As a successful result a `SendSmsResponse` object will be returned with `result`
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="sendSms" method="post" path="/messages/sms" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -125,21 +118,16 @@ const client = new Client({
 });
 
 async function run() {
-  const result = await client.outgoing.sms.send([
-    {
-      recipients: [
-        "+48999999999",
-      ],
-      message: "To jest treść wiadomości",
-      sender: "Bramka SMS",
-      type: 1,
-      unicode: false,
-      flash: false,
-      date: null,
-    },
-  ]);
+  const result = await client.messages.sms.send({
+    recipients: "+48999999999",
+    message: "This is SMS message content.",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -152,7 +140,7 @@ The standalone function version of this method:
 
 ```typescript
 import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
-import { outgoingSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsSend.js";
+import { messagesSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/messagesSmsSend.js";
 
 // Use `ClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -161,28 +149,21 @@ const client = new ClientCore({
 });
 
 async function run() {
-  const res = await outgoingSmsSend(client, [
-    {
-      recipients: [
-        "+48999999999",
-      ],
-      message: "To jest treść wiadomości",
-      sender: "Bramka SMS",
-      type: 1,
-      unicode: false,
-      flash: false,
-      date: null,
-    },
-  ]);
-
-  if (!res.ok) {
-    throw res.error;
+  const res = await messagesSmsSend(client, {
+    recipients: "+48999999999",
+    message: "This is SMS message content.",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("messagesSmsSend failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();

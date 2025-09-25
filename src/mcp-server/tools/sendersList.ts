@@ -6,7 +6,7 @@ import { sendersList } from "../../funcs/sendersList.js";
 import { formatResult, ToolDefinition } from "../tools.js";
 
 export const tool$sendersList: ToolDefinition = {
-  name: "senders_list",
+  name: "senders-list",
   description: `List allowed senders names
 
 Get a list of allowed senders defined in your account. The method doesn't take any parameters.

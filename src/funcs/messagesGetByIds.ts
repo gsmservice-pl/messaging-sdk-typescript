@@ -10,7 +10,7 @@ import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
-import * as components from "../models/components/index.js";
+import { ClientError } from "../models/errors/clienterror.js";
 import {
   ConnectionError,
   InvalidRequestError,
@@ -19,38 +19,36 @@ import {
   UnexpectedClientError,
 } from "../models/errors/httpclienterrors.js";
 import * as errors from "../models/errors/index.js";
-import { SDKError } from "../models/errors/sdkerror.js";
+import { ResponseValidationError } from "../models/errors/responsevalidationerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
 import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Get subaccount details
+ * Get the messages details and status by IDs
  *
  * @remarks
- * Check account balance and other details such subcredit balance of a subaccount. Subaccounts are additional users who can access your account services and the details. You can restrict access level and setup privileges to subaccounts using [user panel](https://panel.szybkisms.pl).
+ * Check the current status and details of one or more messages using their `ids`. You have to pass a `GetMessagesRequest` object with `ids` property, containing an `array` with unique message *IDs* which details you want to fetch. This method will accept maximum 50 identifiers in one call.
  *
- * This method accepts an object `GetSubaccountDetailsRequest` with `userLogin` property. You should pass there the full subaccount login to access its data.
- *
- * As a successful result a `AccountResponse` object will be returned with properties describing details of subaccount with provided login.
+ * As a successful result a `GetMessagesResponse` object will be returned containing `result` property with an `array` of `Message` objects, each object per single found message. `GetMessagesResponse` object will also contain `headers` array property where you can find `X-Success-Count` (a count of messages which were found and returned correctly) and `X-Error-Count` (count of messages which were not found) elements.
  */
-export function accountsGetSubaccount(
+export function messagesGetByIds(
   client: ClientCore,
-  request: operations.GetSubaccountDetailsRequest,
+  request: operations.GetMessagesRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    components.AccountResponse,
+    operations.GetMessagesResponse,
     | errors.ErrorResponse
-    | errors.ErrorResponse
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | ClientError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >
 > {
   return new APIPromise($do(
@@ -62,29 +60,28 @@ export function accountsGetSubaccount(
 
 async function $do(
   client: ClientCore,
-  request: operations.GetSubaccountDetailsRequest,
+  request: operations.GetMessagesRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      components.AccountResponse,
+      operations.GetMessagesResponse,
       | errors.ErrorResponse
-      | errors.ErrorResponse
-      | SDKError
-      | SDKValidationError
-      | UnexpectedClientError
-      | InvalidRequestError
+      | ClientError
+      | ResponseValidationError
+      | ConnectionError
       | RequestAbortedError
       | RequestTimeoutError
-      | ConnectionError
+      | InvalidRequestError
+      | UnexpectedClientError
+      | SDKValidationError
     >,
     APICall,
   ]
 > {
   const parsed = safeParse(
     request,
-    (value) =>
-      operations.GetSubaccountDetailsRequest$outboundSchema.parse(value),
+    (value) => operations.GetMessagesRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -94,13 +91,13 @@ async function $do(
   const body = null;
 
   const pathParams = {
-    user_login: encodeSimple("user_login", payload.user_login, {
+    ids: encodeSimple("ids", payload.ids, {
       explode: true,
       charEncoding: "percent",
     }),
   };
 
-  const path = pathToFunc("/account/{user_login}")(pathParams);
+  const path = pathToFunc("/messages/{ids}")(pathParams);
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
@@ -111,8 +108,9 @@ async function $do(
   const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const context = {
+    options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "getSubaccountDetails",
+    operationID: "getMessages",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,
@@ -141,6 +139,7 @@ async function $do(
     path: path,
     headers: headers,
     body: body,
+    userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
@@ -150,7 +149,7 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["401", "403", "404", "4XX", "5XX"],
+    errorCodes: ["400", "401", "403", "404", "4XX", "5XX"],
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -164,25 +163,28 @@ async function $do(
   };
 
   const [result] = await M.match<
-    components.AccountResponse,
+    operations.GetMessagesResponse,
     | errors.ErrorResponse
-    | errors.ErrorResponse
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | ClientError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >(
-    M.json(200, components.AccountResponse$inboundSchema),
-    M.jsonErr([401, 403, 404, "4XX"], errors.ErrorResponse$inboundSchema, {
+    M.json(200, operations.GetMessagesResponse$inboundSchema, {
+      hdrs: true,
+      key: "Result",
+    }),
+    M.jsonErr([400, 401, 403, 404, "4XX"], errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
     M.jsonErr("5XX", errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
-  )(response, { extraFields: responseFields });
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }

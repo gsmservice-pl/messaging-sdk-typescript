@@ -6,7 +6,7 @@ import { commonPing } from "../../funcs/commonPing.js";
 import { formatResult, ToolDefinition } from "../tools.js";
 
 export const tool$commonPing: ToolDefinition = {
-  name: "common_ping",
+  name: "common-ping",
   description: `Checks API availability and version
 
 Check the API connection and the current API availability status. Also you will get the current API version number. The method doesn't accept any parameters.

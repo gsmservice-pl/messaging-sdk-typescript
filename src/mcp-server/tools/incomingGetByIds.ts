@@ -11,7 +11,7 @@ const args = {
 };
 
 export const tool$incomingGetByIds: ToolDefinition<typeof args> = {
-  name: "incoming_get-by-ids",
+  name: "incoming-get-by-ids",
   description: `Get the incoming messages by IDs
 
 Get the details of one or more received messages using their \`ids\`. This method accepts a \`GetIncomingMessagesRequest\` object with \`ids\` property containing an \`array\` of the unique incoming message *IDs*, which were given while receiving a messages. The method will accept maximum 50 identifiers in one call.

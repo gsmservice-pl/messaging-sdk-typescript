@@ -8,7 +8,12 @@ import { GetMessagesResponse } from "@gsmservice-pl/messaging-sdk-typescript/mod
 let value: GetMessagesResponse = {
   headers: {
     "key": [
-      "<value>",
+      "<value 1>",
+      "<value 2>",
+    ],
+    "key1": [
+      "<value 1>",
+      "<value 2>",
     ],
   },
   result: [

@@ -8,26 +8,11 @@ import { SendSmsResponse } from "@gsmservice-pl/messaging-sdk-typescript/models/
 let value: SendSmsResponse = {
   headers: {
     "key": [
-      "<value>",
+      "<value 1>",
     ],
+    "key1": [],
   },
-  result: [
-    {
-      id: 323234,
-      cid: "custom-id-A44445T",
-      type: 1,
-      recipient: "+48999999999",
-      sender: "Bramka SMS",
-      parts: 1,
-      sentDate: new Date("2024-06-01T16:22:05Z"),
-      statusDate: new Date("2024-06-01T16:22:07Z"),
-      statusCode: "QUEUED",
-      statusDescription: "The message has been accepted",
-      unicode: true,
-      flash: false,
-      price: 0.16,
-    },
-  ],
+  result: [],
 };
 ```
 

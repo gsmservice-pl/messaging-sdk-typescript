@@ -3,13 +3,14 @@
  */
 
 import { ClientCore } from "../core.js";
-import { encodeJSON } from "../lib/encodings.js";
+import { encodeSimple } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
+import { ClientError } from "../models/errors/clienterror.js";
 import {
   ConnectionError,
   InvalidRequestError,
@@ -18,39 +19,38 @@ import {
   UnexpectedClientError,
 } from "../models/errors/httpclienterrors.js";
 import * as errors from "../models/errors/index.js";
-import { SDKError } from "../models/errors/sdkerror.js";
+import { ResponseValidationError } from "../models/errors/responsevalidationerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
 import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Check the price of MMS Messages
+ * Cancel a scheduled messages
  *
  * @remarks
- * Check the price of single or multiple MMS messages at the same time before sending them. You can pass a single `MmsMessage` object (for single message) or `array` of `MmsMessage` objects (for multiple messages). Each `MmsMessage` object has several properties, describing message parameters such as recipient phone number, content of the message, attachments, etc.
- * The method will accept maximum **50** messages in one call.
+ * Cancel messages using their `ids` which were scheduled to be sent at a specific time. You have to pass a `CancelMessagesRequest` object containing as `ids` property an `array` of the unique message IDs, which were returned after sending a message. This method will accept maximum 50 identifiers in one call. You can cancel only messages with *SCHEDULED* status.
  *
- * As a successful result a `GetMmsPriceResponse` object will be returned with `result` property containing `array` of `Price` objects, one object per each single message. You should check the `error` property of each `Price` object to make sure which were priced successfully and which finished with an error. Successfully priced messages will have `null` value of `error` property.
+ * As a successful result a `CancelMessagesResponse` object will be returned, with `result` property containing array of `CancelledMessage` object. The `status` property of each `CancelledMessage` object will contain a status code of operation - `204` if a particular message was cancelled successfully and other code if an error occured.
  *
- * `GetSmsPriceResponse` object will include also `headers` array with `X-Success-Count` (a count of messages which were processed successfully) and `X-Error-Count` (count of messages which were rejected) elements.
+ * `CancelMessagesResponse` object will also contain `headers` array property where you can find `X-Success-Count` (a count of messages which were cancelled successfully), `X-Error-Count` (count of messages which were not cancelled) and `X-Sandbox` (if a request was made in Sandbox or Production system) elements.
  */
-export function outgoingMmsGetPrice(
+export function messagesCancelScheduled(
   client: ClientCore,
-  request: operations.GetMmsPriceRequestBody,
+  request: operations.CancelMessagesRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.GetMmsPriceResponse,
+    operations.CancelMessagesResponse,
     | errors.ErrorResponse
-    | errors.ErrorResponse
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | ClientError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >
 > {
   return new APIPromise($do(
@@ -62,40 +62,46 @@ export function outgoingMmsGetPrice(
 
 async function $do(
   client: ClientCore,
-  request: operations.GetMmsPriceRequestBody,
+  request: operations.CancelMessagesRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.GetMmsPriceResponse,
+      operations.CancelMessagesResponse,
       | errors.ErrorResponse
-      | errors.ErrorResponse
-      | SDKError
-      | SDKValidationError
-      | UnexpectedClientError
-      | InvalidRequestError
+      | ClientError
+      | ResponseValidationError
+      | ConnectionError
       | RequestAbortedError
       | RequestTimeoutError
-      | ConnectionError
+      | InvalidRequestError
+      | UnexpectedClientError
+      | SDKValidationError
     >,
     APICall,
   ]
 > {
   const parsed = safeParse(
     request,
-    (value) => operations.GetMmsPriceRequestBody$outboundSchema.parse(value),
+    (value) => operations.CancelMessagesRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
     return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
-  const body = encodeJSON("body", payload, { explode: true });
+  const body = null;
 
-  const path = pathToFunc("/messages/mms/price")();
+  const pathParams = {
+    ids: encodeSimple("ids", payload.ids, {
+      explode: true,
+      charEncoding: "percent",
+    }),
+  };
+
+  const path = pathToFunc("/messages/{ids}")(pathParams);
 
   const headers = new Headers(compactMap({
-    "Content-Type": "application/json",
     Accept: "application/json",
   }));
 
@@ -104,8 +110,9 @@ async function $do(
   const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const context = {
+    options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "getMmsPrice",
+    operationID: "cancelMessages",
     oAuth2Scopes: [],
 
     resolvedSecurity: requestSecurity,
@@ -129,11 +136,12 @@ async function $do(
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "POST",
+    method: "DELETE",
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
     body: body,
+    userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
@@ -143,7 +151,7 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "4XX", "5XX"],
+    errorCodes: ["400", "401", "403", "404", "4XX", "5XX"],
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -157,28 +165,28 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.GetMmsPriceResponse,
+    operations.CancelMessagesResponse,
     | errors.ErrorResponse
-    | errors.ErrorResponse
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | ClientError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >(
-    M.json(200, operations.GetMmsPriceResponse$inboundSchema, {
+    M.json(200, operations.CancelMessagesResponse$inboundSchema, {
       hdrs: true,
       key: "Result",
     }),
-    M.jsonErr([400, 401, "4XX"], errors.ErrorResponse$inboundSchema, {
+    M.jsonErr([400, 401, 403, 404, "4XX"], errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
     M.jsonErr("5XX", errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
-  )(response, { extraFields: responseFields });
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }

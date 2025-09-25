@@ -11,7 +11,7 @@ const args = {
 };
 
 export const tool$sendersSetDefault: ToolDefinition<typeof args> = {
-  name: "senders_set-default",
+  name: "senders-set-default",
   description: `Set default sender name
 
 Set default sender name to one of the senders names already defined on your account. This method accepts a \`SetDefaultSenderRequest\` object with \`sender\` property containing a **sender name** to be set as default on your account.

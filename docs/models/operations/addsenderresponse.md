@@ -8,7 +8,7 @@ import { AddSenderResponse } from "@gsmservice-pl/messaging-sdk-typescript/model
 let value: AddSenderResponse = {
   headers: {
     "key": [
-      "<value>",
+      "<value 1>",
     ],
   },
   result: {

@@ -6,24 +6,8 @@
 import { GetSmsPriceResponse } from "@gsmservice-pl/messaging-sdk-typescript/models/operations";
 
 let value: GetSmsPriceResponse = {
-  headers: {
-    "key": [
-      "<value>",
-    ],
-  },
-  result: [
-    {
-      error: null,
-      cid: "custom-id-A44445T",
-      type: 1,
-      recipient: "+48999999999",
-      sender: "Bramka SMS",
-      parts: 1,
-      unicode: true,
-      flash: false,
-      price: 0.16,
-    },
-  ],
+  headers: {},
+  result: [],
 };
 ```
 

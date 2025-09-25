@@ -6,11 +6,7 @@
 import { DeleteSenderResponse } from "@gsmservice-pl/messaging-sdk-typescript/models/operations";
 
 let value: DeleteSenderResponse = {
-  headers: {
-    "key": [
-      "<value>",
-    ],
-  },
+  headers: {},
 };
 ```
 

@@ -9,14 +9,10 @@ To check the price of a single message or messages with the same content to mult
 
 ```typescript
 const value: components.MmsMessage = {
-  recipients: [
-    "+48999999999",
-  ],
+  recipients: "+48999999999",
   subject: "To jest temat wiadomości",
   message: "To jest treść wiadomości",
-  attachments: [
-    "<file_body in base64 format>",
-  ],
+  attachments: "<file_body in base64 format>",
 };
 ```
 
@@ -25,12 +21,7 @@ const value: components.MmsMessage = {
 ```typescript
 const value: components.MmsMessage[] = [
   {
-    recipients: [
-      {
-        nr: "+48999999999",
-        cid: "my-id-1113",
-      },
-    ],
+    recipients: "+48999999999",
     subject: "To jest temat wiadomości",
     message: "To jest treść wiadomości",
     attachments: "<file_body in base64 format>",

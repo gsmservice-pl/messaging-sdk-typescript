@@ -16,6 +16,7 @@ As a successful result a `ListIncomingMessagesResponse` object will be returned 
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="listIncomingMessages" method="get" path="/incoming" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -26,7 +27,6 @@ const client = new Client({
 async function run() {
   const result = await client.incoming.list({});
 
-  // Handle the result
   console.log(result);
 }
 
@@ -49,15 +49,12 @@ const client = new ClientCore({
 
 async function run() {
   const res = await incomingList(client, {});
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("incomingList failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
@@ -91,6 +88,7 @@ As a successful result a `GetIncomingMessagesResponse` object will be returned w
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="getIncomingMessages" method="get" path="/incoming/{ids}" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -105,7 +103,6 @@ async function run() {
     ],
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -132,15 +129,12 @@ async function run() {
       43456,
     ],
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("incomingGetByIds failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();

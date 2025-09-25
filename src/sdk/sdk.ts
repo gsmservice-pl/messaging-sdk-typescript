@@ -6,7 +6,7 @@ import { ClientSDK } from "../lib/sdks.js";
 import { Accounts } from "./accounts.js";
 import { Common } from "./common.js";
 import { Incoming } from "./incoming.js";
-import { Outgoing } from "./outgoing.js";
+import { Messages } from "./messages.js";
 import { Senders } from "./senders.js";
 
 export class Client extends ClientSDK {
@@ -15,9 +15,9 @@ export class Client extends ClientSDK {
     return (this._accounts ??= new Accounts(this._options));
   }
 
-  private _outgoing?: Outgoing;
-  get outgoing(): Outgoing {
-    return (this._outgoing ??= new Outgoing(this._options));
+  private _messages?: Messages;
+  get messages(): Messages {
+    return (this._messages ??= new Messages(this._options));
   }
 
   private _incoming?: Incoming;
