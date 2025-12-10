@@ -18,6 +18,7 @@ import { tool$accountsGetSubaccount } from "./tools/accountsGetSubaccount.js";
 import { tool$commonPing } from "./tools/commonPing.js";
 import { tool$incomingGetByIds } from "./tools/incomingGetByIds.js";
 import { tool$incomingList } from "./tools/incomingList.js";
+import { tool$incomingRemoveByIds } from "./tools/incomingRemoveByIds.js";
 import { tool$outgoingCancelScheduled } from "./tools/outgoingCancelScheduled.js";
 import { tool$outgoingGetByIds } from "./tools/outgoingGetByIds.js";
 import { tool$outgoingList } from "./tools/outgoingList.js";
@@ -40,7 +41,7 @@ export function createMCPServer(deps: {
 }) {
   const server = new McpServer({
     name: "Client",
-    version: "3.9.48",
+    version: "3.11.3",
   });
 
   const client = new ClientCore({
@@ -77,6 +78,7 @@ export function createMCPServer(deps: {
   tool(tool$outgoingList);
   tool(tool$incomingList);
   tool(tool$incomingGetByIds);
+  tool(tool$incomingRemoveByIds);
   tool(tool$commonPing);
   tool(tool$sendersList);
   tool(tool$sendersAdd);

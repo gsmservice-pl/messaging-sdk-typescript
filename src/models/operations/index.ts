@@ -12,6 +12,7 @@ export * from "./getsmsprice.js";
 export * from "./getsubaccountdetails.js";
 export * from "./listincomingmessages.js";
 export * from "./listmessages.js";
+export * from "./removeincomingmessages.js";
 export * from "./sendmms.js";
 export * from "./sendsms.js";
 export * from "./setdefaultsender.js";

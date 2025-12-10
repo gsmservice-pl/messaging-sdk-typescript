@@ -12,6 +12,7 @@ export * from "./mmsmessage.js";
 export * from "./phonenumberwithcid.js";
 export * from "./pingresponse.js";
 export * from "./price.js";
+export * from "./removedincomingmessage.js";
 export * from "./security.js";
 export * from "./sender.js";
 export * from "./senderinput.js";

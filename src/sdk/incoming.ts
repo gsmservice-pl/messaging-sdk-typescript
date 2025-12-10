@@ -4,6 +4,7 @@
 
 import { incomingGetByIds } from "../funcs/incomingGetByIds.js";
 import { incomingList } from "../funcs/incomingList.js";
+import { incomingRemoveByIds } from "../funcs/incomingRemoveByIds.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
@@ -41,6 +42,31 @@ export class Incoming extends ClientSDK {
     options?: RequestOptions,
   ): Promise<operations.GetIncomingMessagesResponse> {
     return unwrapAsync(incomingGetByIds(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Remove the incoming messages from your inbox
+   *
+   * @remarks
+   * Remove incoming messages from your inbox using their `ids`. You have to pass the unique incoming message IDs as path parameter. If you want to remove multiple incoming messages at once, please separate their IDs with a comma. The system will accept maximum 50 identifiers in one call. If you need to remove larger volume of incoming messages, please split it to several separate requests.
+   *
+   * As a successful result an array with `RemovedIncomingMessage` objects will be returned, each object per single incoming message id. The `status` property will contain a status code of operation - `204` if incoming message was removed successfully and other code if an error occured with removing a given incoming message. In case of an error, an `error` property will contain `ErrorResponse` object with the details of an error.
+   *
+   * Response will also include meta-data headers: `X-Success-Count` (a count of incoming messages which were removed successfully), `X-Error-Count` (count of incoming messages which were not removed) and `X-Sandbox` (if a request was made in Sandbox or Production system).
+   *
+   * If you pass duplicated incoming message IDs in one call, API will process them only once. This request have to be authenticated using **API Access Token**.
+   *
+   * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+   */
+  async removeByIds(
+    request: operations.RemoveIncomingMessagesRequest,
+    options?: RequestOptions,
+  ): Promise<operations.RemoveIncomingMessagesResponse> {
+    return unwrapAsync(incomingRemoveByIds(
       this,
       request,
       options,
