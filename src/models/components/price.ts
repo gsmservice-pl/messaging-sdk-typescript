@@ -6,18 +6,14 @@ import * as z from "zod/v3";
 import { safeParse } from "../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
-import {
-  MessageType,
-  MessageType$inboundSchema,
-  MessageType$outboundSchema,
-} from "./messagetype.js";
+import { MessageType, MessageType$inboundSchema } from "./messagetype.js";
 
 /**
- * An object with the properties and price of a single message
+ * The pricing result for a single message, returned as part of an HTTP 200 response.
  */
 export type Price = {
   /**
-   * Information about a possible error
+   * Description of a pricing failure for this message, or null when pricing succeeded. The batch response uses HTTP 200.
    */
   error?: string | null | undefined;
   /**
@@ -67,39 +63,7 @@ export const Price$inboundSchema: z.ZodType<Price, z.ZodTypeDef, unknown> = z
     flash: z.boolean().optional(),
     price: z.number().optional(),
   });
-/** @internal */
-export type Price$Outbound = {
-  error?: string | null | undefined;
-  cid?: string | null | undefined;
-  type?: number | undefined;
-  recipient?: string | undefined;
-  sender?: string | null | undefined;
-  parts?: number | null | undefined;
-  unicode?: boolean | undefined;
-  flash?: boolean | undefined;
-  price?: number | undefined;
-};
 
-/** @internal */
-export const Price$outboundSchema: z.ZodType<
-  Price$Outbound,
-  z.ZodTypeDef,
-  Price
-> = z.object({
-  error: z.nullable(z.string()).optional(),
-  cid: z.nullable(z.string()).optional(),
-  type: MessageType$outboundSchema.optional(),
-  recipient: z.string().optional(),
-  sender: z.nullable(z.string()).optional(),
-  parts: z.nullable(z.number().int()).optional(),
-  unicode: z.boolean().optional(),
-  flash: z.boolean().optional(),
-  price: z.number().optional(),
-});
-
-export function priceToJSON(price: Price): string {
-  return JSON.stringify(Price$outboundSchema.parse(price));
-}
 export function priceFromJSON(
   jsonString: string,
 ): SafeParseResult<Price, SDKValidationError> {

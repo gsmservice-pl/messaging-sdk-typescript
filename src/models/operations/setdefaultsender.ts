@@ -20,14 +20,6 @@ export type SetDefaultSenderResponse = {
 };
 
 /** @internal */
-export const SetDefaultSenderRequest$inboundSchema: z.ZodType<
-  SetDefaultSenderRequest,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  sender: z.string(),
-});
-/** @internal */
 export type SetDefaultSenderRequest$Outbound = {
   sender: string;
 };
@@ -48,15 +40,6 @@ export function setDefaultSenderRequestToJSON(
     SetDefaultSenderRequest$outboundSchema.parse(setDefaultSenderRequest),
   );
 }
-export function setDefaultSenderRequestFromJSON(
-  jsonString: string,
-): SafeParseResult<SetDefaultSenderRequest, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => SetDefaultSenderRequest$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'SetDefaultSenderRequest' from JSON`,
-  );
-}
 
 /** @internal */
 export const SetDefaultSenderResponse$inboundSchema: z.ZodType<
@@ -70,31 +53,7 @@ export const SetDefaultSenderResponse$inboundSchema: z.ZodType<
     "Headers": "headers",
   });
 });
-/** @internal */
-export type SetDefaultSenderResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-};
 
-/** @internal */
-export const SetDefaultSenderResponse$outboundSchema: z.ZodType<
-  SetDefaultSenderResponse$Outbound,
-  z.ZodTypeDef,
-  SetDefaultSenderResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-  });
-});
-
-export function setDefaultSenderResponseToJSON(
-  setDefaultSenderResponse: SetDefaultSenderResponse,
-): string {
-  return JSON.stringify(
-    SetDefaultSenderResponse$outboundSchema.parse(setDefaultSenderResponse),
-  );
-}
 export function setDefaultSenderResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<SetDefaultSenderResponse, SDKValidationError> {

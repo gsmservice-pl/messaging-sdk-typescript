@@ -73,47 +73,7 @@ export const IncomingMessage$inboundSchema: z.ZodType<
     "dedicated_prefix": "dedicatedPrefix",
   });
 });
-/** @internal */
-export type IncomingMessage$Outbound = {
-  id?: number | undefined;
-  login?: string | undefined;
-  recipient?: string | undefined;
-  sender?: string | undefined;
-  phonebook_sender_name?: string | null | undefined;
-  date?: string | undefined;
-  message?: string | undefined;
-  dedicated_number?: string | null | undefined;
-  dedicated_prefix?: string | null | undefined;
-};
 
-/** @internal */
-export const IncomingMessage$outboundSchema: z.ZodType<
-  IncomingMessage$Outbound,
-  z.ZodTypeDef,
-  IncomingMessage
-> = z.object({
-  id: z.number().int().optional(),
-  login: z.string().optional(),
-  recipient: z.string().optional(),
-  sender: z.string().optional(),
-  phonebookSenderName: z.nullable(z.string()).optional(),
-  date: z.date().transform(v => v.toISOString()).optional(),
-  message: z.string().optional(),
-  dedicatedNumber: z.nullable(z.string()).optional(),
-  dedicatedPrefix: z.nullable(z.string()).optional(),
-}).transform((v) => {
-  return remap$(v, {
-    phonebookSenderName: "phonebook_sender_name",
-    dedicatedNumber: "dedicated_number",
-    dedicatedPrefix: "dedicated_prefix",
-  });
-});
-
-export function incomingMessageToJSON(
-  incomingMessage: IncomingMessage,
-): string {
-  return JSON.stringify(IncomingMessage$outboundSchema.parse(incomingMessage));
-}
 export function incomingMessageFromJSON(
   jsonString: string,
 ): SafeParseResult<IncomingMessage, SDKValidationError> {

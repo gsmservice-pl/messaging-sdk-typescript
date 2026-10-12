@@ -5,6 +5,7 @@
 export * from "./addsender.js";
 export * from "./cancelmessages.js";
 export * from "./deletesender.js";
+export * from "./getaccountdetails.js";
 export * from "./getincomingmessages.js";
 export * from "./getmessages.js";
 export * from "./getmmsprice.js";
@@ -12,6 +13,8 @@ export * from "./getsmsprice.js";
 export * from "./getsubaccountdetails.js";
 export * from "./listincomingmessages.js";
 export * from "./listmessages.js";
+export * from "./listsenders.js";
+export * from "./ping.js";
 export * from "./removeincomingmessages.js";
 export * from "./sendmms.js";
 export * from "./sendsms.js";

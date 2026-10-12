@@ -12,7 +12,7 @@ const value: components.MmsMessage = {
   recipients: "+48999999999",
   subject: "To jest temat wiadomości",
   message: "To jest treść wiadomości",
-  attachments: "<file_body in base64 format>",
+  attachments: null,
 };
 ```
 
@@ -24,7 +24,7 @@ const value: components.MmsMessage[] = [
     recipients: "+48999999999",
     subject: "To jest temat wiadomości",
     message: "To jest treść wiadomości",
-    attachments: "<file_body in base64 format>",
+    attachments: "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
   },
 ];
 ```

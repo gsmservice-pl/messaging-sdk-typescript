@@ -69,13 +69,14 @@ run();
 
 ### Response
 
-**Promise\<[components.AccountResponse](../../models/components/accountresponse.md)\>**
+**Promise\<[operations.GetAccountDetailsResponse](../../models/operations/getaccountdetailsresponse.md)\>**
 
 ### Errors
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 401, 403, 4XX            | application/problem+json |
+| errors.ErrorResponse     | 401, 405                 | application/problem+json |
+| errors.ErrorResponse     | 403, 4XX                 | application/problem+json |
 | errors.ErrorResponse     | 5XX                      | application/problem+json |
 
 ## getSubaccount
@@ -147,11 +148,12 @@ run();
 
 ### Response
 
-**Promise\<[components.AccountResponse](../../models/components/accountresponse.md)\>**
+**Promise\<[operations.GetSubaccountDetailsResponse](../../models/operations/getsubaccountdetailsresponse.md)\>**
 
 ### Errors
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 401, 403, 404, 4XX       | application/problem+json |
+| errors.ErrorResponse     | 401, 405                 | application/problem+json |
+| errors.ErrorResponse     | 403, 404, 4XX            | application/problem+json |
 | errors.ErrorResponse     | 5XX                      | application/problem+json |

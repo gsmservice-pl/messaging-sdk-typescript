@@ -16,9 +16,333 @@ As a successful result a `GetSmsPriceResponse` object will be returned with `res
 
 `GetSmsPriceResponse` object will include also `headers` array with `X-Success-Count` (a count of messages which were processed successfully) and `X-Error-Count` (count of messages which were rejected) elements.
 
-### Example Usage
+### Example Usage: bulk
 
-<!-- UsageSnippet language="typescript" operationID="getSmsPrice" method="post" path="/messages/sms/price" -->
+<!-- UsageSnippet language="typescript" operationID="getSmsPrice" method="post" path="/messages/sms/price" example="bulk" -->
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const result = await client.outgoing.sms.getPrice([
+    {
+      recipients: "+48999999999",
+      message: "This is first SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+    {
+      recipients: "+48999888777",
+      message: "This is second SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+  ]);
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsGetPrice.js";
+
+// Use `ClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const client = new ClientCore({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const res = await outgoingSmsGetPrice(client, [
+    {
+      recipients: "+48999999999",
+      message: "This is first SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+    {
+      recipients: "+48999888777",
+      message: "This is second SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+  ]);
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("outgoingSmsGetPrice failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: bulk_cid
+
+<!-- UsageSnippet language="typescript" operationID="getSmsPrice" method="post" path="/messages/sms/price" example="bulk_cid" -->
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const result = await client.outgoing.sms.getPrice([
+    {
+      recipients: {
+        nr: "+48999999999",
+        cid: "custom-id-A44445T",
+      },
+      message: "This is first SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+    {
+      recipients: {
+        nr: "+48999888777",
+        cid: "custom-id-F44445R",
+      },
+      message: "This is second SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+  ]);
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsGetPrice.js";
+
+// Use `ClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const client = new ClientCore({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const res = await outgoingSmsGetPrice(client, [
+    {
+      recipients: {
+        nr: "+48999999999",
+        cid: "custom-id-A44445T",
+      },
+      message: "This is first SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+    {
+      recipients: {
+        nr: "+48999888777",
+        cid: "custom-id-F44445R",
+      },
+      message: "This is second SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+  ]);
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("outgoingSmsGetPrice failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: multi
+
+<!-- UsageSnippet language="typescript" operationID="getSmsPrice" method="post" path="/messages/sms/price" example="multi" -->
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const result = await client.outgoing.sms.getPrice({
+    recipients: [
+      "+48999999999",
+      "+48999888777",
+    ],
+    message: "This is SMS message content.",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsGetPrice.js";
+
+// Use `ClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const client = new ClientCore({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const res = await outgoingSmsGetPrice(client, {
+    recipients: [
+      "+48999999999",
+      "+48999888777",
+    ],
+    message: "This is SMS message content.",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("outgoingSmsGetPrice failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: multi_cid
+
+<!-- UsageSnippet language="typescript" operationID="getSmsPrice" method="post" path="/messages/sms/price" example="multi_cid" -->
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const result = await client.outgoing.sms.getPrice({
+    recipients: [
+      {
+        nr: "+48999999999",
+        cid: "custom-id-A44445T",
+      },
+      {
+        nr: "+48999888777",
+        cid: "custom-id-F44445R",
+      },
+    ],
+    message: "This is SMS message content",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsGetPrice.js";
+
+// Use `ClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const client = new ClientCore({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const res = await outgoingSmsGetPrice(client, {
+    recipients: [
+      {
+        nr: "+48999999999",
+        cid: "custom-id-A44445T",
+      },
+      {
+        nr: "+48999888777",
+        cid: "custom-id-F44445R",
+      },
+    ],
+    message: "This is SMS message content",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("outgoingSmsGetPrice failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: single
+
+<!-- UsageSnippet language="typescript" operationID="getSmsPrice" method="post" path="/messages/sms/price" example="single" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -77,6 +401,73 @@ async function run() {
 
 run();
 ```
+### Example Usage: single_cid
+
+<!-- UsageSnippet language="typescript" operationID="getSmsPrice" method="post" path="/messages/sms/price" example="single_cid" -->
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const result = await client.outgoing.sms.getPrice({
+    recipients: {
+      nr: "+48999999999",
+      cid: "custom-id-A44445T",
+    },
+    message: "This is SMS message content",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsGetPrice } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsGetPrice.js";
+
+// Use `ClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const client = new ClientCore({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const res = await outgoingSmsGetPrice(client, {
+    recipients: {
+      nr: "+48999999999",
+      cid: "custom-id-A44445T",
+    },
+    message: "This is SMS message content",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("outgoingSmsGetPrice failed:", res.error);
+  }
+}
+
+run();
+```
 
 ### Parameters
 
@@ -95,7 +486,8 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 401, 4XX            | application/problem+json |
+| errors.ErrorResponse     | 401, 405                 | application/problem+json |
+| errors.ErrorResponse     | 400, 415, 4XX            | application/problem+json |
 | errors.ErrorResponse     | 5XX                      | application/problem+json |
 
 ## send
@@ -106,9 +498,333 @@ As a successful result a `SendSmsResponse` object will be returned with `result`
 
 `SendSmsResponse` will also include `headers` array with `X-Success-Count` (a count of messages which were processed successfully), `X-Error-Count` (count of messages which were rejected) and `X-Sandbox` (if a request was made in Sandbox or Production system) elements.
 
-### Example Usage
+### Example Usage: bulk
 
-<!-- UsageSnippet language="typescript" operationID="sendSms" method="post" path="/messages/sms" -->
+<!-- UsageSnippet language="typescript" operationID="sendSms" method="post" path="/messages/sms" example="bulk" -->
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const result = await client.outgoing.sms.send([
+    {
+      recipients: "+48999999999",
+      message: "This is first SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+    {
+      recipients: "+48999888777",
+      message: "This is second SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+  ]);
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsSend.js";
+
+// Use `ClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const client = new ClientCore({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const res = await outgoingSmsSend(client, [
+    {
+      recipients: "+48999999999",
+      message: "This is first SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+    {
+      recipients: "+48999888777",
+      message: "This is second SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+  ]);
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("outgoingSmsSend failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: bulk_cid
+
+<!-- UsageSnippet language="typescript" operationID="sendSms" method="post" path="/messages/sms" example="bulk_cid" -->
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const result = await client.outgoing.sms.send([
+    {
+      recipients: {
+        nr: "+48999999999",
+        cid: "custom-id-A44445T",
+      },
+      message: "This is first SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+    {
+      recipients: {
+        nr: "+48999888777",
+        cid: "custom-id-F44445R",
+      },
+      message: "This is second SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+  ]);
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsSend.js";
+
+// Use `ClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const client = new ClientCore({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const res = await outgoingSmsSend(client, [
+    {
+      recipients: {
+        nr: "+48999999999",
+        cid: "custom-id-A44445T",
+      },
+      message: "This is first SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+    {
+      recipients: {
+        nr: "+48999888777",
+        cid: "custom-id-F44445R",
+      },
+      message: "This is second SMS message content",
+      sender: "Bramka SMS",
+      type: 1,
+      unicode: true,
+      flash: false,
+      date: null,
+    },
+  ]);
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("outgoingSmsSend failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: multi
+
+<!-- UsageSnippet language="typescript" operationID="sendSms" method="post" path="/messages/sms" example="multi" -->
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const result = await client.outgoing.sms.send({
+    recipients: [
+      "+48999999999",
+      "+48999888777",
+    ],
+    message: "This is SMS message content.",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsSend.js";
+
+// Use `ClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const client = new ClientCore({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const res = await outgoingSmsSend(client, {
+    recipients: [
+      "+48999999999",
+      "+48999888777",
+    ],
+    message: "This is SMS message content.",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("outgoingSmsSend failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: multi_cid
+
+<!-- UsageSnippet language="typescript" operationID="sendSms" method="post" path="/messages/sms" example="multi_cid" -->
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const result = await client.outgoing.sms.send({
+    recipients: [
+      {
+        nr: "+48999999999",
+        cid: "custom-id-A44445T",
+      },
+      {
+        nr: "+48999888777",
+        cid: "custom-id-F44445R",
+      },
+    ],
+    message: "This is SMS message content",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsSend.js";
+
+// Use `ClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const client = new ClientCore({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const res = await outgoingSmsSend(client, {
+    recipients: [
+      {
+        nr: "+48999999999",
+        cid: "custom-id-A44445T",
+      },
+      {
+        nr: "+48999888777",
+        cid: "custom-id-F44445R",
+      },
+    ],
+    message: "This is SMS message content",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("outgoingSmsSend failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: single
+
+<!-- UsageSnippet language="typescript" operationID="sendSms" method="post" path="/messages/sms" example="single" -->
 ```typescript
 import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
 
@@ -167,6 +883,73 @@ async function run() {
 
 run();
 ```
+### Example Usage: single_cid
+
+<!-- UsageSnippet language="typescript" operationID="sendSms" method="post" path="/messages/sms" example="single_cid" -->
+```typescript
+import { Client } from "@gsmservice-pl/messaging-sdk-typescript";
+
+const client = new Client({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const result = await client.outgoing.sms.send({
+    recipients: {
+      nr: "+48999999999",
+      cid: "custom-id-A44445T",
+    },
+    message: "This is SMS message content",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { ClientCore } from "@gsmservice-pl/messaging-sdk-typescript/core.js";
+import { outgoingSmsSend } from "@gsmservice-pl/messaging-sdk-typescript/funcs/outgoingSmsSend.js";
+
+// Use `ClientCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const client = new ClientCore({
+  bearer: "<YOUR API ACCESS TOKEN>",
+});
+
+async function run() {
+  const res = await outgoingSmsSend(client, {
+    recipients: {
+      nr: "+48999999999",
+      cid: "custom-id-A44445T",
+    },
+    message: "This is SMS message content",
+    sender: "Bramka SMS",
+    type: 1,
+    unicode: true,
+    flash: false,
+    date: null,
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("outgoingSmsSend failed:", res.error);
+  }
+}
+
+run();
+```
 
 ### Parameters
 
@@ -185,5 +968,6 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 401, 403, 4XX       | application/problem+json |
+| errors.ErrorResponse     | 401, 405                 | application/problem+json |
+| errors.ErrorResponse     | 400, 403, 415, 4XX       | application/problem+json |
 | errors.ErrorResponse     | 5XX                      | application/problem+json |

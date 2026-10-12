@@ -26,15 +26,6 @@ export type ListMessagesResponse = {
 };
 
 /** @internal */
-export const ListMessagesRequest$inboundSchema: z.ZodType<
-  ListMessagesRequest,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  page: z.number().int().default(1),
-  limit: z.number().int().default(10),
-});
-/** @internal */
 export type ListMessagesRequest$Outbound = {
   page: number;
   limit: number;
@@ -57,15 +48,6 @@ export function listMessagesRequestToJSON(
     ListMessagesRequest$outboundSchema.parse(listMessagesRequest),
   );
 }
-export function listMessagesRequestFromJSON(
-  jsonString: string,
-): SafeParseResult<ListMessagesRequest, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => ListMessagesRequest$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'ListMessagesRequest' from JSON`,
-  );
-}
 
 /** @internal */
 export const ListMessagesResponse$inboundSchema: z.ZodType<
@@ -81,34 +63,7 @@ export const ListMessagesResponse$inboundSchema: z.ZodType<
     "Result": "result",
   });
 });
-/** @internal */
-export type ListMessagesResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-  Result: Array<components.Message$Outbound>;
-};
 
-/** @internal */
-export const ListMessagesResponse$outboundSchema: z.ZodType<
-  ListMessagesResponse$Outbound,
-  z.ZodTypeDef,
-  ListMessagesResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-  result: z.array(components.Message$outboundSchema),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-    result: "Result",
-  });
-});
-
-export function listMessagesResponseToJSON(
-  listMessagesResponse: ListMessagesResponse,
-): string {
-  return JSON.stringify(
-    ListMessagesResponse$outboundSchema.parse(listMessagesResponse),
-  );
-}
 export function listMessagesResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<ListMessagesResponse, SDKValidationError> {

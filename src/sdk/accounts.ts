@@ -5,7 +5,6 @@
 import { accountsGet } from "../funcs/accountsGet.js";
 import { accountsGetSubaccount } from "../funcs/accountsGetSubaccount.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
-import * as components from "../models/components/index.js";
 import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
@@ -20,7 +19,7 @@ export class Accounts extends ClientSDK {
    */
   async get(
     options?: RequestOptions,
-  ): Promise<components.AccountResponse> {
+  ): Promise<operations.GetAccountDetailsResponse> {
     return unwrapAsync(accountsGet(
       this,
       options,
@@ -40,7 +39,7 @@ export class Accounts extends ClientSDK {
   async getSubaccount(
     request: operations.GetSubaccountDetailsRequest,
     options?: RequestOptions,
-  ): Promise<components.AccountResponse> {
+  ): Promise<operations.GetSubaccountDetailsResponse> {
     return unwrapAsync(accountsGetSubaccount(
       this,
       request,

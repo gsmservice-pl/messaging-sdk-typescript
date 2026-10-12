@@ -22,14 +22,6 @@ export type RemoveIncomingMessagesResponse = {
 };
 
 /** @internal */
-export const RemoveIncomingMessagesRequest$inboundSchema: z.ZodType<
-  RemoveIncomingMessagesRequest,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  ids: z.array(z.number().int()),
-});
-/** @internal */
 export type RemoveIncomingMessagesRequest$Outbound = {
   ids: Array<number>;
 };
@@ -52,15 +44,6 @@ export function removeIncomingMessagesRequestToJSON(
     ),
   );
 }
-export function removeIncomingMessagesRequestFromJSON(
-  jsonString: string,
-): SafeParseResult<RemoveIncomingMessagesRequest, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => RemoveIncomingMessagesRequest$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'RemoveIncomingMessagesRequest' from JSON`,
-  );
-}
 
 /** @internal */
 export const RemoveIncomingMessagesResponse$inboundSchema: z.ZodType<
@@ -76,36 +59,7 @@ export const RemoveIncomingMessagesResponse$inboundSchema: z.ZodType<
     "Result": "result",
   });
 });
-/** @internal */
-export type RemoveIncomingMessagesResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-  Result: Array<components.RemovedIncomingMessage$Outbound>;
-};
 
-/** @internal */
-export const RemoveIncomingMessagesResponse$outboundSchema: z.ZodType<
-  RemoveIncomingMessagesResponse$Outbound,
-  z.ZodTypeDef,
-  RemoveIncomingMessagesResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-  result: z.array(components.RemovedIncomingMessage$outboundSchema),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-    result: "Result",
-  });
-});
-
-export function removeIncomingMessagesResponseToJSON(
-  removeIncomingMessagesResponse: RemoveIncomingMessagesResponse,
-): string {
-  return JSON.stringify(
-    RemoveIncomingMessagesResponse$outboundSchema.parse(
-      removeIncomingMessagesResponse,
-    ),
-  );
-}
 export function removeIncomingMessagesResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<RemoveIncomingMessagesResponse, SDKValidationError> {

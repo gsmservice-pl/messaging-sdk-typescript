@@ -22,14 +22,6 @@ export type GetMessagesResponse = {
 };
 
 /** @internal */
-export const GetMessagesRequest$inboundSchema: z.ZodType<
-  GetMessagesRequest,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  ids: z.array(z.number().int()),
-});
-/** @internal */
 export type GetMessagesRequest$Outbound = {
   ids: Array<number>;
 };
@@ -50,15 +42,6 @@ export function getMessagesRequestToJSON(
     GetMessagesRequest$outboundSchema.parse(getMessagesRequest),
   );
 }
-export function getMessagesRequestFromJSON(
-  jsonString: string,
-): SafeParseResult<GetMessagesRequest, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => GetMessagesRequest$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'GetMessagesRequest' from JSON`,
-  );
-}
 
 /** @internal */
 export const GetMessagesResponse$inboundSchema: z.ZodType<
@@ -74,34 +57,7 @@ export const GetMessagesResponse$inboundSchema: z.ZodType<
     "Result": "result",
   });
 });
-/** @internal */
-export type GetMessagesResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-  Result: Array<components.Message$Outbound>;
-};
 
-/** @internal */
-export const GetMessagesResponse$outboundSchema: z.ZodType<
-  GetMessagesResponse$Outbound,
-  z.ZodTypeDef,
-  GetMessagesResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-  result: z.array(components.Message$outboundSchema),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-    result: "Result",
-  });
-});
-
-export function getMessagesResponseToJSON(
-  getMessagesResponse: GetMessagesResponse,
-): string {
-  return JSON.stringify(
-    GetMessagesResponse$outboundSchema.parse(getMessagesResponse),
-  );
-}
 export function getMessagesResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<GetMessagesResponse, SDKValidationError> {

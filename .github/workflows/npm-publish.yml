@@ -2,7 +2,14 @@ name: Publish Package to npmjs
 
 on:
   release:
-    types: [created]
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-publish-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
 
 jobs:
   publish-npm:
@@ -11,12 +18,43 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Check out the release
+        uses: actions/checkout@v6
         with:
-          node-version: 20
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish --access public
+          package-manager-cache: false
+
+      # Trusted publishing requires npm >=11.5.1.
+      - name: Set up npm with OIDC support
+        run: npm install --global npm@11 --registry=https://registry.npmjs.org/
+
+      - name: Verify the release version
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          node <<'NODE'
+          const { version } = require('./package.json');
+          const releaseVersion = process.env.RELEASE_TAG.replace(/^v/, '');
+          if (version !== releaseVersion) {
+            throw new Error(`Release tag ${process.env.RELEASE_TAG} does not match package version ${version}`);
+          }
+          NODE
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the package
+        run: npm run build
+
+      # Configure npm-publish.yml as a trusted publisher on npmjs.com.
+      # npm uses OIDC and adds provenance automatically; no NPM_TOKEN is needed.
+      - name: Publish to npm
+        env:
+          NPM_DIST_TAG: ${{ github.event.release.prerelease && 'next' || 'latest' }}
+        run: npm publish --access public --ignore-scripts --tag "$NPM_DIST_TAG" --registry=https://registry.npmjs.org/

@@ -26,9 +26,3 @@ export const MessageType$inboundSchema: z.ZodType<
   z.ZodTypeDef,
   unknown
 > = openEnums.inboundSchemaInt(MessageType);
-/** @internal */
-export const MessageType$outboundSchema: z.ZodType<
-  number,
-  z.ZodTypeDef,
-  MessageType
-> = openEnums.outboundSchemaInt(MessageType);

@@ -3,12 +3,12 @@
  */
 
 import { ClientCore } from "../core.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
-import * as components from "../models/components/index.js";
 import { ClientError } from "../models/errors/clienterror.js";
 import {
   ConnectionError,
@@ -20,6 +20,7 @@ import {
 import * as errors from "../models/errors/index.js";
 import { ResponseValidationError } from "../models/errors/responsevalidationerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
+import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
@@ -36,7 +37,7 @@ export function accountsGet(
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    components.AccountResponse,
+    operations.GetAccountDetailsResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -60,7 +61,7 @@ async function $do(
 ): Promise<
   [
     Result<
-      components.AccountResponse,
+      operations.GetAccountDetailsResponse,
       | errors.ErrorResponse
       | ClientError
       | ResponseValidationError
@@ -125,7 +126,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["401", "403", "4XX", "5XX"],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -139,7 +141,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    components.AccountResponse,
+    operations.GetAccountDetailsResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -150,8 +152,14 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, components.AccountResponse$inboundSchema),
-    M.jsonErr([401, 403, "4XX"], errors.ErrorResponse$inboundSchema, {
+    M.json(200, operations.GetAccountDetailsResponse$inboundSchema, {
+      key: "Result",
+    }),
+    M.jsonErr([401, 405], errors.ErrorResponse$inboundSchema, {
+      ctype: "application/problem+json",
+      hdrs: true,
+    }),
+    M.jsonErr([403, "4XX"], errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
     M.jsonErr("5XX", errors.ErrorResponse$inboundSchema, {

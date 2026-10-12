@@ -28,34 +28,7 @@ export const AddSenderResponse$inboundSchema: z.ZodType<
     "Result": "result",
   });
 });
-/** @internal */
-export type AddSenderResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-  Result: components.Sender$Outbound;
-};
 
-/** @internal */
-export const AddSenderResponse$outboundSchema: z.ZodType<
-  AddSenderResponse$Outbound,
-  z.ZodTypeDef,
-  AddSenderResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-  result: components.Sender$outboundSchema,
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-    result: "Result",
-  });
-});
-
-export function addSenderResponseToJSON(
-  addSenderResponse: AddSenderResponse,
-): string {
-  return JSON.stringify(
-    AddSenderResponse$outboundSchema.parse(addSenderResponse),
-  );
-}
 export function addSenderResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<AddSenderResponse, SDKValidationError> {

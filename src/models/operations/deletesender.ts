@@ -20,14 +20,6 @@ export type DeleteSenderResponse = {
 };
 
 /** @internal */
-export const DeleteSenderRequest$inboundSchema: z.ZodType<
-  DeleteSenderRequest,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  sender: z.string(),
-});
-/** @internal */
 export type DeleteSenderRequest$Outbound = {
   sender: string;
 };
@@ -48,15 +40,6 @@ export function deleteSenderRequestToJSON(
     DeleteSenderRequest$outboundSchema.parse(deleteSenderRequest),
   );
 }
-export function deleteSenderRequestFromJSON(
-  jsonString: string,
-): SafeParseResult<DeleteSenderRequest, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => DeleteSenderRequest$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'DeleteSenderRequest' from JSON`,
-  );
-}
 
 /** @internal */
 export const DeleteSenderResponse$inboundSchema: z.ZodType<
@@ -70,31 +53,7 @@ export const DeleteSenderResponse$inboundSchema: z.ZodType<
     "Headers": "headers",
   });
 });
-/** @internal */
-export type DeleteSenderResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-};
 
-/** @internal */
-export const DeleteSenderResponse$outboundSchema: z.ZodType<
-  DeleteSenderResponse$Outbound,
-  z.ZodTypeDef,
-  DeleteSenderResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-  });
-});
-
-export function deleteSenderResponseToJSON(
-  deleteSenderResponse: DeleteSenderResponse,
-): string {
-  return JSON.stringify(
-    DeleteSenderResponse$outboundSchema.parse(deleteSenderResponse),
-  );
-}
 export function deleteSenderResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<DeleteSenderResponse, SDKValidationError> {

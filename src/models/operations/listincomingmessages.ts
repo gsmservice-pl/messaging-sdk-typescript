@@ -26,15 +26,6 @@ export type ListIncomingMessagesResponse = {
 };
 
 /** @internal */
-export const ListIncomingMessagesRequest$inboundSchema: z.ZodType<
-  ListIncomingMessagesRequest,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  page: z.number().int().default(1),
-  limit: z.number().int().default(10),
-});
-/** @internal */
 export type ListIncomingMessagesRequest$Outbound = {
   page: number;
   limit: number;
@@ -59,15 +50,6 @@ export function listIncomingMessagesRequestToJSON(
     ),
   );
 }
-export function listIncomingMessagesRequestFromJSON(
-  jsonString: string,
-): SafeParseResult<ListIncomingMessagesRequest, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => ListIncomingMessagesRequest$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'ListIncomingMessagesRequest' from JSON`,
-  );
-}
 
 /** @internal */
 export const ListIncomingMessagesResponse$inboundSchema: z.ZodType<
@@ -83,36 +65,7 @@ export const ListIncomingMessagesResponse$inboundSchema: z.ZodType<
     "Result": "result",
   });
 });
-/** @internal */
-export type ListIncomingMessagesResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-  Result: Array<components.IncomingMessage$Outbound>;
-};
 
-/** @internal */
-export const ListIncomingMessagesResponse$outboundSchema: z.ZodType<
-  ListIncomingMessagesResponse$Outbound,
-  z.ZodTypeDef,
-  ListIncomingMessagesResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-  result: z.array(components.IncomingMessage$outboundSchema),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-    result: "Result",
-  });
-});
-
-export function listIncomingMessagesResponseToJSON(
-  listIncomingMessagesResponse: ListIncomingMessagesResponse,
-): string {
-  return JSON.stringify(
-    ListIncomingMessagesResponse$outboundSchema.parse(
-      listIncomingMessagesResponse,
-    ),
-  );
-}
 export function listIncomingMessagesResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<ListIncomingMessagesResponse, SDKValidationError> {

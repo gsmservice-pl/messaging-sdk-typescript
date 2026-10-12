@@ -6,12 +6,7 @@ import * as z from "zod/v3";
 import { safeParse } from "../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
-import {
-  ErrorResponse,
-  ErrorResponse$inboundSchema,
-  ErrorResponse$Outbound,
-  ErrorResponse$outboundSchema,
-} from "./errorresponse.js";
+import { ErrorResponse, ErrorResponse$inboundSchema } from "./errorresponse.js";
 
 /**
  * An object containing information about results of removing single incoming message
@@ -26,7 +21,7 @@ export type RemovedIncomingMessage = {
    */
   status?: number | undefined;
   /**
-   * An object that complies with RFC 9457 containing information about a request error
+   * RFC 9457 Problem Details. See the [error catalog](https://api.szybkisms.pl/problems/) for problem types and recovery steps.
    */
   error?: ErrorResponse | null | undefined;
 };
@@ -41,31 +36,7 @@ export const RemovedIncomingMessage$inboundSchema: z.ZodType<
   status: z.number().int().optional(),
   error: z.nullable(ErrorResponse$inboundSchema).optional(),
 });
-/** @internal */
-export type RemovedIncomingMessage$Outbound = {
-  id?: number | undefined;
-  status?: number | undefined;
-  error?: ErrorResponse$Outbound | null | undefined;
-};
 
-/** @internal */
-export const RemovedIncomingMessage$outboundSchema: z.ZodType<
-  RemovedIncomingMessage$Outbound,
-  z.ZodTypeDef,
-  RemovedIncomingMessage
-> = z.object({
-  id: z.number().int().optional(),
-  status: z.number().int().optional(),
-  error: z.nullable(ErrorResponse$outboundSchema).optional(),
-});
-
-export function removedIncomingMessageToJSON(
-  removedIncomingMessage: RemovedIncomingMessage,
-): string {
-  return JSON.stringify(
-    RemovedIncomingMessage$outboundSchema.parse(removedIncomingMessage),
-  );
-}
 export function removedIncomingMessageFromJSON(
   jsonString: string,
 ): SafeParseResult<RemovedIncomingMessage, SDKValidationError> {

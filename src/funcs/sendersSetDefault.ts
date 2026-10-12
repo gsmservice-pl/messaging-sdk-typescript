@@ -4,6 +4,7 @@
 
 import { ClientCore } from "../core.js";
 import { encodeSimple } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -25,11 +26,6 @@ import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
-export enum SetDefaultAcceptEnum {
-  applicationJson = "application/json",
-  applicationProblemPlusJson = "application/problem+json",
-}
-
 /**
  * Set default sender name
  *
@@ -41,7 +37,7 @@ export enum SetDefaultAcceptEnum {
 export function sendersSetDefault(
   client: ClientCore,
   request: operations.SetDefaultSenderRequest,
-  options?: RequestOptions & { acceptHeaderOverride?: SetDefaultAcceptEnum },
+  options?: RequestOptions,
 ): APIPromise<
   Result<
     operations.SetDefaultSenderResponse | undefined,
@@ -66,7 +62,7 @@ export function sendersSetDefault(
 async function $do(
   client: ClientCore,
   request: operations.SetDefaultSenderRequest,
-  options?: RequestOptions & { acceptHeaderOverride?: SetDefaultAcceptEnum },
+  options?: RequestOptions,
 ): Promise<
   [
     Result<
@@ -101,12 +97,10 @@ async function $do(
       charEncoding: "percent",
     }),
   };
-
   const path = pathToFunc("/senders/{sender}")(pathParams);
 
   const headers = new Headers(compactMap({
-    Accept: options?.acceptHeaderOverride
-      || "application/json;q=1, application/problem+json;q=0",
+    Accept: "application/problem+json",
   }));
 
   const secConfig = await extractSecurity(client._options.bearer);
@@ -155,7 +149,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "401", "403", "404", "4XX", "5XX"],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -183,8 +178,11 @@ async function $do(
     M.nil(204, operations.SetDefaultSenderResponse$inboundSchema.optional(), {
       hdrs: true,
     }),
-    M.jsonErr(404, errors.ErrorResponse$inboundSchema),
-    M.jsonErr([400, 401, 403, "4XX"], errors.ErrorResponse$inboundSchema, {
+    M.jsonErr([401, 405], errors.ErrorResponse$inboundSchema, {
+      ctype: "application/problem+json",
+      hdrs: true,
+    }),
+    M.jsonErr([400, 403, 404, 409, "4XX"], errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),
     M.jsonErr("5XX", errors.ErrorResponse$inboundSchema, {

@@ -8,14 +8,15 @@ Attachments for the message. You can pass here images, audio and video files bod
 ### `string`
 
 ```typescript
-const value: string = "<file_body in base64 format>";
+const value: string =
+  "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 ```
 
 ### `string[]`
 
 ```typescript
 const value: string[] = [
-  "<file_body in base64 format>",
+  "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
 ];
 ```
 

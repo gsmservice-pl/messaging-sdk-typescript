@@ -35,27 +35,7 @@ export const PingResponse$inboundSchema: z.ZodType<
   version: z.string().optional(),
   sandbox: z.boolean().optional(),
 });
-/** @internal */
-export type PingResponse$Outbound = {
-  status?: string | undefined;
-  version?: string | undefined;
-  sandbox?: boolean | undefined;
-};
 
-/** @internal */
-export const PingResponse$outboundSchema: z.ZodType<
-  PingResponse$Outbound,
-  z.ZodTypeDef,
-  PingResponse
-> = z.object({
-  status: z.string().optional(),
-  version: z.string().optional(),
-  sandbox: z.boolean().optional(),
-});
-
-export function pingResponseToJSON(pingResponse: PingResponse): string {
-  return JSON.stringify(PingResponse$outboundSchema.parse(pingResponse));
-}
 export function pingResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<PingResponse, SDKValidationError> {

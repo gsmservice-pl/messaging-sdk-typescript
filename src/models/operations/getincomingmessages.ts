@@ -22,14 +22,6 @@ export type GetIncomingMessagesResponse = {
 };
 
 /** @internal */
-export const GetIncomingMessagesRequest$inboundSchema: z.ZodType<
-  GetIncomingMessagesRequest,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  ids: z.array(z.number().int()),
-});
-/** @internal */
 export type GetIncomingMessagesRequest$Outbound = {
   ids: Array<number>;
 };
@@ -50,15 +42,6 @@ export function getIncomingMessagesRequestToJSON(
     GetIncomingMessagesRequest$outboundSchema.parse(getIncomingMessagesRequest),
   );
 }
-export function getIncomingMessagesRequestFromJSON(
-  jsonString: string,
-): SafeParseResult<GetIncomingMessagesRequest, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => GetIncomingMessagesRequest$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'GetIncomingMessagesRequest' from JSON`,
-  );
-}
 
 /** @internal */
 export const GetIncomingMessagesResponse$inboundSchema: z.ZodType<
@@ -74,36 +57,7 @@ export const GetIncomingMessagesResponse$inboundSchema: z.ZodType<
     "Result": "result",
   });
 });
-/** @internal */
-export type GetIncomingMessagesResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-  Result: Array<components.IncomingMessage$Outbound>;
-};
 
-/** @internal */
-export const GetIncomingMessagesResponse$outboundSchema: z.ZodType<
-  GetIncomingMessagesResponse$Outbound,
-  z.ZodTypeDef,
-  GetIncomingMessagesResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-  result: z.array(components.IncomingMessage$outboundSchema),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-    result: "Result",
-  });
-});
-
-export function getIncomingMessagesResponseToJSON(
-  getIncomingMessagesResponse: GetIncomingMessagesResponse,
-): string {
-  return JSON.stringify(
-    GetIncomingMessagesResponse$outboundSchema.parse(
-      getIncomingMessagesResponse,
-    ),
-  );
-}
 export function getIncomingMessagesResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<GetIncomingMessagesResponse, SDKValidationError> {

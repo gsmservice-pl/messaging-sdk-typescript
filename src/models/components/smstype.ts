@@ -20,8 +20,5 @@ export const SmsType = {
 export type SmsType = OpenEnum<typeof SmsType>;
 
 /** @internal */
-export const SmsType$inboundSchema: z.ZodType<SmsType, z.ZodTypeDef, unknown> =
-  openEnums.inboundSchemaInt(SmsType);
-/** @internal */
 export const SmsType$outboundSchema: z.ZodType<number, z.ZodTypeDef, SmsType> =
   openEnums.outboundSchemaInt(SmsType);

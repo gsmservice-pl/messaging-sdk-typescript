@@ -6,6 +6,7 @@ import * as z from "zod/v3";
 import { remap as remap$ } from "../../lib/primitives.js";
 import { safeParse } from "../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
+import * as components from "../components/index.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type GetSubaccountDetailsRequest = {
@@ -15,18 +16,11 @@ export type GetSubaccountDetailsRequest = {
   userLogin: string;
 };
 
-/** @internal */
-export const GetSubaccountDetailsRequest$inboundSchema: z.ZodType<
-  GetSubaccountDetailsRequest,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  user_login: z.string(),
-}).transform((v) => {
-  return remap$(v, {
-    "user_login": "userLogin",
-  });
-});
+export type GetSubaccountDetailsResponse = {
+  headers: { [k: string]: Array<string> };
+  result: components.AccountResponse;
+};
+
 /** @internal */
 export type GetSubaccountDetailsRequest$Outbound = {
   user_login: string;
@@ -54,12 +48,28 @@ export function getSubaccountDetailsRequestToJSON(
     ),
   );
 }
-export function getSubaccountDetailsRequestFromJSON(
+
+/** @internal */
+export const GetSubaccountDetailsResponse$inboundSchema: z.ZodType<
+  GetSubaccountDetailsResponse,
+  z.ZodTypeDef,
+  unknown
+> = z.object({
+  Headers: z.record(z.array(z.string())).default({}),
+  Result: components.AccountResponse$inboundSchema,
+}).transform((v) => {
+  return remap$(v, {
+    "Headers": "headers",
+    "Result": "result",
+  });
+});
+
+export function getSubaccountDetailsResponseFromJSON(
   jsonString: string,
-): SafeParseResult<GetSubaccountDetailsRequest, SDKValidationError> {
+): SafeParseResult<GetSubaccountDetailsResponse, SDKValidationError> {
   return safeParse(
     jsonString,
-    (x) => GetSubaccountDetailsRequest$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'GetSubaccountDetailsRequest' from JSON`,
+    (x) => GetSubaccountDetailsResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetSubaccountDetailsResponse' from JSON`,
   );
 }

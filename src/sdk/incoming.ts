@@ -60,7 +60,7 @@ export class Incoming extends ClientSDK {
    *
    * If you pass duplicated incoming message IDs in one call, API will process them only once. This request have to be authenticated using **API Access Token**.
    *
-   * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc7807)).
+   * In case of an error, the `ErrorResponse` object will be returned with proper HTTP header status code (our error response complies with [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)).
    */
   async removeByIds(
     request: operations.RemoveIncomingMessagesRequest,

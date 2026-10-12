@@ -22,15 +22,6 @@ export type GetMmsPriceResponse = {
 };
 
 /** @internal */
-export const GetMmsPriceRequestBody$inboundSchema: z.ZodType<
-  GetMmsPriceRequestBody,
-  z.ZodTypeDef,
-  unknown
-> = z.union([
-  components.MmsMessage$inboundSchema,
-  z.array(components.MmsMessage$inboundSchema),
-]);
-/** @internal */
 export type GetMmsPriceRequestBody$Outbound =
   | components.MmsMessage$Outbound
   | Array<components.MmsMessage$Outbound>;
@@ -52,15 +43,6 @@ export function getMmsPriceRequestBodyToJSON(
     GetMmsPriceRequestBody$outboundSchema.parse(getMmsPriceRequestBody),
   );
 }
-export function getMmsPriceRequestBodyFromJSON(
-  jsonString: string,
-): SafeParseResult<GetMmsPriceRequestBody, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => GetMmsPriceRequestBody$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'GetMmsPriceRequestBody' from JSON`,
-  );
-}
 
 /** @internal */
 export const GetMmsPriceResponse$inboundSchema: z.ZodType<
@@ -76,34 +58,7 @@ export const GetMmsPriceResponse$inboundSchema: z.ZodType<
     "Result": "result",
   });
 });
-/** @internal */
-export type GetMmsPriceResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-  Result: Array<components.Price$Outbound>;
-};
 
-/** @internal */
-export const GetMmsPriceResponse$outboundSchema: z.ZodType<
-  GetMmsPriceResponse$Outbound,
-  z.ZodTypeDef,
-  GetMmsPriceResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-  result: z.array(components.Price$outboundSchema),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-    result: "Result",
-  });
-});
-
-export function getMmsPriceResponseToJSON(
-  getMmsPriceResponse: GetMmsPriceResponse,
-): string {
-  return JSON.stringify(
-    GetMmsPriceResponse$outboundSchema.parse(getMmsPriceResponse),
-  );
-}
 export function getMmsPriceResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<GetMmsPriceResponse, SDKValidationError> {

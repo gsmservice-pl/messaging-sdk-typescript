@@ -22,15 +22,6 @@ export type SendMmsResponse = {
 };
 
 /** @internal */
-export const SendMmsRequestBody$inboundSchema: z.ZodType<
-  SendMmsRequestBody,
-  z.ZodTypeDef,
-  unknown
-> = z.union([
-  components.MmsMessage$inboundSchema,
-  z.array(components.MmsMessage$inboundSchema),
-]);
-/** @internal */
 export type SendMmsRequestBody$Outbound =
   | components.MmsMessage$Outbound
   | Array<components.MmsMessage$Outbound>;
@@ -52,15 +43,6 @@ export function sendMmsRequestBodyToJSON(
     SendMmsRequestBody$outboundSchema.parse(sendMmsRequestBody),
   );
 }
-export function sendMmsRequestBodyFromJSON(
-  jsonString: string,
-): SafeParseResult<SendMmsRequestBody, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => SendMmsRequestBody$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'SendMmsRequestBody' from JSON`,
-  );
-}
 
 /** @internal */
 export const SendMmsResponse$inboundSchema: z.ZodType<
@@ -76,32 +58,7 @@ export const SendMmsResponse$inboundSchema: z.ZodType<
     "Result": "result",
   });
 });
-/** @internal */
-export type SendMmsResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-  Result: Array<components.Message$Outbound>;
-};
 
-/** @internal */
-export const SendMmsResponse$outboundSchema: z.ZodType<
-  SendMmsResponse$Outbound,
-  z.ZodTypeDef,
-  SendMmsResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-  result: z.array(components.Message$outboundSchema),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-    result: "Result",
-  });
-});
-
-export function sendMmsResponseToJSON(
-  sendMmsResponse: SendMmsResponse,
-): string {
-  return JSON.stringify(SendMmsResponse$outboundSchema.parse(sendMmsResponse));
-}
 export function sendMmsResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<SendMmsResponse, SDKValidationError> {

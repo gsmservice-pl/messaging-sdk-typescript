@@ -22,15 +22,6 @@ export type SendSmsResponse = {
 };
 
 /** @internal */
-export const SendSmsRequestBody$inboundSchema: z.ZodType<
-  SendSmsRequestBody,
-  z.ZodTypeDef,
-  unknown
-> = z.union([
-  components.SmsMessage$inboundSchema,
-  z.array(components.SmsMessage$inboundSchema),
-]);
-/** @internal */
 export type SendSmsRequestBody$Outbound =
   | components.SmsMessage$Outbound
   | Array<components.SmsMessage$Outbound>;
@@ -52,15 +43,6 @@ export function sendSmsRequestBodyToJSON(
     SendSmsRequestBody$outboundSchema.parse(sendSmsRequestBody),
   );
 }
-export function sendSmsRequestBodyFromJSON(
-  jsonString: string,
-): SafeParseResult<SendSmsRequestBody, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => SendSmsRequestBody$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'SendSmsRequestBody' from JSON`,
-  );
-}
 
 /** @internal */
 export const SendSmsResponse$inboundSchema: z.ZodType<
@@ -76,32 +58,7 @@ export const SendSmsResponse$inboundSchema: z.ZodType<
     "Result": "result",
   });
 });
-/** @internal */
-export type SendSmsResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-  Result: Array<components.Message$Outbound>;
-};
 
-/** @internal */
-export const SendSmsResponse$outboundSchema: z.ZodType<
-  SendSmsResponse$Outbound,
-  z.ZodTypeDef,
-  SendSmsResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-  result: z.array(components.Message$outboundSchema),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-    result: "Result",
-  });
-});
-
-export function sendSmsResponseToJSON(
-  sendSmsResponse: SendSmsResponse,
-): string {
-  return JSON.stringify(SendSmsResponse$outboundSchema.parse(sendSmsResponse));
-}
 export function sendSmsResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<SendSmsResponse, SDKValidationError> {

@@ -7,11 +7,7 @@ import { remap as remap$ } from "../../lib/primitives.js";
 import { safeParse } from "../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
-import {
-  MessageType,
-  MessageType$inboundSchema,
-  MessageType$outboundSchema,
-} from "./messagetype.js";
+import { MessageType, MessageType$inboundSchema } from "./messagetype.js";
 
 /**
  * An object defining the properties of a single message
@@ -50,11 +46,11 @@ export type Message = {
    */
   statusDate?: Date | null | undefined;
   /**
-   * Message status code
+   * Message-processing status, e.g. QUEUED or REJECTED. Sending results use HTTP 200; further delivery status is available in message history.
    */
   statusCode?: string | undefined;
   /**
-   * Human redable description of message status
+   * Human-readable description of the message status and any rejection reason.
    */
   statusDescription?: string | undefined;
   /**
@@ -99,54 +95,7 @@ export const Message$inboundSchema: z.ZodType<Message, z.ZodTypeDef, unknown> =
       "status_description": "statusDescription",
     });
   });
-/** @internal */
-export type Message$Outbound = {
-  id?: number | null | undefined;
-  cid?: string | null | undefined;
-  type?: number | undefined;
-  recipient?: string | undefined;
-  sender?: string | null | undefined;
-  parts?: number | null | undefined;
-  sent_date?: string | null | undefined;
-  status_date?: string | null | undefined;
-  status_code?: string | undefined;
-  status_description?: string | undefined;
-  unicode?: boolean | undefined;
-  flash?: boolean | undefined;
-  price?: number | undefined;
-};
 
-/** @internal */
-export const Message$outboundSchema: z.ZodType<
-  Message$Outbound,
-  z.ZodTypeDef,
-  Message
-> = z.object({
-  id: z.nullable(z.number().int()).optional(),
-  cid: z.nullable(z.string()).optional(),
-  type: MessageType$outboundSchema.optional(),
-  recipient: z.string().optional(),
-  sender: z.nullable(z.string()).optional(),
-  parts: z.nullable(z.number().int()).optional(),
-  sentDate: z.nullable(z.date().transform(v => v.toISOString())).optional(),
-  statusDate: z.nullable(z.date().transform(v => v.toISOString())).optional(),
-  statusCode: z.string().optional(),
-  statusDescription: z.string().optional(),
-  unicode: z.boolean().optional(),
-  flash: z.boolean().optional(),
-  price: z.number().optional(),
-}).transform((v) => {
-  return remap$(v, {
-    sentDate: "sent_date",
-    statusDate: "status_date",
-    statusCode: "status_code",
-    statusDescription: "status_description",
-  });
-});
-
-export function messageToJSON(message: Message): string {
-  return JSON.stringify(Message$outboundSchema.parse(message));
-}
 export function messageFromJSON(
   jsonString: string,
 ): SafeParseResult<Message, SDKValidationError> {

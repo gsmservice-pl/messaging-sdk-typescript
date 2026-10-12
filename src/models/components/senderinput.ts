@@ -3,9 +3,6 @@
  */
 
 import * as z from "zod/v3";
-import { safeParse } from "../../lib/schemas.js";
-import { Result as SafeParseResult } from "../../types/fp.js";
-import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * An object with the properties of the message sender
@@ -21,15 +18,6 @@ export type SenderInput = {
   description: string;
 };
 
-/** @internal */
-export const SenderInput$inboundSchema: z.ZodType<
-  SenderInput,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  sender: z.string(),
-  description: z.string(),
-});
 /** @internal */
 export type SenderInput$Outbound = {
   sender: string;
@@ -48,13 +36,4 @@ export const SenderInput$outboundSchema: z.ZodType<
 
 export function senderInputToJSON(senderInput: SenderInput): string {
   return JSON.stringify(SenderInput$outboundSchema.parse(senderInput));
-}
-export function senderInputFromJSON(
-  jsonString: string,
-): SafeParseResult<SenderInput, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => SenderInput$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'SenderInput' from JSON`,
-  );
 }

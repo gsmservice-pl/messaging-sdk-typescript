@@ -64,11 +64,12 @@ run();
 
 ### Response
 
-**Promise\<[components.PingResponse](../../models/components/pingresponse.md)\>**
+**Promise\<[operations.PingResponse](../../models/operations/pingresponse.md)\>**
 
 ### Errors
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
+| errors.ErrorResponse     | 405                      | application/problem+json |
 | errors.ErrorResponse     | 400, 4XX                 | application/problem+json |
 | errors.ErrorResponse     | 503, 5XX                 | application/problem+json |

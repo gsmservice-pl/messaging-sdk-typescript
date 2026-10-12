@@ -4,7 +4,7 @@
 
 import { commonPing } from "../funcs/commonPing.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
-import * as components from "../models/components/index.js";
+import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Common extends ClientSDK {
@@ -18,7 +18,7 @@ export class Common extends ClientSDK {
    */
   async ping(
     options?: RequestOptions,
-  ): Promise<components.PingResponse> {
+  ): Promise<operations.PingResponse> {
     return unwrapAsync(commonPing(
       this,
       options,

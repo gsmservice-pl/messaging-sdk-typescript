@@ -5,16 +5,11 @@
 import { sendersAdd } from "../funcs/sendersAdd.js";
 import { sendersDelete } from "../funcs/sendersDelete.js";
 import { sendersList } from "../funcs/sendersList.js";
-import {
-  sendersSetDefault,
-  SetDefaultAcceptEnum,
-} from "../funcs/sendersSetDefault.js";
+import { sendersSetDefault } from "../funcs/sendersSetDefault.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as components from "../models/components/index.js";
 import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
-
-export { SetDefaultAcceptEnum } from "../funcs/sendersSetDefault.js";
 
 export class Senders extends ClientSDK {
   /**
@@ -27,7 +22,7 @@ export class Senders extends ClientSDK {
    */
   async list(
     options?: RequestOptions,
-  ): Promise<Array<components.Sender>> {
+  ): Promise<operations.ListSendersResponse> {
     return unwrapAsync(sendersList(
       this,
       options,
@@ -82,7 +77,7 @@ export class Senders extends ClientSDK {
    */
   async setDefault(
     request: operations.SetDefaultSenderRequest,
-    options?: RequestOptions & { acceptHeaderOverride?: SetDefaultAcceptEnum },
+    options?: RequestOptions,
   ): Promise<operations.SetDefaultSenderResponse | undefined> {
     return unwrapAsync(sendersSetDefault(
       this,

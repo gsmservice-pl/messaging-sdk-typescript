@@ -62,9 +62,6 @@ export type AccountResponse = {
 /** @internal */
 export const AccountType$inboundSchema: z.ZodNativeEnum<typeof AccountType> = z
   .nativeEnum(AccountType);
-/** @internal */
-export const AccountType$outboundSchema: z.ZodNativeEnum<typeof AccountType> =
-  AccountType$inboundSchema;
 
 /** @internal */
 export const AccountResponse$inboundSchema: z.ZodType<
@@ -86,44 +83,7 @@ export const AccountResponse$inboundSchema: z.ZodType<
     "is_main": "isMain",
   });
 });
-/** @internal */
-export type AccountResponse$Outbound = {
-  login?: string | undefined;
-  account_type?: string | undefined;
-  limit?: number | undefined;
-  credit?: number | undefined;
-  subcredit?: number | null | undefined;
-  currency?: string | undefined;
-  name?: string | undefined;
-  is_main?: boolean | undefined;
-};
 
-/** @internal */
-export const AccountResponse$outboundSchema: z.ZodType<
-  AccountResponse$Outbound,
-  z.ZodTypeDef,
-  AccountResponse
-> = z.object({
-  login: z.string().optional(),
-  accountType: AccountType$outboundSchema.optional(),
-  limit: z.number().optional(),
-  credit: z.number().optional(),
-  subcredit: z.nullable(z.number()).optional(),
-  currency: z.string().optional(),
-  name: z.string().optional(),
-  isMain: z.boolean().optional(),
-}).transform((v) => {
-  return remap$(v, {
-    accountType: "account_type",
-    isMain: "is_main",
-  });
-});
-
-export function accountResponseToJSON(
-  accountResponse: AccountResponse,
-): string {
-  return JSON.stringify(AccountResponse$outboundSchema.parse(accountResponse));
-}
 export function accountResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<AccountResponse, SDKValidationError> {

@@ -85,7 +85,8 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 401, 403, 404, 4XX  | application/problem+json |
+| errors.ErrorResponse     | 401, 405                 | application/problem+json |
+| errors.ErrorResponse     | 400, 403, 404, 4XX       | application/problem+json |
 | errors.ErrorResponse     | 5XX                      | application/problem+json |
 
 ## cancelScheduled
@@ -167,7 +168,8 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 401, 403, 404, 4XX  | application/problem+json |
+| errors.ErrorResponse     | 401, 405                 | application/problem+json |
+| errors.ErrorResponse     | 400, 403, 404, 4XX       | application/problem+json |
 | errors.ErrorResponse     | 5XX                      | application/problem+json |
 
 ## list
@@ -239,5 +241,6 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrorResponse     | 400, 401, 403, 404, 4XX  | application/problem+json |
+| errors.ErrorResponse     | 401, 405                 | application/problem+json |
+| errors.ErrorResponse     | 400, 403, 404, 4XX       | application/problem+json |
 | errors.ErrorResponse     | 5XX                      | application/problem+json |

@@ -37,31 +37,7 @@ export const Sender$inboundSchema: z.ZodType<Sender, z.ZodTypeDef, unknown> = z
       "is_default": "isDefault",
     });
   });
-/** @internal */
-export type Sender$Outbound = {
-  sender: string;
-  status: string;
-  is_default: boolean;
-};
 
-/** @internal */
-export const Sender$outboundSchema: z.ZodType<
-  Sender$Outbound,
-  z.ZodTypeDef,
-  Sender
-> = z.object({
-  sender: z.string(),
-  status: z.string(),
-  isDefault: z.boolean(),
-}).transform((v) => {
-  return remap$(v, {
-    isDefault: "is_default",
-  });
-});
-
-export function senderToJSON(sender: Sender): string {
-  return JSON.stringify(Sender$outboundSchema.parse(sender));
-}
 export function senderFromJSON(
   jsonString: string,
 ): SafeParseResult<Sender, SDKValidationError> {

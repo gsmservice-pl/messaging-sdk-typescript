@@ -3,11 +3,11 @@
  */
 
 import { ClientCore } from "../core.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { pathToFunc } from "../lib/url.js";
-import * as components from "../models/components/index.js";
 import { ClientError } from "../models/errors/clienterror.js";
 import {
   ConnectionError,
@@ -19,6 +19,7 @@ import {
 import * as errors from "../models/errors/index.js";
 import { ResponseValidationError } from "../models/errors/responsevalidationerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
+import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
@@ -35,7 +36,7 @@ export function commonPing(
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    components.PingResponse,
+    operations.PingResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -59,7 +60,7 @@ async function $do(
 ): Promise<
   [
     Result<
-      components.PingResponse,
+      operations.PingResponse,
       | errors.ErrorResponse
       | ClientError
       | ResponseValidationError
@@ -119,7 +120,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: ["400", "4XX", "503", "5XX"],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -133,7 +135,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    components.PingResponse,
+    operations.PingResponse,
     | errors.ErrorResponse
     | ClientError
     | ResponseValidationError
@@ -144,7 +146,11 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, components.PingResponse$inboundSchema),
+    M.json(200, operations.PingResponse$inboundSchema, { key: "Result" }),
+    M.jsonErr(405, errors.ErrorResponse$inboundSchema, {
+      ctype: "application/problem+json",
+      hdrs: true,
+    }),
     M.jsonErr([400, "4XX"], errors.ErrorResponse$inboundSchema, {
       ctype: "application/problem+json",
     }),

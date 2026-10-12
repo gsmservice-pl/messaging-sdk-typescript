@@ -22,14 +22,6 @@ export type CancelMessagesResponse = {
 };
 
 /** @internal */
-export const CancelMessagesRequest$inboundSchema: z.ZodType<
-  CancelMessagesRequest,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  ids: z.array(z.number().int()),
-});
-/** @internal */
 export type CancelMessagesRequest$Outbound = {
   ids: Array<number>;
 };
@@ -50,15 +42,6 @@ export function cancelMessagesRequestToJSON(
     CancelMessagesRequest$outboundSchema.parse(cancelMessagesRequest),
   );
 }
-export function cancelMessagesRequestFromJSON(
-  jsonString: string,
-): SafeParseResult<CancelMessagesRequest, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => CancelMessagesRequest$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'CancelMessagesRequest' from JSON`,
-  );
-}
 
 /** @internal */
 export const CancelMessagesResponse$inboundSchema: z.ZodType<
@@ -74,34 +57,7 @@ export const CancelMessagesResponse$inboundSchema: z.ZodType<
     "Result": "result",
   });
 });
-/** @internal */
-export type CancelMessagesResponse$Outbound = {
-  Headers: { [k: string]: Array<string> };
-  Result: Array<components.CancelledMessage$Outbound>;
-};
 
-/** @internal */
-export const CancelMessagesResponse$outboundSchema: z.ZodType<
-  CancelMessagesResponse$Outbound,
-  z.ZodTypeDef,
-  CancelMessagesResponse
-> = z.object({
-  headers: z.record(z.array(z.string())),
-  result: z.array(components.CancelledMessage$outboundSchema),
-}).transform((v) => {
-  return remap$(v, {
-    headers: "Headers",
-    result: "Result",
-  });
-});
-
-export function cancelMessagesResponseToJSON(
-  cancelMessagesResponse: CancelMessagesResponse,
-): string {
-  return JSON.stringify(
-    CancelMessagesResponse$outboundSchema.parse(cancelMessagesResponse),
-  );
-}
 export function cancelMessagesResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<CancelMessagesResponse, SDKValidationError> {

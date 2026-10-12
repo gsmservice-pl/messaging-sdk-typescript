@@ -3,20 +3,12 @@
  */
 
 import * as z from "zod/v3";
-import { safeParse } from "../../lib/schemas.js";
-import { Result as SafeParseResult } from "../../types/fp.js";
-import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 import {
   PhoneNumberWithCid,
-  PhoneNumberWithCid$inboundSchema,
   PhoneNumberWithCid$Outbound,
   PhoneNumberWithCid$outboundSchema,
 } from "./phonenumberwithcid.js";
-import {
-  SmsType,
-  SmsType$inboundSchema,
-  SmsType$outboundSchema,
-} from "./smstype.js";
+import { SmsType, SmsType$outboundSchema } from "./smstype.js";
 
 /**
  * The recipient number or multiple recipients numbers of single message. To set one recipient, simply pass here a `string` with his phone number. To set multiple recipients, pass here a simple `array` of `string`. Optionally you can also set custom id (user identifier) for each message - pass `PhoneNumberWithCid` object (in case of single recipient) or `Array` of `PhoneNumberWithCid` (in case of multiple recipients).
@@ -66,17 +58,6 @@ export type SmsMessage = {
 };
 
 /** @internal */
-export const SmsMessageRecipients$inboundSchema: z.ZodType<
-  SmsMessageRecipients,
-  z.ZodTypeDef,
-  unknown
-> = z.union([
-  PhoneNumberWithCid$inboundSchema,
-  z.string(),
-  z.array(z.string()),
-  z.array(PhoneNumberWithCid$inboundSchema),
-]);
-/** @internal */
 export type SmsMessageRecipients$Outbound =
   | PhoneNumberWithCid$Outbound
   | string
@@ -102,37 +83,7 @@ export function smsMessageRecipientsToJSON(
     SmsMessageRecipients$outboundSchema.parse(smsMessageRecipients),
   );
 }
-export function smsMessageRecipientsFromJSON(
-  jsonString: string,
-): SafeParseResult<SmsMessageRecipients, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => SmsMessageRecipients$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'SmsMessageRecipients' from JSON`,
-  );
-}
 
-/** @internal */
-export const SmsMessage$inboundSchema: z.ZodType<
-  SmsMessage,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  recipients: z.union([
-    PhoneNumberWithCid$inboundSchema,
-    z.string(),
-    z.array(z.string()),
-    z.array(PhoneNumberWithCid$inboundSchema),
-  ]),
-  message: z.string(),
-  sender: z.string().default("Bramka SMS"),
-  type: SmsType$inboundSchema.default(1),
-  unicode: z.boolean().default(false),
-  flash: z.boolean().default(false),
-  date: z.nullable(
-    z.string().datetime({ offset: true }).transform(v => new Date(v)),
-  ).default(null),
-});
 /** @internal */
 export type SmsMessage$Outbound = {
   recipients:
@@ -170,13 +121,4 @@ export const SmsMessage$outboundSchema: z.ZodType<
 
 export function smsMessageToJSON(smsMessage: SmsMessage): string {
   return JSON.stringify(SmsMessage$outboundSchema.parse(smsMessage));
-}
-export function smsMessageFromJSON(
-  jsonString: string,
-): SafeParseResult<SmsMessage, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => SmsMessage$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'SmsMessage' from JSON`,
-  );
 }
